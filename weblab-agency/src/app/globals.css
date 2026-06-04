@@ -1326,6 +1326,230 @@ body::before {
   left: 50px;
 }
 
+/* ─── Why Us Orb Scene ─── */
+.why-visual-area {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 660px;
+  margin: 0 auto;
+}
+
+.why-orb-scene {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+}
+
+.why-sphere {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  overflow: hidden;
+  width: min(62vw, 610px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(54, 184, 255, 0.34);
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 73% 24%, rgba(255, 255, 255, 0.98) 0 0.5%, rgba(54, 184, 255, 0.95) 1%, rgba(54, 184, 255, 0.2) 4%, transparent 10%),
+    radial-gradient(circle at 48% 82%, rgba(54, 184, 255, 0.32), transparent 43%),
+    radial-gradient(circle at 55% 52%, rgba(7, 42, 68, 0.74), rgba(1, 10, 17, 0.95) 62%, #010203 78%);
+  box-shadow:
+    inset -34px -36px 80px rgba(0, 0, 0, 0.82),
+    inset 18px 18px 65px rgba(54, 184, 255, 0.09),
+    0 0 70px rgba(54, 184, 255, 0.13),
+    0 0 0 1px rgba(255, 255, 255, 0.025);
+  transform: translate(-50%, -50%);
+  animation: why-sphere-breathe 6s ease-in-out infinite;
+}
+
+.why-sphere::before {
+  position: absolute;
+  inset: 8%;
+  border: 1px solid rgba(255, 255, 255, 0.035);
+  border-radius: inherit;
+  background: radial-gradient(circle at 38% 38%, rgba(54, 184, 255, 0.07), transparent 55%);
+  content: "";
+}
+
+.why-sphere::after {
+  position: absolute;
+  right: 10%;
+  bottom: 7%;
+  left: 10%;
+  height: 14%;
+  border-radius: 999px;
+  background: rgba(54, 184, 255, 0.14);
+  content: "";
+  filter: blur(28px);
+}
+
+.why-sphere-grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.15;
+  background-image:
+    linear-gradient(rgba(54, 184, 255, 0.16) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(54, 184, 255, 0.16) 1px, transparent 1px);
+  background-size: 46px 46px;
+  mask-image: radial-gradient(circle at center, #000, transparent 70%);
+  transform: perspective(500px) rotateX(64deg) translateY(38%);
+  transform-origin: bottom;
+}
+
+.why-sphere-label {
+  position: absolute;
+  top: 35%;
+  right: 0;
+  left: 0;
+  color: rgba(255, 255, 255, 0.055);
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(28px, 4vw, 54px);
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-align: center;
+}
+
+.why-orbit {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(54, 184, 255, 0.09);
+  border-radius: 999px;
+  transform: translate(-50%, -50%);
+}
+
+.why-orbit-outer {
+  width: min(78vw, 770px);
+}
+
+.why-orbit-inner {
+  width: min(70vw, 685px);
+  border-color: rgba(255, 255, 255, 0.035);
+}
+
+.why-person {
+  position: absolute;
+  z-index: 4;
+  bottom: 73px;
+  left: 50%;
+  width: 38px;
+  height: 126px;
+  filter: drop-shadow(0 0 12px rgba(54, 184, 255, 0.52));
+  transform: translateX(-50%);
+  animation: why-person-float 4.8s ease-in-out infinite;
+}
+
+.why-person span {
+  position: absolute;
+  display: block;
+  background: linear-gradient(90deg, #03111b, #11669a 72%, #36b8ff);
+}
+
+.why-person-head {
+  top: 0;
+  left: 13px;
+  width: 14px;
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 50%;
+}
+
+.why-person-body {
+  top: 17px;
+  left: 9px;
+  width: 20px;
+  height: 52px;
+  border: 1px solid rgba(54, 184, 255, 0.32);
+  border-radius: 9px 8px 5px 5px;
+  transform: skewX(-3deg);
+}
+
+.why-person-arm {
+  top: 23px;
+  left: 28px;
+  width: 6px;
+  height: 45px;
+  border-radius: 999px;
+  transform: rotate(-7deg);
+  transform-origin: top;
+}
+
+.why-person-leg {
+  top: 65px;
+  width: 8px;
+  height: 58px;
+  border-radius: 999px;
+  transform-origin: top;
+}
+
+.why-person-leg-left {
+  left: 10px;
+  transform: rotate(3deg);
+}
+
+.why-person-leg-right {
+  left: 22px;
+  transform: rotate(-4deg);
+}
+
+.why-person-reflection {
+  position: absolute;
+  z-index: 2;
+  bottom: 9px;
+  left: 50%;
+  width: 34px;
+  height: 92px;
+  background: linear-gradient(180deg, rgba(54, 184, 255, 0.18), transparent 85%);
+  filter: blur(5px);
+  opacity: 0.55;
+  transform: translateX(-50%) scaleY(-1);
+  transform-origin: top;
+}
+
+.why-ground-line {
+  position: absolute;
+  z-index: 3;
+  right: 16%;
+  bottom: 67px;
+  left: 16%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(54, 184, 255, 0.5), transparent);
+  box-shadow: 0 0 20px rgba(54, 184, 255, 0.25);
+}
+
+.why-visual-area .float-pill {
+  z-index: 5;
+}
+
+@keyframes why-sphere-breathe {
+  0%,
+  100% {
+    box-shadow:
+      inset -34px -36px 80px rgba(0, 0, 0, 0.82),
+      inset 18px 18px 65px rgba(54, 184, 255, 0.09),
+      0 0 70px rgba(54, 184, 255, 0.13);
+  }
+  50% {
+    box-shadow:
+      inset -34px -36px 80px rgba(0, 0, 0, 0.82),
+      inset 18px 18px 65px rgba(54, 184, 255, 0.15),
+      0 0 105px rgba(54, 184, 255, 0.2);
+  }
+}
+
+@keyframes why-person-float {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-4px);
+  }
+}
+
 /* ─── Team ─── */
 .team-watermark {
   position: absolute;
@@ -2898,6 +3122,14 @@ a.contact-info-card:hover {
 }
 
 @media (max-width: 1023px) {
+  .why-visual-area {
+    min-height: 600px;
+  }
+
+  .why-sphere {
+    width: min(72vw, 560px);
+  }
+
   .site-footer {
     padding-right: 40px;
     padding-left: 40px;
@@ -3166,6 +3398,45 @@ a.contact-info-card:hover {
 
   .section-padding {
     padding: 100px 20px;
+  }
+
+  .why-visual-area {
+    min-height: 500px;
+  }
+
+  .why-sphere {
+    width: min(102vw, 390px);
+  }
+
+  .why-orbit-outer {
+    width: min(120vw, 460px);
+  }
+
+  .why-orbit-inner {
+    width: min(110vw, 420px);
+  }
+
+  .why-person {
+    bottom: 58px;
+    animation: none;
+    transform: translateX(-50%) scale(0.78);
+    transform-origin: bottom;
+  }
+
+  .why-person-reflection {
+    bottom: 11px;
+    height: 65px;
+  }
+
+  .why-ground-line {
+    right: 5%;
+    bottom: 54px;
+    left: 5%;
+  }
+
+  .why-visual-area .float-pill > div {
+    padding: 0.7rem 1rem !important;
+    font-size: 8px;
   }
 
   .site-footer {

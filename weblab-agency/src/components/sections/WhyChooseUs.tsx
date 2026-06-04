@@ -50,6 +50,18 @@ export default function WhyChooseUs() {
           },
         });
       }
+
+      gsap.from(".why-orb-scene", {
+        scale: 0.82,
+        opacity: 0,
+        duration: 1.5,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".why-orb-scene",
+          start: "top 82%",
+          toggleActions: "play none none none",
+        },
+      });
     }, sectionRef);
 
     return () => ctx.revert();
@@ -91,17 +103,23 @@ export default function WhyChooseUs() {
         </p>
 
         {/* Pill layout area */}
-        <div className="relative w-full max-w-3xl mx-auto" style={{ minHeight: "420px" }}>
-          {/* Large faint circle outlines */}
-          <div className="absolute inset-[5%] rounded-full border border-white/[0.04]" />
-          <div className="absolute inset-[20%] rounded-full border border-white/[0.03]" />
-          <div className="absolute inset-[35%] rounded-full border border-white/[0.02]" />
-
-          {/* Center text */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <h3 className="font-display font-bold text-xl md:text-2xl text-white/[0.06] tracking-[0.3em] uppercase">
-              WHY WEBLAB
-            </h3>
+        <div className="why-visual-area">
+          <div className="why-orb-scene" aria-hidden="true">
+            <div className="why-orbit why-orbit-outer" />
+            <div className="why-orbit why-orbit-inner" />
+            <div className="why-sphere">
+              <div className="why-sphere-grid" />
+              <div className="why-sphere-label">WHY WEBLAB</div>
+            </div>
+            <div className="why-person">
+              <span className="why-person-head" />
+              <span className="why-person-body" />
+              <span className="why-person-arm" />
+              <span className="why-person-leg why-person-leg-left" />
+              <span className="why-person-leg why-person-leg-right" />
+            </div>
+            <div className="why-person-reflection" />
+            <div className="why-ground-line" />
           </div>
 
           {/* Floating pills — oval shaped like the reference */}
