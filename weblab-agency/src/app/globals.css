@@ -4216,7 +4216,7 @@ body {
 
   .hero-section,
   .hero-layout {
-    min-height: max(680px, 100svh);
+    min-height: max(720px, 100svh);
   }
 
   .hero-section {
@@ -4261,8 +4261,28 @@ body {
   }
 
   .hero-artwork {
-    inset: 31% -96px 4% -96px;
-    opacity: 0.6;
+    z-index: 2;
+    top: clamp(318px, 50vh, 430px);
+    right: var(--mobile-gutter);
+    bottom: auto;
+    left: var(--mobile-gutter);
+    overflow: hidden;
+    height: clamp(150px, 42vw, 220px);
+    border: 1px solid rgba(54, 184, 255, 0.24);
+    border-radius: 20px;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(54, 184, 255, 0.16), transparent 62%),
+      #000;
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.5),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+    opacity: 0.96;
+  }
+
+  .hero-artwork img {
+    padding: clamp(8px, 2.4vw, 14px) !important;
+    object-fit: contain !important;
+    object-position: center !important;
   }
 
   .hero-vignette {
@@ -4272,10 +4292,7 @@ body {
   }
 
   .hero-mark-wrap {
-    top: 56%;
-    left: 67%;
-    gap: 10px;
-    opacity: 0.82;
+    display: none;
   }
 
   .hero-mark-halo {
@@ -4484,9 +4501,23 @@ body {
     right: auto;
     left: auto;
     width: 100%;
+    aspect-ratio: 16 / 10.8;
     margin-top: 18px;
     border-radius: 18px;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(54, 184, 255, 0.08), transparent 65%),
+      #030404;
     order: 1;
+  }
+
+  .project-image-card img {
+    padding: 8px !important;
+    object-fit: contain !important;
+    object-position: center !important;
+  }
+
+  .project-image-shade {
+    background: linear-gradient(180deg, transparent 72%, rgba(0, 0, 0, 0.34));
   }
 
   .project-open {
@@ -4682,6 +4713,10 @@ body {
   .team-member-image {
     width: 84px;
     border-radius: 14px;
+  }
+
+  .team-member-image img {
+    object-position: center top !important;
   }
 
   .team-member-info h3 {
@@ -4976,7 +5011,28 @@ body {
   }
 
   .playground-art {
-    min-height: clamp(520px, 146vw, 690px);
+    min-height: clamp(320px, 76vw, 480px);
+    border-top: 1px solid rgba(54, 184, 255, 0.16);
+    border-bottom: 1px solid rgba(54, 184, 255, 0.16);
+    background:
+      radial-gradient(circle at 50% 50%, rgba(54, 184, 255, 0.16), transparent 62%),
+      #000;
+  }
+
+  .playground-art > img {
+    padding: clamp(12px, 3vw, 22px) !important;
+    object-fit: contain !important;
+    object-position: center !important;
+  }
+
+  .playground-shade {
+    background:
+      linear-gradient(90deg, rgba(0, 0, 0, 0.45), transparent 42%, rgba(0, 0, 0, 0.45)),
+      linear-gradient(180deg, rgba(0, 0, 0, 0.12), transparent 60%, #000);
+  }
+
+  .playground-mark {
+    display: none;
   }
 
   .playground-modes {
