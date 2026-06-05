@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { ArrowUpRight, X } from "lucide-react";
 import AgencyMark from "@/components/ui/AgencyMark";
 
 const navLinks = [
@@ -92,7 +92,11 @@ export default function Navbar() {
             aria-expanded={mobileOpen}
           >
             <span>Menu</span>
-            <Menu className="h-4 w-4" />
+            <span className="nav-burger" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
           </button>
         </div>
       </motion.header>
