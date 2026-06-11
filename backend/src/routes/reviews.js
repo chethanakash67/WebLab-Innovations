@@ -4,6 +4,7 @@ import { z } from "zod";
 import { pool } from "../db/pool.js";
 import {
   canSendReviewModerationEmail,
+  reviewModerationEmailStatus,
   sendReviewModerationEmail,
 } from "../services/mailer.js";
 
@@ -62,7 +63,11 @@ function sendModerationEmailInBackground({ review, approveUrl }) {
   sendReviewModerationEmail({ review, approveUrl })
     .then((sent) => {
       if (!sent) {
-        console.warn("Review moderation email skipped: recipient or EmailJS config is missing.");
+        const status = reviewModerationEmailStatus();
+
+        console.warn(
+          `Review moderation email skipped: missing ${status.missing.join(", ")}.`,
+        );
       }
     })
     .catch((error) => {

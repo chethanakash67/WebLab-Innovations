@@ -32,19 +32,53 @@ function emailJsConfig(templateEnvName) {
   };
 }
 
-function canSendTemplate(templateEnvName, recipient) {
-  return Boolean(recipient && emailJsConfig(templateEnvName));
+function missingEmailJsEnv(templateEnvName, recipientEnvNames) {
+  const missing = [];
+  const hasRecipient = recipientEnvNames.some((name) => Boolean(process.env[name]));
+
+  if (!hasRecipient) {
+    missing.push(recipientEnvNames.join(" or "));
+  }
+
+  for (const name of ["EMAILJS_SERVICE_ID", "EMAILJS_PUBLIC_KEY", templateEnvName]) {
+    if (!process.env[name]) {
+      missing.push(name);
+    }
+  }
+
+  return missing;
+}
+
+function notificationStatus(templateEnvName, recipientEnvNames) {
+  const missing = missingEmailJsEnv(templateEnvName, recipientEnvNames);
+
+  return {
+    ready: missing.length === 0,
+    missing,
+  };
+}
+
+export function contactNotificationStatus() {
+  return notificationStatus("EMAILJS_CONTACT_TEMPLATE_ID", ["CONTACT_TO"]);
+}
+
+export function reviewModerationEmailStatus() {
+  return notificationStatus("EMAILJS_REVIEW_TEMPLATE_ID", ["REVIEW_TO", "CONTACT_TO"]);
+}
+
+export function emailNotificationStatus() {
+  return {
+    contact: contactNotificationStatus(),
+    review: reviewModerationEmailStatus(),
+  };
 }
 
 export function canSendContactNotification() {
-  return canSendTemplate("EMAILJS_CONTACT_TEMPLATE_ID", process.env.CONTACT_TO);
+  return contactNotificationStatus().ready;
 }
 
 export function canSendReviewModerationEmail() {
-  return canSendTemplate(
-    "EMAILJS_REVIEW_TEMPLATE_ID",
-    process.env.REVIEW_TO || process.env.CONTACT_TO,
-  );
+  return reviewModerationEmailStatus().ready;
 }
 
 function enqueueEmailJsSend(task) {
@@ -150,6 +184,10 @@ function textToHtml(text) {
 }
 
 export async function sendContactNotification(inquiry) {
+  if (!canSendContactNotification()) {
+    return false;
+  }
+
   const to = process.env.CONTACT_TO;
 
   if (!to) {
@@ -199,6 +237,10 @@ export async function sendContactNotification(inquiry) {
 }
 
 export async function sendReviewModerationEmail({ review, approveUrl }) {
+  if (!canSendReviewModerationEmail()) {
+    return false;
+  }
+
   const to = process.env.REVIEW_TO || process.env.CONTACT_TO;
 
   if (!to) {

@@ -3,6 +3,7 @@ import { z } from "zod";
 import { pool } from "../db/pool.js";
 import {
   canSendContactNotification,
+  contactNotificationStatus,
   sendContactNotification,
 } from "../services/mailer.js";
 
@@ -41,7 +42,11 @@ function sendNotificationInBackground(inquiry) {
   sendContactNotification(inquiry)
     .then((sent) => {
       if (!sent) {
-        console.warn("Contact notification skipped: CONTACT_TO or EmailJS config is missing.");
+        const status = contactNotificationStatus();
+
+        console.warn(
+          `Contact notification skipped: missing ${status.missing.join(", ")}.`,
+        );
       }
     })
     .catch((error) => {

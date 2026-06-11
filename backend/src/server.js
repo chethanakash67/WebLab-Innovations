@@ -5,6 +5,7 @@ import helmet from "helmet";
 import { initDatabase } from "./db/init.js";
 import contactRouter from "./routes/contact.js";
 import reviewsRouter from "./routes/reviews.js";
+import { emailNotificationStatus } from "./services/mailer.js";
 
 const app = express();
 const port = Number(process.env.PORT || 10000);
@@ -59,6 +60,26 @@ function validateProductionEnv() {
   }
 }
 
+function logEmailNotificationStatus() {
+  const { contact, review } = emailNotificationStatus();
+
+  if (contact.ready) {
+    console.log("EmailJS contact notifications ready.");
+  } else {
+    console.warn(
+      `EmailJS contact notifications disabled: missing ${contact.missing.join(", ")}.`,
+    );
+  }
+
+  if (review.ready) {
+    console.log("EmailJS review moderation emails ready.");
+  } else {
+    console.warn(
+      `EmailJS review moderation emails disabled: missing ${review.missing.join(", ")}.`,
+    );
+  }
+}
+
 app.set("trust proxy", 1);
 app.use(helmet());
 app.use(
@@ -97,6 +118,7 @@ app.use((error, _request, response, _next) => {
 });
 
 validateProductionEnv();
+logEmailNotificationStatus();
 initDatabase()
   .then(() => {
     app.listen(port, () => {
