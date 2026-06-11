@@ -7,6 +7,12 @@ function backendBaseUrl() {
   return configuredUrl.trim().replace(/\/+$/, "");
 }
 
+function envNumber(name: string, fallback: number) {
+  const value = Number(process.env[name]);
+
+  return Number.isFinite(value) && value > 0 ? value : fallback;
+}
+
 export async function proxyBackendRequest(path: string, init: RequestInit = {}) {
   const baseUrl = backendBaseUrl();
 
@@ -17,10 +23,17 @@ export async function proxyBackendRequest(path: string, init: RequestInit = {}) 
     );
   }
 
+  const controller = new AbortController();
+  const timeout = setTimeout(
+    () => controller.abort(),
+    envNumber("BACKEND_REQUEST_TIMEOUT_MS", 20000),
+  );
+
   try {
     const response = await fetch(`${baseUrl}${path}`, {
       ...init,
       cache: "no-store",
+      signal: controller.signal,
     });
     const body = await response.text();
     const headers = new Headers();
@@ -40,8 +53,16 @@ export async function proxyBackendRequest(path: string, init: RequestInit = {}) 
     console.error("Backend API request failed:", error);
 
     return Response.json(
-      { success: false, message: "Could not reach the backend API." },
+      {
+        success: false,
+        message:
+          error instanceof Error && error.name === "AbortError"
+            ? "Backend API request timed out. Please try again."
+            : "Could not reach the backend API.",
+      },
       { status: 502 },
     );
+  } finally {
+    clearTimeout(timeout);
   }
 }

@@ -1,35 +1,139 @@
-import nodemailer from "nodemailer";
+const EMAILJS_SEND_URL =
+  process.env.EMAILJS_SEND_URL || "https://api.emailjs.com/api/v1.0/email/send";
+const EMAILJS_MIN_SEND_GAP_MS = 1100;
 
-let transporter;
+let emailJsQueue = Promise.resolve();
+let lastEmailJsSendAt = 0;
 
-function requiredEnv(name) {
-  const value = process.env[name];
+function envNumber(name, fallback) {
+  const value = Number(process.env[name]);
 
-  if (!value) {
-    throw new Error(`${name} is required for email delivery.`);
-  }
-
-  return value;
+  return Number.isFinite(value) && value > 0 ? value : fallback;
 }
 
-function getTransporter() {
-  if (transporter) {
-    return transporter;
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function emailJsConfig(templateEnvName) {
+  const serviceId = process.env.EMAILJS_SERVICE_ID;
+  const publicKey = process.env.EMAILJS_PUBLIC_KEY;
+  const templateId = process.env[templateEnvName];
+
+  if (!serviceId || !publicKey || !templateId) {
+    return null;
   }
 
-  const port = Number(process.env.SMTP_PORT || 587);
+  return {
+    serviceId,
+    publicKey,
+    privateKey: process.env.EMAILJS_PRIVATE_KEY,
+    templateId,
+  };
+}
 
-  transporter = nodemailer.createTransport({
-    host: requiredEnv("SMTP_HOST"),
-    port,
-    secure: process.env.SMTP_SECURE === "true" || port === 465,
-    auth: {
-      user: requiredEnv("SMTP_USER"),
-      pass: requiredEnv("SMTP_PASS"),
-    },
+function canSendTemplate(templateEnvName, recipient) {
+  return Boolean(recipient && emailJsConfig(templateEnvName));
+}
+
+export function canSendContactNotification() {
+  return canSendTemplate("EMAILJS_CONTACT_TEMPLATE_ID", process.env.CONTACT_TO);
+}
+
+export function canSendReviewModerationEmail() {
+  return canSendTemplate(
+    "EMAILJS_REVIEW_TEMPLATE_ID",
+    process.env.REVIEW_TO || process.env.CONTACT_TO,
+  );
+}
+
+function enqueueEmailJsSend(task) {
+  const queuedTask = emailJsQueue.then(async () => {
+    const elapsedSinceLastSend = Date.now() - lastEmailJsSendAt;
+    const waitMs = Math.max(0, EMAILJS_MIN_SEND_GAP_MS - elapsedSinceLastSend);
+
+    if (waitMs > 0) {
+      await delay(waitMs);
+    }
+
+    try {
+      return await task();
+    } finally {
+      lastEmailJsSendAt = Date.now();
+    }
   });
 
-  return transporter;
+  emailJsQueue = queuedTask.catch(() => {});
+
+  return queuedTask;
+}
+
+async function emailJsErrorMessage(response) {
+  const fallback = response.statusText || "EmailJS request failed.";
+  const text = await response.text().catch(() => "");
+
+  if (!text) {
+    return fallback;
+  }
+
+  try {
+    const data = JSON.parse(text);
+
+    return data.message || data.error || data.text || text;
+  } catch {
+    return text;
+  }
+}
+
+async function sendEmailJsTemplate(templateEnvName, templateParams) {
+  const config = emailJsConfig(templateEnvName);
+
+  if (!config) {
+    return false;
+  }
+
+  return enqueueEmailJsSend(async () => {
+    const timeout = envNumber("MAIL_TIMEOUT_MS", 10000);
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeout);
+
+    try {
+      const body = {
+        service_id: config.serviceId,
+        template_id: config.templateId,
+        user_id: config.publicKey,
+        template_params: templateParams,
+      };
+
+      if (config.privateKey) {
+        body.accessToken = config.privateKey;
+      }
+
+      const response = await fetch(EMAILJS_SEND_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        const message = await emailJsErrorMessage(response);
+        throw new Error(`EmailJS send failed (${response.status}): ${message}`);
+      }
+
+      return true;
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") {
+        throw new Error(`EmailJS send timed out after ${timeout}ms.`);
+      }
+
+      throw error;
+    } finally {
+      clearTimeout(timer);
+    }
+  });
 }
 
 function escapeHtml(value = "") {
@@ -41,6 +145,10 @@ function escapeHtml(value = "") {
     .replace(/'/g, "&#39;");
 }
 
+function textToHtml(text) {
+  return escapeHtml(text).replace(/\n/g, "<br>");
+}
+
 export async function sendContactNotification(inquiry) {
   const to = process.env.CONTACT_TO;
 
@@ -48,40 +156,46 @@ export async function sendContactNotification(inquiry) {
     return false;
   }
 
+  const projectGoal = inquiry.projectGoal || "Not sure";
+  const phone = inquiry.phone || "Not provided";
+  const timeline = inquiry.timeline || "Not sure";
+  const budget = inquiry.budget || "Not sure yet";
   const subject = `New WebLab enquiry from ${inquiry.name}`;
-  const text = [
+  const bodyText = [
     `Name: ${inquiry.name}`,
     `Email: ${inquiry.email}`,
-    `Phone: ${inquiry.phone || "Not provided"}`,
+    `Phone: ${phone}`,
     `Project type: ${inquiry.projectType}`,
-    `Main help needed: ${inquiry.projectGoal || "Not sure"}`,
-    `Timeline: ${inquiry.timeline || "Not sure"}`,
-    `Budget/payment: ${inquiry.budget || "Not sure yet"}`,
+    `Main help needed: ${projectGoal}`,
+    `Timeline: ${timeline}`,
+    `Budget/payment: ${budget}`,
     "",
     inquiry.message,
   ].join("\n");
 
-  await getTransporter().sendMail({
-    from: process.env.MAIL_FROM || process.env.SMTP_USER,
-    to,
-    replyTo: inquiry.email,
+  return sendEmailJsTemplate("EMAILJS_CONTACT_TEMPLATE_ID", {
+    to_email: to,
+    to_name: "WebLab",
+    reply_to: inquiry.email,
+    from_name: inquiry.name,
+    from_email: inquiry.email,
+    name: inquiry.name,
+    email: inquiry.email,
+    phone,
+    project_type: inquiry.projectType,
+    projectType: inquiry.projectType,
+    project_goal: projectGoal,
+    projectGoal,
+    timeline,
+    budget,
+    message: inquiry.message,
+    message_html: textToHtml(inquiry.message),
     subject,
-    text,
-    html: `
-      <h2>New WebLab enquiry</h2>
-      <p><strong>Name:</strong> ${escapeHtml(inquiry.name)}</p>
-      <p><strong>Email:</strong> ${escapeHtml(inquiry.email)}</p>
-      <p><strong>Phone:</strong> ${escapeHtml(inquiry.phone || "Not provided")}</p>
-      <p><strong>Project type:</strong> ${escapeHtml(inquiry.projectType)}</p>
-      <p><strong>Main help needed:</strong> ${escapeHtml(inquiry.projectGoal || "Not sure")}</p>
-      <p><strong>Timeline:</strong> ${escapeHtml(inquiry.timeline || "Not sure")}</p>
-      <p><strong>Budget/payment:</strong> ${escapeHtml(inquiry.budget || "Not sure yet")}</p>
-      <p><strong>Message:</strong></p>
-      <p>${escapeHtml(inquiry.message).replace(/\n/g, "<br>")}</p>
-    `,
+    body: bodyText,
+    body_text: bodyText,
+    body_html: textToHtml(bodyText),
+    submitted_at: new Date().toISOString(),
   });
-
-  return true;
 }
 
 export async function sendReviewModerationEmail({ review, approveUrl }) {
@@ -91,39 +205,43 @@ export async function sendReviewModerationEmail({ review, approveUrl }) {
     return false;
   }
 
+  const role = review.role || "Not provided";
+  const rating = String(review.rating);
   const subject = `Review approval needed from ${review.name}`;
-  const text = [
+  const bodyText = [
     `New portfolio review from ${review.name}`,
     `Email: ${review.email}`,
-    `Role/business: ${review.role || "Not provided"}`,
-    `Rating: ${review.rating}/5`,
+    `Role/business: ${role}`,
+    `Rating: ${rating}/5`,
     "",
     review.quote,
     "",
     `Approve and publish: ${approveUrl}`,
   ].join("\n");
 
-  await getTransporter().sendMail({
-    from: process.env.MAIL_FROM || process.env.SMTP_USER,
-    to,
-    replyTo: review.email,
+  return sendEmailJsTemplate("EMAILJS_REVIEW_TEMPLATE_ID", {
+    to_email: to,
+    to_name: "WebLab",
+    reply_to: review.email,
+    from_name: review.name,
+    from_email: review.email,
+    name: review.name,
+    email: review.email,
+    role,
+    rating,
+    quote: review.quote,
+    quote_html: textToHtml(review.quote),
+    review_name: review.name,
+    review_email: review.email,
+    review_role: role,
+    review_rating: rating,
+    review_quote: review.quote,
+    approve_url: approveUrl,
+    approval_url: approveUrl,
     subject,
-    text,
-    html: `
-      <h2>Review approval needed</h2>
-      <p><strong>Name:</strong> ${escapeHtml(review.name)}</p>
-      <p><strong>Email:</strong> ${escapeHtml(review.email)}</p>
-      <p><strong>Role/business:</strong> ${escapeHtml(review.role || "Not provided")}</p>
-      <p><strong>Rating:</strong> ${review.rating}/5</p>
-      <p><strong>Review:</strong></p>
-      <p>${escapeHtml(review.quote).replace(/\n/g, "<br>")}</p>
-      <p>
-        <a href="${escapeHtml(approveUrl)}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:#0ea5e9;color:#ffffff;text-decoration:none;font-weight:700;">
-          Approve and publish review
-        </a>
-      </p>
-    `,
+    body: bodyText,
+    body_text: bodyText,
+    body_html: textToHtml(bodyText),
+    submitted_at: new Date().toISOString(),
   });
-
-  return true;
 }

@@ -2,7 +2,10 @@ import crypto from "node:crypto";
 import express from "express";
 import { z } from "zod";
 import { pool } from "../db/pool.js";
-import { sendReviewModerationEmail } from "../services/mailer.js";
+import {
+  canSendReviewModerationEmail,
+  sendReviewModerationEmail,
+} from "../services/mailer.js";
 
 const router = express.Router();
 
@@ -27,11 +30,7 @@ function validationMessage(result) {
 }
 
 function reviewSecret() {
-  return (
-    process.env.REVIEW_SECRET ||
-    process.env.SMTP_PASS ||
-    "local-development-review-secret"
-  );
+  return process.env.REVIEW_SECRET || "local-development-review-secret";
 }
 
 function hashApprovalToken(token) {
@@ -57,6 +56,18 @@ function backendBaseUrl(request) {
   }
 
   return `${request.protocol}://${request.get("host")}`;
+}
+
+function sendModerationEmailInBackground({ review, approveUrl }) {
+  sendReviewModerationEmail({ review, approveUrl })
+    .then((sent) => {
+      if (!sent) {
+        console.warn("Review moderation email skipped: recipient or EmailJS config is missing.");
+      }
+    })
+    .catch((error) => {
+      console.error("Review moderation email failed:", error);
+    });
 }
 
 function approvalPage(title, message) {
@@ -138,23 +149,18 @@ router.post(
 
     const id = insertResult.rows[0].id;
     const approveUrl = `${backendBaseUrl(request)}/api/reviews/${id}/approve?token=${approvalToken}`;
-    let notificationSent = false;
-
-    try {
-      notificationSent = await sendReviewModerationEmail({
-        review: { ...review, id },
-        approveUrl,
-      });
-    } catch (error) {
-      console.error("Review moderation email failed:", error);
-    }
+    const notificationQueued = canSendReviewModerationEmail();
+    sendModerationEmailInBackground({
+      review: { ...review, id },
+      approveUrl,
+    });
 
     return response.status(201).json({
       success: true,
       message: "Review received and waiting for approval.",
       id,
       createdAt: insertResult.rows[0].created_at,
-      notificationSent,
+      notificationQueued,
     });
   }),
 );

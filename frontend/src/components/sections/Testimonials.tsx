@@ -24,21 +24,35 @@ type ReviewFormData = {
 type ReviewStatus = "idle" | "submitting" | "submitted" | "error";
 
 async function postToApi(path: string, payload: unknown) {
-  const response = await fetch(path, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  });
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 25000);
 
-  const data = await response.json().catch(() => ({}));
+  try {
+    const response = await fetch(path, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+      signal: controller.signal,
+    });
 
-  if (!response.ok) {
-    throw new Error(data.message || "Something went wrong.");
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(data.message || "Something went wrong.");
+    }
+
+    return data;
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new Error("The request is taking too long. Please try again.");
+    }
+
+    throw error;
+  } finally {
+    window.clearTimeout(timeout);
   }
-
-  return data;
 }
 
 export default function Testimonials() {
@@ -156,14 +170,10 @@ export default function Testimonials() {
     setReviewMessage("");
 
     try {
-      const data = await postToApi("/api/reviews", {
+      await postToApi("/api/reviews", {
         ...reviewFormData,
         rating: reviewRating,
       });
-
-      if (!data.notificationSent) {
-        throw new Error("Review saved, but the approval email is not set up yet.");
-      }
 
       setReviewStatus("submitted");
       setReviewMessage("Thank you. We will check your review and publish it after approval.");

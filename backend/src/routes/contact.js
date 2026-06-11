@@ -1,7 +1,10 @@
 import express from "express";
 import { z } from "zod";
 import { pool } from "../db/pool.js";
-import { sendContactNotification } from "../services/mailer.js";
+import {
+  canSendContactNotification,
+  sendContactNotification,
+} from "../services/mailer.js";
 
 const router = express.Router();
 
@@ -34,6 +37,18 @@ function validationMessage(result) {
   return result.error.issues[0]?.message || "Invalid request.";
 }
 
+function sendNotificationInBackground(inquiry) {
+  sendContactNotification(inquiry)
+    .then((sent) => {
+      if (!sent) {
+        console.warn("Contact notification skipped: CONTACT_TO or EmailJS config is missing.");
+      }
+    })
+    .catch((error) => {
+      console.error("Contact notification failed:", error);
+    });
+}
+
 router.post(
   "/",
   asyncHandler(async (request, response) => {
@@ -62,20 +77,15 @@ router.post(
       ],
     );
 
-    let notificationSent = false;
-
-    try {
-      notificationSent = await sendContactNotification(inquiry);
-    } catch (error) {
-      console.error("Contact notification failed:", error);
-    }
+    const notificationQueued = canSendContactNotification();
+    sendNotificationInBackground(inquiry);
 
     return response.status(201).json({
       success: true,
       message: "Enquiry received.",
       id: insertResult.rows[0].id,
       createdAt: insertResult.rows[0].created_at,
-      notificationSent,
+      notificationQueued,
     });
   }),
 );

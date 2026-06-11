@@ -43,10 +43,13 @@ function validateProductionEnv() {
   const required = [
     "DATABASE_URL",
     "FRONTEND_URL",
-    "SMTP_HOST",
-    "SMTP_USER",
-    "SMTP_PASS",
-    "MAIL_FROM",
+    "BACKEND_PUBLIC_URL",
+    "REVIEW_SECRET",
+    "EMAILJS_SERVICE_ID",
+    "EMAILJS_PUBLIC_KEY",
+    "EMAILJS_PRIVATE_KEY",
+    "EMAILJS_CONTACT_TEMPLATE_ID",
+    "EMAILJS_REVIEW_TEMPLATE_ID",
     "CONTACT_TO",
   ];
   const missing = required.filter((name) => !process.env[name]);
