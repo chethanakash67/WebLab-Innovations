@@ -8,11 +8,30 @@ import reviewsRouter from "./routes/reviews.js";
 
 const app = express();
 const port = Number(process.env.PORT || 10000);
+const corsErrorMessage = "Not allowed by CORS";
+
+function normalizeOrigin(origin) {
+  if (!origin) {
+    return "";
+  }
+
+  const trimmedOrigin = origin.trim();
+
+  if (!trimmedOrigin) {
+    return "";
+  }
+
+  try {
+    return new URL(trimmedOrigin).origin;
+  } catch {
+    return trimmedOrigin.replace(/\/+$/, "");
+  }
+}
 
 function allowedOrigins() {
   return (process.env.FRONTEND_URL || "http://localhost:3000")
     .split(",")
-    .map((origin) => origin.trim())
+    .map(normalizeOrigin)
     .filter(Boolean);
 }
 
@@ -42,12 +61,12 @@ app.use(helmet());
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins().includes(origin)) {
+      if (!origin || allowedOrigins().includes(normalizeOrigin(origin))) {
         callback(null, true);
         return;
       }
 
-      callback(new Error("Not allowed by CORS"));
+      callback(new Error(corsErrorMessage));
     },
   }),
 );
@@ -65,7 +84,7 @@ app.use((_request, response) => {
 });
 
 app.use((error, _request, response, _next) => {
-  const isCorsError = error.message === "Not allowed by CORS";
+  const isCorsError = error.message === corsErrorMessage;
   console.error(error);
 
   response.status(isCorsError ? 403 : 500).json({

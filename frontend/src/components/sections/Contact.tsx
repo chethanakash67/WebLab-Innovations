@@ -27,9 +27,6 @@ const goalOptions = [
   "Not sure",
 ];
 const timelineOptions = ["This week", "This month", "In 2-3 months", "Not sure"];
-const apiBaseUrl = (
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:10000"
-).replace(/\/$/, "");
 
 type ContactFormData = {
   name: string;
@@ -41,7 +38,7 @@ type ContactFormData = {
 type FormStatus = "idle" | "submitting" | "submitted" | "error";
 
 async function postToApi(path: string, payload: unknown) {
-  const response = await fetch(`${apiBaseUrl}${path}`, {
+  const response = await fetch(path, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

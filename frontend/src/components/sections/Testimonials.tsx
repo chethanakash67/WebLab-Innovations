@@ -6,10 +6,6 @@ import { ArrowUpRight, Check, LoaderCircle, Quote, Star } from "lucide-react";
 import { testimonials } from "@/data/projects";
 import SectionBadge from "@/components/ui/SectionBadge";
 
-const apiBaseUrl = (
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:10000"
-).replace(/\/$/, "");
-
 type TestimonialItem = {
   id: string;
   quote: string;
@@ -28,7 +24,7 @@ type ReviewFormData = {
 type ReviewStatus = "idle" | "submitting" | "submitted" | "error";
 
 async function postToApi(path: string, payload: unknown) {
-  const response = await fetch(`${apiBaseUrl}${path}`, {
+  const response = await fetch(path, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -81,7 +77,7 @@ export default function Testimonials() {
   useEffect(() => {
     let active = true;
 
-    fetch(`${apiBaseUrl}/api/reviews`, { cache: "no-store" })
+    fetch("/api/reviews", { cache: "no-store" })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Unable to load reviews.");

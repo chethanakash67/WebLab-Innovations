@@ -12,10 +12,10 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-`NEXT_PUBLIC_API_BASE_URL` must point to the backend API. For local work, use:
+`BACKEND_PUBLIC_URL` must point to the backend API. For local work, use:
 
 ```bash
-NEXT_PUBLIC_API_BASE_URL=http://localhost:10000
+BACKEND_PUBLIC_URL=http://localhost:10000
 ```
 
 ## Vercel
@@ -24,7 +24,8 @@ Set the Vercel project root to this `frontend` folder.
 
 - Build command: `npm run build`
 - Output: Next.js default
-- Environment variable: `NEXT_PUBLIC_API_BASE_URL=https://your-render-service.onrender.com`
+- Environment variable: `BACKEND_PUBLIC_URL=https://your-render-service.onrender.com`
+- Redeploy after changing environment variables so Vercel rebuilds with the latest config.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 

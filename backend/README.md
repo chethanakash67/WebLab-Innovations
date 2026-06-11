@@ -21,6 +21,7 @@ Create a Render PostgreSQL database and a Web Service from this `backend` folder
 - Environment variables: copy `.env.example` and fill real values
 - Use Render's internal Postgres `DATABASE_URL`
 - Set `DATABASE_SSL=true` if your database connection requires SSL
+- `FRONTEND_URL` accepts a comma-separated list of frontend origins, for example `https://theaigleonlabs.dev,https://your-preview.vercel.app`
 
 ## API
 
