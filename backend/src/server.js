@@ -61,7 +61,7 @@ function validateProductionEnv() {
 }
 
 function logEmailNotificationStatus() {
-  const { contact, review } = emailNotificationStatus();
+  const { contact, contactAutoReply, review } = emailNotificationStatus();
 
   if (contact.ready) {
     console.log("EmailJS contact notifications ready.");
@@ -76,6 +76,14 @@ function logEmailNotificationStatus() {
   } else {
     console.warn(
       `EmailJS review moderation emails disabled: missing ${review.missing.join(", ")}.`,
+    );
+  }
+
+  if (contactAutoReply.ready) {
+    console.log("EmailJS contact auto-replies ready.");
+  } else {
+    console.warn(
+      `EmailJS contact auto-replies disabled: missing ${contactAutoReply.missing.join(", ")}.`,
     );
   }
 }

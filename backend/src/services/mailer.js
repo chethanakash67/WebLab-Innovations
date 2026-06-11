@@ -32,9 +32,11 @@ function emailJsConfig(templateEnvName) {
   };
 }
 
-function missingEmailJsEnv(templateEnvName, recipientEnvNames) {
+function missingEmailJsEnv(templateEnvName, recipientEnvNames = []) {
   const missing = [];
-  const hasRecipient = recipientEnvNames.some((name) => Boolean(process.env[name]));
+  const hasRecipient =
+    recipientEnvNames.length === 0 ||
+    recipientEnvNames.some((name) => Boolean(process.env[name]));
 
   if (!hasRecipient) {
     missing.push(recipientEnvNames.join(" or "));
@@ -62,6 +64,10 @@ export function contactNotificationStatus() {
   return notificationStatus("EMAILJS_CONTACT_TEMPLATE_ID", ["CONTACT_TO"]);
 }
 
+export function contactAutoReplyStatus() {
+  return notificationStatus("EMAILJS_CONTACT_TEMPLATE_ID");
+}
+
 export function reviewModerationEmailStatus() {
   return notificationStatus("EMAILJS_REVIEW_TEMPLATE_ID", ["REVIEW_TO", "CONTACT_TO"]);
 }
@@ -69,12 +75,17 @@ export function reviewModerationEmailStatus() {
 export function emailNotificationStatus() {
   return {
     contact: contactNotificationStatus(),
+    contactAutoReply: contactAutoReplyStatus(),
     review: reviewModerationEmailStatus(),
   };
 }
 
 export function canSendContactNotification() {
   return contactNotificationStatus().ready;
+}
+
+export function canSendContactAutoReply() {
+  return contactAutoReplyStatus().ready;
 }
 
 export function canSendReviewModerationEmail() {
@@ -183,6 +194,85 @@ function textToHtml(text) {
   return escapeHtml(text).replace(/\n/g, "<br>");
 }
 
+function emailShell({ eyebrow, title, intro, content, footer }) {
+  return `
+    <div style="margin:0;padding:0;background:#f4f7fb;font-family:Arial,sans-serif;color:#111827;">
+      <div style="max-width:640px;margin:0 auto;padding:32px 18px;">
+        <div style="background:#ffffff;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;">
+          <div style="background:#0b1220;padding:28px 30px;">
+            <p style="margin:0 0 8px;color:#38bdf8;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;">
+              ${escapeHtml(eyebrow)}
+            </p>
+            <h2 style="margin:0;color:#ffffff;font-size:26px;line-height:1.25;">
+              ${escapeHtml(title)}
+            </h2>
+          </div>
+
+          <div style="padding:28px 30px;">
+            <p style="margin:0 0 24px;color:#4b5563;font-size:15px;line-height:1.7;">
+              ${escapeHtml(intro)}
+            </p>
+            ${content}
+            ${
+              footer
+                ? `<p style="margin:24px 0 0;color:#6b7280;font-size:13px;line-height:1.6;">${escapeHtml(
+                    footer,
+                  )}</p>`
+                : ""
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function detailRows(rows) {
+  return `
+    <div style="padding:18px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:12px;">
+      ${rows
+        .map(
+          ([label, value], index) => `
+            <p style="margin:0 0 ${
+              index === rows.length - 1 ? "0" : "14px"
+            };font-size:14px;">
+              <strong style="display:inline-block;width:120px;color:#6b7280;">${escapeHtml(
+                label,
+              )}</strong>
+              <span style="color:#111827;">${escapeHtml(value)}</span>
+            </p>
+          `,
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function messageBlock(label, message) {
+  return `
+    <div style="margin-top:24px;">
+      <p style="margin:0 0 10px;color:#6b7280;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">
+        ${escapeHtml(label)}
+      </p>
+      <div style="padding:18px;background:#ffffff;border:1px solid #e5e7eb;border-radius:12px;color:#111827;font-size:15px;line-height:1.7;white-space:pre-line;">
+        ${textToHtml(message)}
+      </div>
+    </div>
+  `;
+}
+
+function contactDetails({ inquiry, phone, projectGoal, timeline, budget }) {
+  return detailRows([
+    ["Name", inquiry.name],
+    ["Email", inquiry.email],
+    ["Phone", phone],
+    ["Project Type", inquiry.projectType],
+    ["Help Needed", projectGoal],
+    ["Timeline", timeline],
+    ["Budget", budget],
+  ]);
+}
+
 export async function sendContactNotification(inquiry) {
   if (!canSendContactNotification()) {
     return false;
@@ -210,6 +300,15 @@ export async function sendContactNotification(inquiry) {
     "",
     inquiry.message,
   ].join("\n");
+  const bodyHtml = emailShell({
+    eyebrow: "WebLab Innovations Project Request",
+    title: `New enquiry from ${inquiry.name}`,
+    intro: "A new project request has been submitted. Reply directly to this email to contact the client.",
+    content: `
+      ${contactDetails({ inquiry, phone, projectGoal, timeline, budget })}
+      ${messageBlock("Message", inquiry.message)}
+    `,
+  });
 
   return sendEmailJsTemplate("EMAILJS_CONTACT_TEMPLATE_ID", {
     to_email: to,
@@ -231,7 +330,71 @@ export async function sendContactNotification(inquiry) {
     subject,
     body: bodyText,
     body_text: bodyText,
-    body_html: textToHtml(bodyText),
+    body_html: bodyHtml,
+    submitted_at: new Date().toISOString(),
+  });
+}
+
+export async function sendContactAutoReply(inquiry) {
+  if (!canSendContactAutoReply()) {
+    return false;
+  }
+
+  const replyTo = process.env.CONTACT_TO || process.env.REVIEW_TO || "";
+  const projectGoal = inquiry.projectGoal || "Not sure";
+  const phone = inquiry.phone || "Not provided";
+  const timeline = inquiry.timeline || "Not sure";
+  const budget = inquiry.budget || "Not sure yet";
+  const subject = "We received your WebLab project request";
+  const bodyText = [
+    `Hi ${inquiry.name},`,
+    "",
+    "Thanks for sharing your project details with WebLab Innovations.",
+    "We have received your request, and our team will go through it and contact you soon.",
+    "",
+    `Project type: ${inquiry.projectType}`,
+    `Main help needed: ${projectGoal}`,
+    `Timeline: ${timeline}`,
+    `Budget/payment: ${budget}`,
+    "",
+    "We usually reply within 24 hours.",
+    "",
+    "Regards,",
+    "WebLab Innovations",
+  ].join("\n");
+  const bodyHtml = emailShell({
+    eyebrow: "WebLab Innovations",
+    title: "We received your project request",
+    intro: `Hi ${inquiry.name}, thanks for sharing your project details. We have received your request, and our team will go through it and contact you soon.`,
+    content: `
+      ${contactDetails({ inquiry, phone, projectGoal, timeline, budget })}
+      ${messageBlock("Your Message", inquiry.message)}
+    `,
+    footer: "We usually reply within 24 hours. Regards, WebLab Innovations.",
+  });
+
+  return sendEmailJsTemplate("EMAILJS_CONTACT_TEMPLATE_ID", {
+    to_email: inquiry.email,
+    to_name: inquiry.name,
+    reply_to: replyTo,
+    from_name: "WebLab Innovations",
+    from_email: replyTo,
+    name: inquiry.name,
+    email: inquiry.email,
+    phone,
+    project_type: inquiry.projectType,
+    projectType: inquiry.projectType,
+    project_goal: projectGoal,
+    projectGoal,
+    timeline,
+    budget,
+    original_message: inquiry.message,
+    message: bodyText,
+    message_html: textToHtml(bodyText),
+    subject,
+    body: bodyText,
+    body_text: bodyText,
+    body_html: bodyHtml,
     submitted_at: new Date().toISOString(),
   });
 }

@@ -29,6 +29,15 @@ Create a Render PostgreSQL database and a Web Service from this `backend` folder
 
 The backend sends from the server only; do not add the private key to frontend env files.
 
+Contact template setup:
+
+- To Email: `{{to_email}}`
+- Reply To: `{{reply_to}}`
+- Subject: `{{subject}}`
+- Content: `{{{body_html}}}`
+
+The backend calls this same template twice: once for the WebLab notification and once for the customer confirmation.
+
 Contact template params:
 
 - `to_email`
@@ -42,8 +51,10 @@ Contact template params:
 - `project_goal`
 - `timeline`
 - `budget`
-- `message`
+- `subject`
 - `body_text`
+- `body_html`
+- `message`
 
 Review template params:
 

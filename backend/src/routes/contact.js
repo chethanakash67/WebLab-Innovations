@@ -2,8 +2,11 @@ import express from "express";
 import { z } from "zod";
 import { pool } from "../db/pool.js";
 import {
+  canSendContactAutoReply,
   canSendContactNotification,
+  contactAutoReplyStatus,
   contactNotificationStatus,
+  sendContactAutoReply,
   sendContactNotification,
 } from "../services/mailer.js";
 
@@ -54,6 +57,22 @@ function sendNotificationInBackground(inquiry) {
     });
 }
 
+function sendAutoReplyInBackground(inquiry) {
+  sendContactAutoReply(inquiry)
+    .then((sent) => {
+      if (!sent) {
+        const status = contactAutoReplyStatus();
+
+        console.warn(
+          `Contact auto-reply skipped: missing ${status.missing.join(", ")}.`,
+        );
+      }
+    })
+    .catch((error) => {
+      console.error("Contact auto-reply failed:", error);
+    });
+}
+
 router.post(
   "/",
   asyncHandler(async (request, response) => {
@@ -83,7 +102,9 @@ router.post(
     );
 
     const notificationQueued = canSendContactNotification();
+    const autoReplyQueued = canSendContactAutoReply();
     sendNotificationInBackground(inquiry);
+    sendAutoReplyInBackground(inquiry);
 
     return response.status(201).json({
       success: true,
@@ -91,6 +112,7 @@ router.post(
       id: insertResult.rows[0].id,
       createdAt: insertResult.rows[0].created_at,
       notificationQueued,
+      autoReplyQueued,
     });
   }),
 );
