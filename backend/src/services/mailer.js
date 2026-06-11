@@ -64,10 +64,6 @@ export function contactNotificationStatus() {
   return notificationStatus("EMAILJS_CONTACT_TEMPLATE_ID", ["CONTACT_TO"]);
 }
 
-export function contactAutoReplyStatus() {
-  return notificationStatus("EMAILJS_CONTACT_TEMPLATE_ID");
-}
-
 export function reviewModerationEmailStatus() {
   return notificationStatus("EMAILJS_REVIEW_TEMPLATE_ID", ["REVIEW_TO", "CONTACT_TO"]);
 }
@@ -75,17 +71,12 @@ export function reviewModerationEmailStatus() {
 export function emailNotificationStatus() {
   return {
     contact: contactNotificationStatus(),
-    contactAutoReply: contactAutoReplyStatus(),
     review: reviewModerationEmailStatus(),
   };
 }
 
 export function canSendContactNotification() {
   return contactNotificationStatus().ready;
-}
-
-export function canSendContactAutoReply() {
-  return contactAutoReplyStatus().ready;
 }
 
 export function canSendReviewModerationEmail() {
@@ -273,6 +264,38 @@ function contactDetails({ inquiry, phone, projectGoal, timeline, budget }) {
   ]);
 }
 
+function contactAutoReplyContent({ inquiry, phone, projectGoal, timeline, budget }) {
+  const subject = "We received your WebLab project request";
+  const text = [
+    `Hi ${inquiry.name},`,
+    "",
+    "Thanks for sharing your project details with WebLab Innovations.",
+    "We have received your request, and our team will go through it and contact you soon.",
+    "",
+    `Project type: ${inquiry.projectType}`,
+    `Main help needed: ${projectGoal}`,
+    `Timeline: ${timeline}`,
+    `Budget/payment: ${budget}`,
+    "",
+    "We usually reply within 24 hours.",
+    "",
+    "Regards,",
+    "WebLab Innovations",
+  ].join("\n");
+  const html = emailShell({
+    eyebrow: "WebLab Innovations",
+    title: "We received your project request",
+    intro: `Hi ${inquiry.name}, thanks for sharing your project details. We have received your request, and our team will go through it and contact you soon.`,
+    content: `
+      ${contactDetails({ inquiry, phone, projectGoal, timeline, budget })}
+      ${messageBlock("Your Message", inquiry.message)}
+    `,
+    footer: "We usually reply within 24 hours. Regards, WebLab Innovations.",
+  });
+
+  return { subject, text, html };
+}
+
 export async function sendContactNotification(inquiry) {
   if (!canSendContactNotification()) {
     return false;
@@ -309,6 +332,13 @@ export async function sendContactNotification(inquiry) {
       ${messageBlock("Message", inquiry.message)}
     `,
   });
+  const autoReply = contactAutoReplyContent({
+    inquiry,
+    phone,
+    projectGoal,
+    timeline,
+    budget,
+  });
 
   return sendEmailJsTemplate("EMAILJS_CONTACT_TEMPLATE_ID", {
     to_email: to,
@@ -331,70 +361,9 @@ export async function sendContactNotification(inquiry) {
     body: bodyText,
     body_text: bodyText,
     body_html: bodyHtml,
-    submitted_at: new Date().toISOString(),
-  });
-}
-
-export async function sendContactAutoReply(inquiry) {
-  if (!canSendContactAutoReply()) {
-    return false;
-  }
-
-  const replyTo = process.env.CONTACT_TO || process.env.REVIEW_TO || "";
-  const projectGoal = inquiry.projectGoal || "Not sure";
-  const phone = inquiry.phone || "Not provided";
-  const timeline = inquiry.timeline || "Not sure";
-  const budget = inquiry.budget || "Not sure yet";
-  const subject = "We received your WebLab project request";
-  const bodyText = [
-    `Hi ${inquiry.name},`,
-    "",
-    "Thanks for sharing your project details with WebLab Innovations.",
-    "We have received your request, and our team will go through it and contact you soon.",
-    "",
-    `Project type: ${inquiry.projectType}`,
-    `Main help needed: ${projectGoal}`,
-    `Timeline: ${timeline}`,
-    `Budget/payment: ${budget}`,
-    "",
-    "We usually reply within 24 hours.",
-    "",
-    "Regards,",
-    "WebLab Innovations",
-  ].join("\n");
-  const bodyHtml = emailShell({
-    eyebrow: "WebLab Innovations",
-    title: "We received your project request",
-    intro: `Hi ${inquiry.name}, thanks for sharing your project details. We have received your request, and our team will go through it and contact you soon.`,
-    content: `
-      ${contactDetails({ inquiry, phone, projectGoal, timeline, budget })}
-      ${messageBlock("Your Message", inquiry.message)}
-    `,
-    footer: "We usually reply within 24 hours. Regards, WebLab Innovations.",
-  });
-
-  return sendEmailJsTemplate("EMAILJS_CONTACT_TEMPLATE_ID", {
-    to_email: inquiry.email,
-    to_name: inquiry.name,
-    reply_to: replyTo,
-    from_name: "WebLab Innovations",
-    from_email: replyTo,
-    name: inquiry.name,
-    email: inquiry.email,
-    phone,
-    project_type: inquiry.projectType,
-    projectType: inquiry.projectType,
-    project_goal: projectGoal,
-    projectGoal,
-    timeline,
-    budget,
-    original_message: inquiry.message,
-    message: bodyText,
-    message_html: textToHtml(bodyText),
-    subject,
-    body: bodyText,
-    body_text: bodyText,
-    body_html: bodyHtml,
+    auto_reply_subject: autoReply.subject,
+    auto_reply_text: autoReply.text,
+    auto_reply_html: autoReply.html,
     submitted_at: new Date().toISOString(),
   });
 }
