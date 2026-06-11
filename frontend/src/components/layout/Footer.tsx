@@ -56,7 +56,7 @@ const footerPopups = {
   contact: {
     eyebrow: "Contact",
     title: "Talk To WebLab",
-    body: "Email hello@weblab.agency or call 8919870959. We usually respond within 24 hours.",
+    body: "Email chethanakash67@gmail.com or call 8919870959. We usually respond within 24 hours.",
   },
   "web-design": {
     eyebrow: "Capability",
@@ -102,7 +102,12 @@ export default function Footer() {
           <button
             type="button"
             className="footer-cta-button"
-            onClick={() => setActivePopup("start")}
+            onClick={() => {
+              const contactSection = document.getElementById("contact");
+              if (contactSection) {
+                contactSection.scrollIntoView({ behavior: "smooth" });
+              }
+            }}
           >
             Start a project
             <ArrowUpRight className="h-5 w-5" />
@@ -132,11 +137,11 @@ export default function Footer() {
             </p>
 
             <div className="footer-contact-list">
-              <a href="mailto:hello@weblab.agency">
+              <a href="mailto:chethanakash67@gmail.com">
                 <Mail className="h-4 w-4" />
                 <span>
                   <small>Email</small>
-                  <strong>hello@weblab.agency</strong>
+                  <strong>chethanakash67@gmail.com</strong>
                 </span>
                 <ArrowUpRight className="ml-auto h-4 w-4" />
               </a>

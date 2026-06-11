@@ -25,5 +25,7 @@ Create a Render PostgreSQL database and a Web Service from this `backend` folder
 ## API
 
 - `GET /health`
-- `POST /api/contact/request-otp`
 - `POST /api/contact`
+- `GET /api/reviews`
+- `POST /api/reviews`
+- `GET /api/reviews/:id/approve?token=...`

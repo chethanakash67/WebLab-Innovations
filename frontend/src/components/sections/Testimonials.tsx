@@ -2,27 +2,189 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Quote } from "lucide-react";
+import { ArrowUpRight, Check, LoaderCircle, Quote, Star } from "lucide-react";
 import { testimonials } from "@/data/projects";
 import SectionBadge from "@/components/ui/SectionBadge";
+
+const apiBaseUrl = (
+  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:10000"
+).replace(/\/$/, "");
+
+type TestimonialItem = {
+  id: string;
+  quote: string;
+  author: string;
+  role: string;
+  rating: number;
+};
+
+type ReviewFormData = {
+  name: string;
+  email: string;
+  role: string;
+  quote: string;
+};
+
+type ReviewStatus = "idle" | "submitting" | "submitted" | "error";
+
+async function postToApi(path: string, payload: unknown) {
+  const response = await fetch(`${apiBaseUrl}${path}`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(data.message || "Something went wrong.");
+  }
+
+  return data;
+}
 
 export default function Testimonials() {
   const sectionRef = useRef<HTMLElement>(null);
   const [current, setCurrent] = useState(0);
+  const [approvedReviews, setApprovedReviews] = useState<TestimonialItem[]>([]);
+  const [reviewStatus, setReviewStatus] = useState<ReviewStatus>("idle");
+  const [reviewMessage, setReviewMessage] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewFormData, setReviewFormData] = useState<ReviewFormData>({
+    name: "",
+    email: "",
+    role: "",
+    quote: "",
+  });
+
+  const staticTestimonials: TestimonialItem[] = testimonials.map((item) => ({
+    id: `static-${item.id}`,
+    quote: item.quote,
+    author: item.author,
+    role: item.role,
+    rating: 5,
+  }));
+  const testimonialItems = [...staticTestimonials, ...approvedReviews];
+  const testimonialCount = testimonialItems.length;
+  const averageRating =
+    testimonialCount > 0
+      ? (
+          testimonialItems.reduce((total, item) => total + item.rating, 0) /
+          testimonialCount
+        ).toFixed(1)
+      : "5.0";
+  const isSubmittingReview = reviewStatus === "submitting";
+  const reviewSubmitted = reviewStatus === "submitted";
 
   useEffect(() => {
+    let active = true;
+
+    fetch(`${apiBaseUrl}/api/reviews`, { cache: "no-store" })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Unable to load reviews.");
+        }
+
+        return response.json();
+      })
+      .then((data) => {
+        if (!active || !Array.isArray(data.reviews)) {
+          return;
+        }
+
+        setApprovedReviews(
+          data.reviews.map(
+            (review: {
+              id: number;
+              name: string;
+              role?: string;
+              quote: string;
+              rating?: number;
+            }) => ({
+              id: `review-${review.id}`,
+              quote: review.quote,
+              author: review.name,
+              role: review.role || "Client",
+              rating: review.rating || 5,
+            }),
+          ),
+        );
+      })
+      .catch(() => {
+        if (active) {
+          setApprovedReviews([]);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (testimonialCount <= 1) {
+      return;
+    }
+
     const timer = window.setInterval(() => {
-      setCurrent((previous) => (previous + 1) % testimonials.length);
+      setCurrent((previous) => (previous + 1) % testimonialCount);
     }, 6500);
 
     return () => window.clearInterval(timer);
-  }, []);
+  }, [testimonialCount]);
 
-  const testimonial = testimonials[current];
+  const testimonial = testimonialItems[current] || testimonialItems[0];
   const initials = testimonial.author
     .split(" ")
     .map((name) => name[0])
     .join("");
+
+  const updateReviewFormData = (field: keyof ReviewFormData, value: string) => {
+    setReviewFormData((currentData) => ({
+      ...currentData,
+      [field]: value,
+    }));
+
+    if (reviewStatus !== "idle") {
+      setReviewStatus("idle");
+      setReviewMessage("");
+    }
+  };
+
+  const handleReviewSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    setReviewStatus("submitting");
+    setReviewMessage("");
+
+    try {
+      const data = await postToApi("/api/reviews", {
+        ...reviewFormData,
+        rating: reviewRating,
+      });
+
+      if (!data.notificationSent) {
+        throw new Error("Review saved, but the approval email is not set up yet.");
+      }
+
+      setReviewStatus("submitted");
+      setReviewMessage("Thank you. We will check your review and publish it after approval.");
+      setReviewFormData({
+        name: "",
+        email: "",
+        role: "",
+        quote: "",
+      });
+      setReviewRating(5);
+    } catch (error) {
+      setReviewStatus("error");
+      setReviewMessage(
+        error instanceof Error ? error.message : "We could not send your review.",
+      );
+    }
+  };
 
   return (
     <section ref={sectionRef} className="testimonial-section">
@@ -49,11 +211,11 @@ export default function Testimonials() {
         <div className="testimonial-layout">
           <div className="testimonial-people">
             <div className="testimonial-people-label">
-              <span>Voices / 03</span>
+              <span>Voices / {String(testimonialCount).padStart(2, "0")}</span>
               <span>Since 2023</span>
             </div>
 
-            {testimonials.map((item, index) => (
+            {testimonialItems.map((item, index) => (
               <button
                 key={item.id}
                 type="button"
@@ -76,7 +238,7 @@ export default function Testimonials() {
             ))}
 
             <div className="testimonial-rating">
-              <strong>5.0</strong>
+              <strong>{averageRating}</strong>
               <span>★★★★★</span>
               <p>Average client rating</p>
             </div>
@@ -85,7 +247,10 @@ export default function Testimonials() {
           <div className="testimonial-stage">
             <div className="testimonial-stage-top">
               <span>Verified collaboration</span>
-              <span>0{current + 1} / 0{testimonials.length}</span>
+              <span>
+                {String(current + 1).padStart(2, "0")} /{" "}
+                {String(testimonialCount).padStart(2, "0")}
+              </span>
             </div>
 
             <AnimatePresence mode="wait">
@@ -114,8 +279,12 @@ export default function Testimonials() {
               </motion.div>
             </AnimatePresence>
 
-            <div className="testimonial-progress" aria-hidden="true">
-              {testimonials.map((item, index) => (
+            <div
+              className="testimonial-progress"
+              style={{ gridTemplateColumns: `repeat(${testimonialCount}, 1fr)` }}
+              aria-hidden="true"
+            >
+              {testimonialItems.map((item, index) => (
                 <span
                   key={item.id}
                   className={current === index ? "is-active" : ""}
@@ -123,6 +292,122 @@ export default function Testimonials() {
               ))}
             </div>
           </div>
+        </div>
+
+        <div className="testimonial-review-panel">
+          <div className="testimonial-review-copy">
+            <span>Add review</span>
+            <h3>Share your experience.</h3>
+            <p>
+              Your review goes to WebLab first. After approval, it appears here.
+            </p>
+          </div>
+
+          <form className="testimonial-review-form" onSubmit={handleReviewSubmit}>
+            <div className="testimonial-review-grid">
+              <label className="testimonial-review-field">
+                <span>Your name</span>
+                <input
+                  type="text"
+                  placeholder="Example: Priya"
+                  required
+                  value={reviewFormData.name}
+                  onChange={(event) =>
+                    updateReviewFormData("name", event.target.value)
+                  }
+                />
+              </label>
+
+              <label className="testimonial-review-field">
+                <span>Your email</span>
+                <input
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                  value={reviewFormData.email}
+                  onChange={(event) =>
+                    updateReviewFormData("email", event.target.value)
+                  }
+                />
+              </label>
+            </div>
+
+            <label className="testimonial-review-field">
+              <span>Your business or role</span>
+              <input
+                type="text"
+                placeholder="Example: Founder, DataFlow"
+                value={reviewFormData.role}
+                onChange={(event) =>
+                  updateReviewFormData("role", event.target.value)
+                }
+              />
+            </label>
+
+            <div className="testimonial-rating-input">
+              <span>Rating</span>
+              <div>
+                {[1, 2, 3, 4, 5].map((rating) => (
+                  <button
+                    key={rating}
+                    type="button"
+                    className={rating <= reviewRating ? "is-active" : ""}
+                    onClick={() => setReviewRating(rating)}
+                    aria-label={`${rating} star rating`}
+                  >
+                    <Star className="h-4 w-4" />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <label className="testimonial-review-field">
+              <span>Your review</span>
+              <textarea
+                placeholder="Example: WebLab made our website clear, fast, and easy for customers to use."
+                rows={4}
+                required
+                minLength={10}
+                value={reviewFormData.quote}
+                onChange={(event) =>
+                  updateReviewFormData("quote", event.target.value)
+                }
+              />
+            </label>
+
+            {reviewMessage && (
+              <p
+                className={`testimonial-review-alert ${
+                  reviewStatus === "error" ? "is-error" : "is-success"
+                }`}
+              >
+                {reviewMessage}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              className="testimonial-review-submit"
+              disabled={isSubmittingReview || reviewSubmitted}
+            >
+              {isSubmittingReview ? (
+                <>
+                  Sending
+                  <LoaderCircle className="contact-spin h-4 w-4" />
+                </>
+              ) : reviewSubmitted ? (
+                <>
+                  Review sent
+                  <Check className="h-4 w-4" />
+                </>
+              ) : (
+                <>
+                  Send review
+                  <ArrowUpRight className="h-4 w-4" />
+                </>
+              )}
+            </button>
+          </form>
         </div>
       </div>
     </section>

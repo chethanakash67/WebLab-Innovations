@@ -41,22 +41,6 @@ function escapeHtml(value = "") {
     .replace(/'/g, "&#39;");
 }
 
-export async function sendOtpEmail({ to, name, otp, ttlMinutes }) {
-  const from = process.env.MAIL_FROM || process.env.SMTP_USER;
-
-  await getTransporter().sendMail({
-    from,
-    to,
-    subject: "Your WebLab enquiry OTP",
-    text: `Hi ${name}, your WebLab enquiry OTP is ${otp}. It expires in ${ttlMinutes} minutes.`,
-    html: `
-      <p>Hi ${escapeHtml(name)},</p>
-      <p>Your WebLab enquiry OTP is <strong>${otp}</strong>.</p>
-      <p>This code expires in ${ttlMinutes} minutes.</p>
-    `,
-  });
-}
-
 export async function sendContactNotification(inquiry) {
   const to = process.env.CONTACT_TO;
 
@@ -70,7 +54,9 @@ export async function sendContactNotification(inquiry) {
     `Email: ${inquiry.email}`,
     `Phone: ${inquiry.phone || "Not provided"}`,
     `Project type: ${inquiry.projectType}`,
-    `Budget: ${inquiry.budget}`,
+    `Main help needed: ${inquiry.projectGoal || "Not sure"}`,
+    `Timeline: ${inquiry.timeline || "Not sure"}`,
+    `Budget/payment: ${inquiry.budget || "Not sure yet"}`,
     "",
     inquiry.message,
   ].join("\n");
@@ -87,9 +73,55 @@ export async function sendContactNotification(inquiry) {
       <p><strong>Email:</strong> ${escapeHtml(inquiry.email)}</p>
       <p><strong>Phone:</strong> ${escapeHtml(inquiry.phone || "Not provided")}</p>
       <p><strong>Project type:</strong> ${escapeHtml(inquiry.projectType)}</p>
-      <p><strong>Budget:</strong> ${escapeHtml(inquiry.budget)}</p>
+      <p><strong>Main help needed:</strong> ${escapeHtml(inquiry.projectGoal || "Not sure")}</p>
+      <p><strong>Timeline:</strong> ${escapeHtml(inquiry.timeline || "Not sure")}</p>
+      <p><strong>Budget/payment:</strong> ${escapeHtml(inquiry.budget || "Not sure yet")}</p>
       <p><strong>Message:</strong></p>
       <p>${escapeHtml(inquiry.message).replace(/\n/g, "<br>")}</p>
+    `,
+  });
+
+  return true;
+}
+
+export async function sendReviewModerationEmail({ review, approveUrl }) {
+  const to = process.env.REVIEW_TO || process.env.CONTACT_TO;
+
+  if (!to) {
+    return false;
+  }
+
+  const subject = `Review approval needed from ${review.name}`;
+  const text = [
+    `New portfolio review from ${review.name}`,
+    `Email: ${review.email}`,
+    `Role/business: ${review.role || "Not provided"}`,
+    `Rating: ${review.rating}/5`,
+    "",
+    review.quote,
+    "",
+    `Approve and publish: ${approveUrl}`,
+  ].join("\n");
+
+  await getTransporter().sendMail({
+    from: process.env.MAIL_FROM || process.env.SMTP_USER,
+    to,
+    replyTo: review.email,
+    subject,
+    text,
+    html: `
+      <h2>Review approval needed</h2>
+      <p><strong>Name:</strong> ${escapeHtml(review.name)}</p>
+      <p><strong>Email:</strong> ${escapeHtml(review.email)}</p>
+      <p><strong>Role/business:</strong> ${escapeHtml(review.role || "Not provided")}</p>
+      <p><strong>Rating:</strong> ${review.rating}/5</p>
+      <p><strong>Review:</strong></p>
+      <p>${escapeHtml(review.quote).replace(/\n/g, "<br>")}</p>
+      <p>
+        <a href="${escapeHtml(approveUrl)}" style="display:inline-block;padding:12px 18px;border-radius:10px;background:#0ea5e9;color:#ffffff;text-decoration:none;font-weight:700;">
+          Approve and publish review
+        </a>
+      </p>
     `,
   });
 

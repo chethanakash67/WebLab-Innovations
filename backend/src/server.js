@@ -4,6 +4,7 @@ import express from "express";
 import helmet from "helmet";
 import { initDatabase } from "./db/init.js";
 import contactRouter from "./routes/contact.js";
+import reviewsRouter from "./routes/reviews.js";
 
 const app = express();
 const port = Number(process.env.PORT || 10000);
@@ -23,7 +24,6 @@ function validateProductionEnv() {
   const required = [
     "DATABASE_URL",
     "FRONTEND_URL",
-    "OTP_SECRET",
     "SMTP_HOST",
     "SMTP_USER",
     "SMTP_PASS",
@@ -58,6 +58,7 @@ app.get("/health", (_request, response) => {
 });
 
 app.use("/api/contact", contactRouter);
+app.use("/api/reviews", reviewsRouter);
 
 app.use((_request, response) => {
   response.status(404).json({ success: false, message: "Route not found." });

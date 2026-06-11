@@ -17,8 +17,16 @@ import SectionBadge from "@/components/ui/SectionBadge";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const budgetOptions = ["< ₹25K", "₹25K - ₹50K", "₹50K - ₹1L", "₹1L+"];
+const budgetOptions = ["Not sure yet", "< ₹25K", "₹25K - ₹50K", "₹50K - ₹1L", "₹1L+"];
 const projectTypes = ["Website", "SaaS product", "AI solution", "Brand + UI"];
+const goalOptions = [
+  "New website",
+  "Improve old website",
+  "App or dashboard",
+  "Automation or AI",
+  "Not sure",
+];
+const timelineOptions = ["This week", "This month", "In 2-3 months", "Not sure"];
 const apiBaseUrl = (
   process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:10000"
 ).replace(/\/$/, "");
@@ -28,10 +36,9 @@ type ContactFormData = {
   email: string;
   phone: string;
   message: string;
-  otp: string;
 };
 
-type FormStatus = "idle" | "sending-otp" | "otp-sent" | "submitting" | "submitted" | "error";
+type FormStatus = "idle" | "submitting" | "submitted" | "error";
 
 async function postToApi(path: string, payload: unknown) {
   const response = await fetch(`${apiBaseUrl}${path}`, {
@@ -53,20 +60,19 @@ async function postToApi(path: string, payload: unknown) {
 
 export default function Contact() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [selectedBudget, setSelectedBudget] = useState("₹50K - ₹1L");
+  const [selectedBudget, setSelectedBudget] = useState("Not sure yet");
   const [selectedType, setSelectedType] = useState("Website");
+  const [selectedGoal, setSelectedGoal] = useState("New website");
+  const [selectedTimeline, setSelectedTimeline] = useState("Not sure");
   const [formStatus, setFormStatus] = useState<FormStatus>("idle");
-  const [otpRequested, setOtpRequested] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
   const [formData, setFormData] = useState<ContactFormData>({
     name: "",
     email: "",
     phone: "",
     message: "",
-    otp: "",
   });
 
-  const isSendingOtp = formStatus === "sending-otp";
   const isSubmitting = formStatus === "submitting";
   const submitted = formStatus === "submitted";
 
@@ -100,18 +106,10 @@ export default function Contact() {
   }, []);
 
   const updateFormData = (field: keyof ContactFormData, value: string) => {
-    const nextValue =
-      field === "otp" ? value.replace(/\D/g, "").slice(0, 6) : value;
-
     setFormData((current) => ({
       ...current,
-      [field]: nextValue,
-      ...(field === "email" ? { otp: "" } : {}),
+      [field]: value,
     }));
-
-    if (field === "email") {
-      setOtpRequested(false);
-    }
 
     if (formStatus !== "idle") {
       setFormStatus("idle");
@@ -119,46 +117,8 @@ export default function Contact() {
     }
   };
 
-  const handleRequestOtp = async () => {
-    if (!formData.name.trim() || !formData.email.trim()) {
-      setFormStatus("error");
-      setStatusMessage("Add your name and email before requesting OTP.");
-      return;
-    }
-
-    setFormStatus("sending-otp");
-    setStatusMessage("");
-
-    try {
-      await postToApi("/api/contact/request-otp", {
-        name: formData.name,
-        email: formData.email,
-      });
-      setOtpRequested(true);
-      setFormStatus("otp-sent");
-      setStatusMessage("OTP sent to your email.");
-    } catch (error) {
-      setFormStatus("error");
-      setStatusMessage(
-        error instanceof Error ? error.message : "Unable to send OTP.",
-      );
-    }
-  };
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-
-    if (!otpRequested) {
-      setFormStatus("error");
-      setStatusMessage("Request an email OTP before sending the enquiry.");
-      return;
-    }
-
-    if (!formData.otp.trim()) {
-      setFormStatus("error");
-      setStatusMessage("Enter the OTP sent to your email.");
-      return;
-    }
 
     setFormStatus("submitting");
     setStatusMessage("");
@@ -167,14 +127,16 @@ export default function Contact() {
       await postToApi("/api/contact", {
         ...formData,
         projectType: selectedType,
+        projectGoal: selectedGoal,
+        timeline: selectedTimeline,
         budget: selectedBudget,
       });
       setFormStatus("submitted");
-      setStatusMessage("Enquiry sent. We'll reply within 24 hours.");
+      setStatusMessage("Request sent. We will reply within 24 hours.");
     } catch (error) {
       setFormStatus("error");
       setStatusMessage(
-        error instanceof Error ? error.message : "Unable to send enquiry.",
+        error instanceof Error ? error.message : "We could not send your request.",
       );
     }
   };
@@ -190,17 +152,17 @@ export default function Contact() {
             <SectionBadge label="Get In Touch" number="12" />
           </div>
           <p className="contact-reveal">
-            [ A focused product team for
+            [ Simple questions for
             <br />
-            ambitious digital ideas ]
+            your website or app idea ]
           </p>
         </header>
 
         <div className="contact-heading contact-reveal">
           <h2>
-            Have a project
+            Tell us your idea
             <br />
-            <span>worth building?</span>
+            <span>in simple words.</span>
           </h2>
           <AgencyMark className="contact-heading-mark" />
         </div>
@@ -210,8 +172,8 @@ export default function Contact() {
             <div className="contact-reveal contact-intro">
               <span className="signal-dot" />
               <p>
-                Tell us where you want to go. We&apos;ll reply with clear next
-                steps, honest scope, and no sales theatre.
+                Answer what you know. If you are not sure, choose
+                &quot;Not sure&quot;. We will help you with the next step.
               </p>
             </div>
 
@@ -224,7 +186,7 @@ export default function Contact() {
               </span>
               <span>
                 <small>Email us directly</small>
-                <strong>hello@weblab.agency</strong>
+                <strong>chethanakash67@gmail.com</strong>
               </span>
               <ArrowUpRight className="ml-auto h-4 w-4" />
             </a>
@@ -265,8 +227,8 @@ export default function Contact() {
           <div className="contact-panel">
             <div className="contact-panel-top">
               <div>
-                <span>Project enquiry</span>
-                <strong>Tell us the essentials.</strong>
+                <span>Project request</span>
+                <strong>Quick questions. Easy answers.</strong>
               </div>
               <span className="contact-panel-status">
                 <span className="signal-dot" />
@@ -278,9 +240,10 @@ export default function Contact() {
               <div className="contact-field-grid">
                 <label className="contact-field">
                   <span>01 / Your name</span>
+                  <small>What should we call you?</small>
                   <input
                     type="text"
-                    placeholder="How should we call you?"
+                    placeholder="Example: Chethan"
                     required
                     value={formData.name}
                     onChange={(event) =>
@@ -290,10 +253,11 @@ export default function Contact() {
                 </label>
 
                 <label className="contact-field">
-                  <span>02 / Work email</span>
+                  <span>02 / Your email</span>
+                  <small>We will reply to this email.</small>
                   <input
                     type="email"
-                    placeholder="you@company.com"
+                    placeholder="you@example.com"
                     required
                     value={formData.email}
                     onChange={(event) =>
@@ -305,6 +269,7 @@ export default function Contact() {
 
               <label className="contact-field">
                 <span>03 / Phone or WhatsApp</span>
+                <small>Optional, but helpful for a faster reply.</small>
                 <input
                   type="tel"
                   placeholder="+91 00000 00000"
@@ -316,7 +281,8 @@ export default function Contact() {
               </label>
 
               <fieldset className="contact-choice-group">
-                <legend>04 / What are we building?</legend>
+                <legend>04 / What do you want to build?</legend>
+                <p className="contact-choice-hint">Pick the closest answer.</p>
                 <div className="contact-choices">
                   {projectTypes.map((type) => (
                     <button
@@ -332,10 +298,47 @@ export default function Contact() {
                 </div>
               </fieldset>
 
+              <fieldset className="contact-choice-group">
+                <legend>05 / What help do you need most?</legend>
+                <p className="contact-choice-hint">It is okay if you are not sure.</p>
+                <div className="contact-choices">
+                  {goalOptions.map((goal) => (
+                    <button
+                      key={goal}
+                      type="button"
+                      onClick={() => setSelectedGoal(goal)}
+                      className={selectedGoal === goal ? "is-selected" : ""}
+                    >
+                      {selectedGoal === goal && <Check className="h-3 w-3" />}
+                      {goal}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+
+              <fieldset className="contact-choice-group">
+                <legend>06 / When do you want to start?</legend>
+                <p className="contact-choice-hint">Choose a rough time.</p>
+                <div className="contact-choices">
+                  {timelineOptions.map((timeline) => (
+                    <button
+                      key={timeline}
+                      type="button"
+                      onClick={() => setSelectedTimeline(timeline)}
+                      className={selectedTimeline === timeline ? "is-selected" : ""}
+                    >
+                      {selectedTimeline === timeline && <Check className="h-3 w-3" />}
+                      {timeline}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+
               <label className="contact-field contact-message">
-                <span>05 / Project brief</span>
+                <span>07 / Tell us the idea</span>
+                <small>Write 2 or 3 lines. Simple words are perfect.</small>
                 <textarea
-                  placeholder="The idea, the problem, and what a successful launch looks like..."
+                  placeholder="Example: I need a website for my business. It should show my services and help people contact me."
                   rows={4}
                   required
                   value={formData.message}
@@ -346,7 +349,10 @@ export default function Contact() {
               </label>
 
               <fieldset className="contact-choice-group">
-                <legend>06 / Comfortable investment</legend>
+                <legend>08 / Budget or payment plan (optional)</legend>
+                <p className="contact-choice-hint">
+                  You can choose &quot;Not sure yet&quot;. We can discuss this later.
+                </p>
                 <div className="contact-choices">
                   {budgetOptions.map((budget) => (
                     <button
@@ -362,42 +368,6 @@ export default function Contact() {
                 </div>
               </fieldset>
 
-              <div className="contact-otp-row">
-                <label className="contact-field">
-                  <span>07 / Email OTP</span>
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={6}
-                    pattern="[0-9]{6}"
-                    placeholder="6 digit code"
-                    required
-                    value={formData.otp}
-                    onChange={(event) =>
-                      updateFormData("otp", event.target.value)
-                    }
-                  />
-                </label>
-
-                <button
-                  type="button"
-                  className="contact-secondary-button"
-                  onClick={handleRequestOtp}
-                  disabled={isSendingOtp || isSubmitting}
-                >
-                  {isSendingOtp ? (
-                    <>
-                      Sending
-                      <LoaderCircle className="contact-spin h-4 w-4" />
-                    </>
-                  ) : otpRequested ? (
-                    "Resend OTP"
-                  ) : (
-                    "Get OTP"
-                  )}
-                </button>
-              </div>
-
               {statusMessage && (
                 <p
                   className={`contact-form-alert ${
@@ -410,13 +380,12 @@ export default function Contact() {
 
               <div className="contact-submit-row">
                 <p>
-                  OTP confirms your inbox before we save this enquiry and reply
-                  about your project.
+                  No code needed. Send the request and we will reply by email.
                 </p>
                 <button
                   type="submit"
                   className={submitted ? "is-submitted" : ""}
-                  disabled={isSendingOtp || isSubmitting || submitted}
+                  disabled={isSubmitting || submitted}
                 >
                   {isSubmitting ? (
                     <>
@@ -425,12 +394,12 @@ export default function Contact() {
                     </>
                   ) : submitted ? (
                     <>
-                      Enquiry sent
+                      Request sent
                       <Check className="h-4 w-4" />
                     </>
                   ) : (
                     <>
-                      Send enquiry
+                      Send request
                       <ArrowUpRight className="h-4 w-4" />
                     </>
                   )}

@@ -2148,6 +2148,188 @@ body::before {
   box-shadow: 0 0 12px rgba(54, 184, 255, 0.6);
 }
 
+.testimonial-review-panel {
+  display: grid;
+  align-items: start;
+  gap: 28px;
+  margin-top: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 28px;
+  background: rgba(255, 255, 255, 0.025);
+  grid-template-columns: minmax(230px, 0.55fr) minmax(0, 1fr);
+}
+
+.testimonial-review-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.testimonial-review-copy > span {
+  color: #36b8ff;
+  font-size: 8px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.testimonial-review-copy h3 {
+  max-width: 420px;
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(34px, 4vw, 58px);
+  font-weight: 500;
+  line-height: 0.94;
+}
+
+.testimonial-review-copy p {
+  max-width: 360px;
+  color: rgba(255, 255, 255, 0.52);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+.testimonial-review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.testimonial-review-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.testimonial-review-field {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.testimonial-review-field > span,
+.testimonial-rating-input > span {
+  color: rgba(255, 255, 255, 0.62);
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.testimonial-review-field input,
+.testimonial-review-field textarea {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  outline: none;
+  background: rgba(0, 0, 0, 0.22);
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.5;
+  transition: border-color 250ms ease, background 250ms ease;
+}
+
+.testimonial-review-field input {
+  min-height: 46px;
+  padding: 0 13px;
+}
+
+.testimonial-review-field textarea {
+  min-height: 116px;
+  padding: 13px;
+  resize: vertical;
+}
+
+.testimonial-review-field input::placeholder,
+.testimonial-review-field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.28);
+}
+
+.testimonial-review-field input:focus,
+.testimonial-review-field textarea:focus {
+  border-color: rgba(54, 184, 255, 0.54);
+  background: rgba(54, 184, 255, 0.05);
+}
+
+.testimonial-rating-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 12px 13px;
+}
+
+.testimonial-rating-input > div {
+  display: flex;
+  gap: 4px;
+}
+
+.testimonial-rating-input button {
+  display: grid;
+  width: 34px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.38);
+  transition: border-color 250ms ease, background 250ms ease, color 250ms ease;
+}
+
+.testimonial-rating-input button:hover,
+.testimonial-rating-input button.is-active {
+  border-color: rgba(54, 184, 255, 0.44);
+  background: rgba(54, 184, 255, 0.1);
+  color: #36b8ff;
+}
+
+.testimonial-rating-input button.is-active svg {
+  fill: rgba(54, 184, 255, 0.35);
+}
+
+.testimonial-review-alert {
+  border: 1px solid rgba(54, 184, 255, 0.24);
+  border-radius: 12px;
+  padding: 11px 13px;
+  background: rgba(54, 184, 255, 0.07);
+  color: rgba(255, 255, 255, 0.74);
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.testimonial-review-alert.is-error {
+  border-color: rgba(255, 95, 95, 0.32);
+  background: rgba(255, 95, 95, 0.08);
+  color: #ffb0b0;
+}
+
+.testimonial-review-submit {
+  display: inline-flex;
+  min-width: 156px;
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  align-self: flex-start;
+  border-radius: 13px;
+  padding: 0 16px;
+  background: #fff;
+  color: #020303;
+  font-size: 9px;
+  font-weight: 650;
+  transition: background 300ms ease, box-shadow 300ms ease, opacity 250ms ease;
+}
+
+.testimonial-review-submit:hover,
+.testimonial-review-submit:disabled {
+  background: #36b8ff;
+  box-shadow: 0 0 30px rgba(54, 184, 255, 0.22);
+}
+
+.testimonial-review-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 /* ─── Process ─── */
 .process-section {
   position: relative;
@@ -3719,10 +3901,18 @@ a.contact-info-card:hover {
 
 .contact-field > span,
 .contact-choice-group legend {
-  color: rgba(255, 255, 255, 0.44);
-  font-size: 7px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.contact-field small,
+.contact-choice-hint {
+  margin-top: -5px;
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 9px;
+  line-height: 1.55;
 }
 
 .contact-field input,
@@ -3734,24 +3924,24 @@ a.contact-info-card:hover {
   background: transparent;
   color: #fff;
   font-family: inherit;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.5;
   transition: border-color 300ms ease, background 300ms ease;
 }
 
 .contact-field input {
-  min-height: 42px;
+  min-height: 46px;
 }
 
 .contact-field textarea {
-  min-height: 112px;
-  padding-top: 10px;
+  min-height: 132px;
+  padding-top: 12px;
   resize: vertical;
 }
 
 .contact-field input::placeholder,
 .contact-field textarea::placeholder {
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.28);
 }
 
 .contact-field input:focus,
@@ -3764,6 +3954,10 @@ a.contact-info-card:hover {
 }
 
 .contact-choice-group legend {
+  margin-bottom: 7px;
+}
+
+.contact-choice-hint {
   margin-bottom: 13px;
 }
 
@@ -3775,14 +3969,14 @@ a.contact-info-card:hover {
 
 .contact-choices button {
   display: inline-flex;
-  min-height: 34px;
+  min-height: 38px;
   align-items: center;
   gap: 6px;
   border: 1px solid rgba(255, 255, 255, 0.11);
   border-radius: 999px;
-  padding: 0 13px;
-  color: rgba(255, 255, 255, 0.48);
-  font-size: 8px;
+  padding: 0 14px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 10px;
   transition: border-color 250ms ease, background 250ms ease, color 250ms ease;
 }
 
@@ -3795,13 +3989,6 @@ a.contact-info-card:hover {
   border-color: rgba(54, 184, 255, 0.5);
   background: rgba(54, 184, 255, 0.1);
   color: #36b8ff;
-}
-
-.contact-otp-row {
-  display: grid;
-  align-items: end;
-  gap: 14px;
-  grid-template-columns: minmax(0, 1fr) auto;
 }
 
 .contact-secondary-button {
@@ -3835,7 +4022,7 @@ a.contact-info-card:hover {
   padding: 11px 13px;
   background: rgba(54, 184, 255, 0.07);
   color: rgba(255, 255, 255, 0.68);
-  font-size: 9px;
+  font-size: 10px;
   line-height: 1.55;
 }
 
@@ -3860,8 +4047,8 @@ a.contact-info-card:hover {
 
 .contact-submit-row p {
   max-width: 300px;
-  color: rgba(255, 255, 255, 0.3);
-  font-size: 7px;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 10px;
   line-height: 1.6;
 }
 
@@ -3895,11 +4082,6 @@ a.contact-info-card:hover {
 }
 
 @media (max-width: 640px) {
-  .contact-otp-row {
-    align-items: stretch;
-    grid-template-columns: 1fr;
-  }
-
   .contact-secondary-button {
     width: 100%;
     min-height: 46px;
@@ -4466,7 +4648,7 @@ a.contact-info-card:hover {
 
   .testimonial-people {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   }
 
   .testimonial-people-label,
@@ -4486,6 +4668,10 @@ a.contact-info-card:hover {
 
   .testimonial-stage {
     min-height: 470px;
+  }
+
+  .testimonial-review-panel {
+    grid-template-columns: 1fr;
   }
 
   .process-console {
@@ -4879,6 +5065,29 @@ a.contact-info-card:hover {
 
   .testimonial-progress {
     padding: 0 20px 20px;
+  }
+
+  .testimonial-review-panel {
+    gap: 22px;
+    border-radius: 18px;
+    padding: 20px;
+  }
+
+  .testimonial-review-copy h3 {
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+
+  .testimonial-review-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .testimonial-rating-input {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .testimonial-review-submit {
+    width: 100%;
   }
 
   .process-header p {
