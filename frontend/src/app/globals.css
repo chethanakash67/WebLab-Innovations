@@ -469,7 +469,7 @@ body::before {
 /* ─── Navigation ─── */
 .site-nav {
   position: fixed;
-  z-index: 50;
+  z-index: 100;
   top: 16px;
   right: 20px;
   left: 20px;
@@ -3027,8 +3027,10 @@ body::before {
   position: relative;
   display: flex;
   flex-direction: column;
-  margin: 64px 0 56px;
+  margin: 64px auto 56px auto;
+  max-width: 1050px;
   width: 100%;
+  padding: 0 30px;
 }
 
 .roadmap-snake-grid {
@@ -10415,4 +10417,3 @@ section:hover .section-marker-line,
 .animate-red-glow {
   animation: slowRedGlow 3.5s ease-in-out infinite;
 }
-

@@ -57,6 +57,28 @@ export default function Process() {
     <section ref={sectionRef} className="process-section">
       <div className="process-grid-background" />
       <div className="process-wrap">
+        <svg style={{ position: "absolute", width: 0, height: 0, pointerEvents: "none" }}>
+          <defs>
+            <linearGradient id="comet-lr" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#36b8ff" stopOpacity="0" />
+              <stop offset="80%" stopColor="#36b8ff" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#36b8ff" stopOpacity="1" />
+            </linearGradient>
+
+            <linearGradient id="comet-rl" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
+              <stop offset="20%" stopColor="#36b8ff" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#36b8ff" stopOpacity="0" />
+            </linearGradient>
+
+            <linearGradient id="comet-tb" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#36b8ff" stopOpacity="0" />
+              <stop offset="80%" stopColor="#36b8ff" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#36b8ff" stopOpacity="1" />
+            </linearGradient>
+          </defs>
+        </svg>
+
         <header className="process-header">
           <div className="process-reveal">
             <SectionBadge label="Our Process" number="10" />
@@ -113,11 +135,11 @@ export default function Process() {
 
             {/* Connector 1-2 — tail moves left → right */}
             <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 2, alignSelf: "start" }}>
-              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "-2px", height: "4px" }}>
+              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "2px", height: "4px" }}>
                 <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <line pathLength="100" x1="0" y1="2" x2="100%" y2="2" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
-                  <animate attributeName="stroke-dashoffset" from="20" to="-110" dur="4s" repeatCount="indefinite" />
-                </line>
+                <rect y="0.5" width="50%" height="3" fill="url(#comet-lr)" rx="1.5">
+                  <animate attributeName="x" from="-50%" to="100%" dur="8s" repeatCount="indefinite" />
+                </rect>
               </svg>
             </div>
 
@@ -152,11 +174,11 @@ export default function Process() {
 
             {/* Connector 2-3 — tail moves left → right */}
             <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 4, alignSelf: "start" }}>
-              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "-2px", height: "4px" }}>
+              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "2px", height: "4px" }}>
                 <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <line pathLength="100" x1="0" y1="2" x2="100%" y2="2" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
-                  <animate attributeName="stroke-dashoffset" from="20" to="-110" dur="4s" repeatCount="indefinite" />
-                </line>
+                <rect y="0.5" width="50%" height="3" fill="url(#comet-lr)" rx="1.5">
+                  <animate attributeName="x" from="-50%" to="100%" dur="8s" repeatCount="indefinite" />
+                </rect>
               </svg>
             </div>
 
@@ -191,11 +213,11 @@ export default function Process() {
 
             {/* Connector 3-4 — tail moves left → right */}
             <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 6, alignSelf: "start" }}>
-              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "-2px", height: "4px" }}>
+              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "2px", height: "4px" }}>
                 <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <line pathLength="100" x1="0" y1="2" x2="100%" y2="2" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
-                  <animate attributeName="stroke-dashoffset" from="20" to="-110" dur="4s" repeatCount="indefinite" />
-                </line>
+                <rect y="0.5" width="50%" height="3" fill="url(#comet-lr)" rx="1.5">
+                  <animate attributeName="x" from="-50%" to="100%" dur="8s" repeatCount="indefinite" />
+                </rect>
               </svg>
             </div>
 
@@ -232,9 +254,9 @@ export default function Process() {
             <div className="roadmap-vertical-connector" style={{ gridRow: 2, gridColumn: 7, alignSelf: "stretch", position: "relative" }}>
               <svg className="roadmap-vertical-connector-svg" style={{ overflow: "visible", position: "absolute", top: "-4px", height: "calc(100% + 8px)", left: "50%", marginLeft: "-10px", width: "20px" }}>
                 <line x1="10" y1="0" x2="10" y2="100%" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <line pathLength="100" x1="10" y1="0" x2="10" y2="100%" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
-                  <animate attributeName="stroke-dashoffset" from="20" to="-110" dur="4s" repeatCount="indefinite" />
-                </line>
+                <rect x="8.5" width="3" height="50%" fill="url(#comet-tb)" rx="1.5">
+                  <animate attributeName="y" from="-50%" to="100%" dur="8s" repeatCount="indefinite" />
+                </rect>
               </svg>
             </div>
 
@@ -269,11 +291,11 @@ export default function Process() {
 
             {/* Connector 5-6 — tail moves right → left */}
             <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 6, alignSelf: "start" }}>
-              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "-2px", height: "4px" }}>
+              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "2px", height: "4px" }}>
                 <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <line pathLength="100" x1="0" y1="2" x2="100%" y2="2" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
-                  <animate attributeName="stroke-dashoffset" from="-110" to="20" dur="4s" repeatCount="indefinite" />
-                </line>
+                <rect y="0.5" width="50%" height="3" fill="url(#comet-rl)" rx="1.5">
+                  <animate attributeName="x" from="100%" to="-50%" dur="8s" repeatCount="indefinite" />
+                </rect>
               </svg>
             </div>
 
@@ -308,11 +330,11 @@ export default function Process() {
 
             {/* Connector 6-7 — tail moves right → left */}
             <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 4, alignSelf: "start" }}>
-              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "-2px", height: "4px" }}>
+              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "2px", height: "4px" }}>
                 <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <line pathLength="100" x1="0" y1="2" x2="100%" y2="2" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
-                  <animate attributeName="stroke-dashoffset" from="-110" to="20" dur="4s" repeatCount="indefinite" />
-                </line>
+                <rect y="0.5" width="50%" height="3" fill="url(#comet-rl)" rx="1.5">
+                  <animate attributeName="x" from="100%" to="-50%" dur="8s" repeatCount="indefinite" />
+                </rect>
               </svg>
             </div>
 
@@ -347,11 +369,11 @@ export default function Process() {
 
             {/* Connector 7-8 — tail moves right → left */}
             <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 2, alignSelf: "start" }}>
-              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "-2px", height: "4px" }}>
+              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "2px", height: "4px" }}>
                 <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <line pathLength="100" x1="0" y1="2" x2="100%" y2="2" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
-                  <animate attributeName="stroke-dashoffset" from="-110" to="20" dur="4s" repeatCount="indefinite" />
-                </line>
+                <rect y="0.5" width="50%" height="3" fill="url(#comet-rl)" rx="1.5">
+                  <animate attributeName="x" from="100%" to="-50%" dur="8s" repeatCount="indefinite" />
+                </rect>
               </svg>
             </div>
 

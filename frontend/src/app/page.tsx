@@ -9,6 +9,7 @@ import Footer from "@/components/layout/Footer";
 // Dynamic imports for sections below the fold
 const Problem = dynamic(() => import("@/components/sections/Problem"));
 const Services = dynamic(() => import("@/components/sections/Services"));
+const BestWork = dynamic(() => import("@/components/sections/BestWork"));
 const CustomerSystem = dynamic(() => import("@/components/sections/CustomerSystem"));
 const Achievements = dynamic(() => import("@/components/sections/Achievements"));
 const WhyChooseUs = dynamic(() => import("@/components/sections/WhyChooseUs"));
@@ -41,7 +42,10 @@ export default function Home() {
         {/* 3. Services — what we offer */}
         <Services />
 
-        {/* 4. CustomerSystem — deeper dive into our system */}
+        {/* 4. BestWork — Bento box showcase */}
+        <BestWork />
+
+        {/* 5. CustomerSystem — deeper dive into our system */}
         <CustomerSystem />
 
         {/* 5. Achievements — credibility proof */}
