@@ -1,6 +1,7 @@
 "use client";
 
 import { ReactNode, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -15,6 +16,7 @@ interface SmoothScrollProps {
 
 export default function SmoothScroll({ children }: SmoothScrollProps) {
   const lenisRef = useRef<Lenis | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     const lenis = new Lenis({
@@ -40,10 +42,16 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       const target = e.target as HTMLAnchorElement;
       const anchor = target.closest("a");
       if (anchor?.hash) {
-        e.preventDefault();
-        const el = document.querySelector(anchor.hash);
-        if (el) {
-          lenis.scrollTo(el as HTMLElement, { offset: -80 });
+        const currentPath = window.location.pathname;
+        const targetPath = anchor.pathname;
+        
+        // If target path is same as current path, handle smooth scrolling
+        if (targetPath === currentPath || targetPath === "" || (targetPath === "/" && currentPath === "/")) {
+          e.preventDefault();
+          const el = document.querySelector(anchor.hash);
+          if (el) {
+            lenis.scrollTo(el as HTMLElement, { offset: -80 });
+          }
         }
       }
     };
@@ -55,6 +63,14 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
       lenis.destroy();
     };
   }, []);
+
+  // Reset scroll to top on route change
+  useEffect(() => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { immediate: true });
+    }
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   return <>{children}</>;
 }

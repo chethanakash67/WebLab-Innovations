@@ -17,10 +17,10 @@ export default function AgencyMark({
       </span>
       {label && (
         <span className="font-display text-sm font-semibold tracking-[-0.04em] text-white">
-          WebLab
+          AigleOn Labs
         </span>
       )}
-      <span className="sr-only">WebLab</span>
+      <span className="sr-only">AigleOn Labs</span>
     </div>
   );
 }

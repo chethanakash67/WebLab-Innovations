@@ -1,28 +1,31 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ArrowUpRight, Mail, Phone, X } from "lucide-react";
 import AgencyMark from "@/components/ui/AgencyMark";
 import { founders } from "@/data/projects";
 
 const footerLinks = {
   navigation: [
-    { label: "Studio", popupKey: "studio" },
-    { label: "Services", popupKey: "services" },
-    { label: "Selected work", popupKey: "work" },
-    { label: "Team", popupKey: "team" },
-    { label: "Contact", popupKey: "contact" },
+    { label: "Studio", popupKey: "studio" as any, href: undefined },
+    { label: "Services", popupKey: "services" as any, href: undefined },
+    { label: "Work", popupKey: undefined, href: "/work" },
+    { label: "Testimonials", popupKey: undefined, href: "/testimonials" },
+    { label: "FAQ", popupKey: undefined, href: "/faq" },
+    { label: "Contact", popupKey: undefined, href: "/contact" },
   ],
   services: [
-    { label: "Web Design", popupKey: "web-design" },
-    { label: "Web Development", popupKey: "web-development" },
-    { label: "SaaS Products", popupKey: "saas-products" },
-    { label: "AI Solutions", popupKey: "ai-solutions" },
+    { label: "UI & UX Design", popupKey: "ui-ux-design" as any, href: undefined },
+    { label: "SEO-First Development", popupKey: "seo-development" as any, href: undefined },
+    { label: "SEO & AEO", popupKey: "seo-aeo" as any, href: undefined },
+    { label: "AI & Automation", popupKey: "ai-automation" as any, href: undefined },
   ],
   social: [
     {
       label: "LinkedIn",
       href: "https://www.linkedin.com/company/the-aigleon-labs/posts/?feedView=all",
+      popupKey: undefined,
     },
   ],
 } as const;
@@ -36,12 +39,12 @@ const footerPopups = {
   studio: {
     eyebrow: "Studio",
     title: "Premium Digital Product Studio",
-    body: "WebLab designs and builds focused digital products for teams that want sharp strategy, polished UI, and reliable engineering.",
+    body: "AigleOn Labs designs and builds focused digital products for teams that want sharp strategy, polished UI, and reliable engineering.",
   },
   services: {
     eyebrow: "Services",
     title: "Design, Development, And AI Systems",
-    body: "From brand websites to SaaS products and AI automations, every build is planned around performance and conversion.",
+    body: "From brand-themed UI design to SEO-first development, answer engine optimisation, and AI-powered business tools — every build is planned around performance and conversion.",
   },
   work: {
     eyebrow: "Selected Work",
@@ -51,32 +54,32 @@ const footerPopups = {
   team: {
     eyebrow: "Team",
     title: "Meet The Founders",
-    body: "WebLab is run by two founders who stay close to strategy, design, engineering, and launch quality.",
+    body: "AigleOn Labs is run by two founders who stay close to strategy, design, engineering, and launch quality.",
   },
   contact: {
     eyebrow: "Contact",
-    title: "Talk To WebLab",
+    title: "Talk To AigleOn Labs",
     body: "Email chethanakash67@gmail.com or call 8919870959. We usually respond within 24 hours.",
   },
-  "web-design": {
+  "ui-ux-design": {
     eyebrow: "Capability",
-    title: "Web Design",
-    body: "High-end landing pages and websites with strong visual hierarchy, mobile responsiveness, and clear conversion paths.",
+    title: "UI & UX Design",
+    body: "Custom visual designs built around your brand theme, refined through conversion-focused UX strategy and real-user testing.",
   },
-  "web-development": {
+  "seo-development": {
     eyebrow: "Capability",
-    title: "Web Development",
-    body: "Fast, scalable frontends and full-stack builds using modern frameworks, clean architecture, and production-ready polish.",
+    title: "SEO-First Development",
+    body: "Clean, semantic code that Google crawlers and AI search engines can easily understand — built from your finalised design.",
   },
-  "saas-products": {
+  "seo-aeo": {
     eyebrow: "Capability",
-    title: "SaaS Products",
-    body: "Dashboards, portals, and product interfaces designed for usability, performance, and long-term growth.",
+    title: "SEO & Answer Engine Optimisation",
+    body: "Traditional search engine optimisation paired with answer engine optimisation so your brand surfaces across both Google and AI-powered search.",
   },
-  "ai-solutions": {
+  "ai-automation": {
     eyebrow: "Capability",
-    title: "AI Solutions",
-    body: "Customer support bots, voice agents, workflow automations, and local-growth systems built around practical business use cases.",
+    title: "AI & Automation Systems",
+    body: "FAQ bots, WhatsApp agents, AI review systems, lead capture tools, and Google Business automation — built around your specific business needs.",
   },
 };
 
@@ -99,35 +102,52 @@ export default function Footer() {
               <span>you are.</span>
             </h2>
           </div>
-          <button
-            type="button"
+          <Link
+            href="/contact"
             className="footer-cta-button"
-            onClick={() => {
-              const contactSection = document.getElementById("contact");
-              if (contactSection) {
-                contactSection.scrollIntoView({ behavior: "smooth" });
-              }
-            }}
+            style={{ textDecoration: "none" }}
           >
             Start a project
             <ArrowUpRight className="h-5 w-5" />
-          </button>
+          </Link>
         </div>
 
         <div className="footer-main">
           <div className="footer-wordmark" aria-hidden="true">
-            Web<span>Lab</span>
+            AigleOn<span>Labs</span>
           </div>
           <div className="footer-studio">
+            <div
+              className="footer-response-flag"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "rgba(255, 255, 255, 0.03)",
+                border: "1px solid rgba(255, 255, 255, 0.08)",
+                borderRadius: "999px",
+                padding: "6px 12px",
+                fontSize: "10px",
+                color: "rgba(255, 255, 255, 0.6)",
+                width: "fit-content",
+                marginBottom: "16px",
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                fontWeight: 500
+              }}
+            >
+              <span className="signal-dot" style={{ background: "#36b8ff", boxShadow: "0 0 8px #36b8ff" }} />
+              Typical response in 24 hours
+            </div>
             <button
               type="button"
               className="footer-brand footer-brand-button"
-              aria-label="Open WebLab studio details"
+              aria-label="Open AigleOn Labs studio details"
               onClick={() => setActivePopup("studio")}
             >
               <AgencyMark />
               <span>
-                <strong>WebLab</strong>
+                <strong>AigleOn Labs</strong>
                 <small>Digital product studio</small>
               </span>
             </button>
@@ -135,6 +155,25 @@ export default function Footer() {
               We design and build focused digital products for ambitious teams
               ready to move.
             </p>
+            <div style={{ marginTop: "12px", marginBottom: "24px" }}>
+              <Link
+                href="/contact"
+                className="footer-idea-link"
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  color: "#36b8ff",
+                  fontWeight: 600,
+                  fontSize: "14px",
+                  textDecoration: "none",
+                  transition: "opacity 0.2s"
+                }}
+              >
+                Tell us your idea
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            </div>
 
             <div className="footer-contact-list">
               <a href="mailto:chethanakash67@gmail.com">
@@ -227,7 +266,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} WebLab Studio</span>
+          <span>© {new Date().getFullYear()} AigleOn Labs Studio</span>
           <span className="footer-availability">
             <span className="signal-dot" />
             Available for select Q3 projects
@@ -257,11 +296,18 @@ function FooterColumn({
       <ul>
         {links.map((link) => (
           <li key={link.label}>
-            {external && link.href ? (
-              <a href={link.href} target="_blank" rel="noopener noreferrer">
-                {link.label}
-                <ArrowUpRight className="h-3.5 w-3.5" />
-              </a>
+            {link.href ? (
+              link.href.startsWith("/") ? (
+                <Link href={link.href}>
+                  {link.label}
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </Link>
+              ) : (
+                <a href={link.href} target="_blank" rel="noopener noreferrer">
+                  {link.label}
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </a>
+              )
             ) : (
               <button
                 type="button"

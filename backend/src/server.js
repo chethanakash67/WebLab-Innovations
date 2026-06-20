@@ -61,7 +61,7 @@ function validateProductionEnv() {
 }
 
 function logEmailNotificationStatus() {
-  const { contact, contactAutoReply, review } = emailNotificationStatus();
+  const { contact, review } = emailNotificationStatus();
 
   if (contact.ready) {
     console.log("EmailJS contact notifications ready.");
@@ -76,14 +76,6 @@ function logEmailNotificationStatus() {
   } else {
     console.warn(
       `EmailJS review moderation emails disabled: missing ${review.missing.join(", ")}.`,
-    );
-  }
-
-  if (contactAutoReply.ready) {
-    console.log("EmailJS contact auto-replies ready.");
-  } else {
-    console.warn(
-      `EmailJS contact auto-replies disabled: missing ${contactAutoReply.missing.join(", ")}.`,
     );
   }
 }
@@ -105,7 +97,7 @@ app.use(
 app.use(express.json({ limit: "80kb" }));
 
 app.get("/health", (_request, response) => {
-  response.json({ success: true, service: "weblab-backend" });
+  response.json({ success: true, service: "aigleonlabs-backend" });
 });
 
 app.use("/api/contact", contactRouter);
@@ -127,13 +119,25 @@ app.use((error, _request, response, _next) => {
 
 validateProductionEnv();
 logEmailNotificationStatus();
-initDatabase()
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`WebLab backend listening on port ${port}.`);
-    });
-  })
-  .catch((error) => {
-    console.error("Unable to start backend:", error);
-    process.exit(1);
+
+const startServer = () => {
+  app.listen(port, () => {
+    console.log(`AigleOn Labs backend listening on port ${port}.`);
   });
+};
+
+if (process.env.NODE_ENV === "production") {
+  initDatabase()
+    .then(startServer)
+    .catch((error) => {
+      console.error("Unable to start backend:", error);
+      process.exit(1);
+    });
+} else {
+  initDatabase()
+    .then(startServer)
+    .catch((error) => {
+      console.warn("Database initialization failed (running in development mode):", error.message);
+      startServer();
+    });
+}

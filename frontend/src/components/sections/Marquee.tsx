@@ -14,8 +14,8 @@ export default function Marquee() {
 
       {/* Small label */}
       <div className="marquee-label max-w-7xl mx-auto px-8 mb-6">
-        <p className="text-[10px] text-muted-dark tracking-[0.3em] uppercase">
-          Join over 10K+ business using WebLab.
+        <p className="text-[10px] text-muted-dark tracking-[0.4em] uppercase ">
+          Join over 8+ businesses using AigleOn Labs.
         </p>
       </div>
 

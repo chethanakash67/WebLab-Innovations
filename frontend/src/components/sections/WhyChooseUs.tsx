@@ -109,7 +109,7 @@ export default function WhyChooseUs() {
             <div className="why-orbit why-orbit-inner" />
             <div className="why-sphere">
               <div className="why-sphere-grid" />
-              <div className="why-sphere-label">WHY WEBLAB</div>
+              <div className="why-sphere-label">WHY AIGLEON LABS</div>
             </div>
             <div className="why-person">
               <span className="why-person-head" />

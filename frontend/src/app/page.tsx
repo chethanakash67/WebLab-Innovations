@@ -7,16 +7,15 @@ import Marquee from "@/components/sections/Marquee";
 import Footer from "@/components/layout/Footer";
 
 // Dynamic imports for sections below the fold
+const Problem = dynamic(() => import("@/components/sections/Problem"));
 const Services = dynamic(() => import("@/components/sections/Services"));
-const FeaturedWork = dynamic(() => import("@/components/sections/FeaturedWork"));
 const CustomerSystem = dynamic(() => import("@/components/sections/CustomerSystem"));
 const Achievements = dynamic(() => import("@/components/sections/Achievements"));
 const WhyChooseUs = dynamic(() => import("@/components/sections/WhyChooseUs"));
 const Founders = dynamic(() => import("@/components/sections/Founders"));
-const Playground = dynamic(() => import("@/components/sections/Playground"));
-const Testimonials = dynamic(() => import("@/components/sections/Testimonials"));
+const OurStory = dynamic(() => import("@/components/sections/OurStory"));
 const Process = dynamic(() => import("@/components/sections/Process"));
-const Contact = dynamic(() => import("@/components/sections/Contact"));
+const Packages = dynamic(() => import("@/components/sections/Packages"));
 
 const SmoothScroll = dynamic(
   () => import("@/components/providers/SmoothScroll"),
@@ -35,16 +34,15 @@ export default function Home() {
       <main>
         <Hero />
         <Marquee />
+        <Problem />
         <Services />
-        <FeaturedWork />
         <CustomerSystem />
         <Achievements />
         <WhyChooseUs />
         <Founders />
-        <Playground />
-        <Testimonials />
+        <OurStory />
         <Process />
-        <Contact />
+        <Packages />
       </main>
       <Footer />
     </SmoothScroll>

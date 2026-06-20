@@ -265,11 +265,11 @@ function contactDetails({ inquiry, phone, projectGoal, timeline, budget }) {
 }
 
 function contactAutoReplyContent({ inquiry, phone, projectGoal, timeline, budget }) {
-  const subject = "We received your WebLab project request";
+  const subject = "We received your AigleOn Labs project request";
   const text = [
     `Hi ${inquiry.name},`,
     "",
-    "Thanks for sharing your project details with WebLab Innovations.",
+    "Thanks for sharing your project details with AigleOn Labs.",
     "We have received your request, and our team will go through it and contact you soon.",
     "",
     `Project type: ${inquiry.projectType}`,
@@ -280,17 +280,17 @@ function contactAutoReplyContent({ inquiry, phone, projectGoal, timeline, budget
     "We usually reply within 24 hours.",
     "",
     "Regards,",
-    "WebLab Innovations",
+    "AigleOn Labs",
   ].join("\n");
   const html = emailShell({
-    eyebrow: "WebLab Innovations",
+    eyebrow: "AigleOn Labs",
     title: "We received your project request",
     intro: `Hi ${inquiry.name}, thanks for sharing your project details. We have received your request, and our team will go through it and contact you soon.`,
     content: `
       ${contactDetails({ inquiry, phone, projectGoal, timeline, budget })}
       ${messageBlock("Your Message", inquiry.message)}
     `,
-    footer: "We usually reply within 24 hours. Regards, WebLab Innovations.",
+    footer: "We usually reply within 24 hours. Regards, AigleOn Labs.",
   });
 
   return { subject, text, html };
@@ -311,7 +311,7 @@ export async function sendContactNotification(inquiry) {
   const phone = inquiry.phone || "Not provided";
   const timeline = inquiry.timeline || "Not sure";
   const budget = inquiry.budget || "Not sure yet";
-  const subject = `New WebLab enquiry from ${inquiry.name}`;
+  const subject = `New AigleOn Labs enquiry from ${inquiry.name}`;
   const bodyText = [
     `Name: ${inquiry.name}`,
     `Email: ${inquiry.email}`,
@@ -324,7 +324,7 @@ export async function sendContactNotification(inquiry) {
     inquiry.message,
   ].join("\n");
   const bodyHtml = emailShell({
-    eyebrow: "WebLab Innovations Project Request",
+    eyebrow: "AigleOn Labs Project Request",
     title: `New enquiry from ${inquiry.name}`,
     intro: "A new project request has been submitted. Reply directly to this email to contact the client.",
     content: `
@@ -342,7 +342,7 @@ export async function sendContactNotification(inquiry) {
 
   return sendEmailJsTemplate("EMAILJS_CONTACT_TEMPLATE_ID", {
     to_email: to,
-    to_name: "WebLab",
+    to_name: "AigleOn Labs",
     reply_to: inquiry.email,
     from_name: inquiry.name,
     from_email: inquiry.email,
@@ -395,7 +395,7 @@ export async function sendReviewModerationEmail({ review, approveUrl }) {
 
   return sendEmailJsTemplate("EMAILJS_REVIEW_TEMPLATE_ID", {
     to_email: to,
-    to_name: "WebLab",
+    to_name: "AigleOn Labs",
     reply_to: review.email,
     from_name: review.name,
     from_email: review.email,

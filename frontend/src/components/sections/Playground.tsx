@@ -49,7 +49,7 @@ export default function Playground() {
       <div className="playground-topline">
         <SectionBadge label="Playground" number="08" />
         <h2>
-          WebLab&apos;s
+          AigleOn Labs&apos;
           <br />
           <span>playground</span>
         </h2>
@@ -58,7 +58,7 @@ export default function Playground() {
       <div className="playground-art">
         <Image
           src="/art/robot-hands-hero.png"
-          alt="Two chrome robotic hands reaching toward the WebLab mark"
+          alt="Two chrome robotic hands reaching toward the AigleOn Labs mark"
           fill
           className="object-cover"
           sizes="100vw"

@@ -1,8 +1,18 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Check } from "lucide-react";
+import { useEffect, useRef } from "react";
+import Link from "next/link";
+import { 
+  ArrowUpRight, 
+  Eye, 
+  Map, 
+  Layers, 
+  Palette, 
+  Code, 
+  FileText, 
+  Cpu, 
+  Zap 
+} from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { processSteps } from "@/data/projects";
@@ -10,52 +20,8 @@ import SectionBadge from "@/components/ui/SectionBadge";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const phaseOutputs = [
-  ["Goals aligned", "Audience mapped", "Scope clarified"],
-  ["Product roadmap", "User journeys", "Technical plan"],
-  ["Visual direction", "Interface system", "Clickable prototype"],
-  ["Production build", "CMS & integrations", "Quality assurance"],
-  ["Production launch", "Performance checks", "Ongoing support"],
-];
-
-const phaseTransition = {
-  duration: 0.34,
-  ease: [0.22, 1, 0.36, 1] as const,
-};
-
-const phaseVariants = {
-  initial: (direction: number) => ({
-    opacity: 0,
-    y: direction > 0 ? 18 : -18,
-    scale: 0.985,
-    filter: "blur(8px)",
-  }),
-  animate: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    filter: "blur(0px)",
-  },
-  exit: (direction: number) => ({
-    opacity: 0,
-    y: direction > 0 ? -16 : 16,
-    scale: 0.99,
-    filter: "blur(8px)",
-  }),
-};
-
 export default function Process() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [activeStep, setActiveStep] = useState(0);
-  const [stepDirection, setStepDirection] = useState(1);
-  const step = processSteps[activeStep];
-
-  const selectStep = (index: number) => {
-    if (index === activeStep) return;
-
-    setStepDirection(index > activeStep ? 1 : -1);
-    setActiveStep(index);
-  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -71,14 +37,15 @@ export default function Process() {
         },
       });
 
-      gsap.from(".process-console", {
-        y: 80,
+      gsap.from(".roadmap-step-card", {
+        y: 40,
         opacity: 0,
-        duration: 1.15,
+        duration: 0.8,
+        stagger: 0.06,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: ".process-console",
-          start: "top 82%",
+          trigger: ".roadmap-snake-container",
+          start: "top 80%",
         },
       });
     }, sectionRef);
@@ -108,90 +75,350 @@ export default function Process() {
             <span>to live product.</span>
           </h2>
           <p>
-            A practical five-phase system built to keep decisions clear,
+            A practical eight-phase system built to keep decisions clear,
             momentum visible, and quality high.
           </p>
         </div>
 
-        <div className="process-console">
-          <div className="process-stage">
-            <div className="process-stage-top">
-              <span>Active phase</span>
-              <span>{step.number} / 05</span>
+        <div className="roadmap-snake-container">
+          <div className="roadmap-snake-grid">
+            {/* Step 1 */}
+            <div className="roadmap-step-card" style={{ gridRow: 1, gridColumn: 1 }}>
+              <div className="roadmap-icon-wrap">
+                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
+                  <defs>
+                    <linearGradient id="roadmap-shine-grad-1" x1="100%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
+                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
+                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
+                  <g className="roadmap-crystal-dot">
+                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-1)" strokeWidth="2.5" strokeLinecap="round" />
+                  </g>
+                </svg>
+                <div className="roadmap-icon-inner">
+                  <Eye size={28} strokeWidth={2} />
+                </div>
+              </div>
+              <div className="roadmap-step-label">
+                <span className="roadmap-step-number">PHASE 01</span>
+                <h3>{processSteps[0].title}</h3>
+              </div>
+              <div className="roadmap-step-popup">
+                <p>{processSteps[0].description}</p>
+              </div>
             </div>
 
-            <AnimatePresence mode="wait" custom={stepDirection}>
-              <motion.div
-                key={step.number}
-                custom={stepDirection}
-                variants={phaseVariants}
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                transition={phaseTransition}
-                className="process-stage-content"
-              >
-                <span className="process-stage-number">{step.number}</span>
-                <div>
-                  <span className="process-stage-label">
-                    WebLab delivery system
-                  </span>
-                  <h3>{step.title}</h3>
-                  <p>{step.description}</p>
-                </div>
+            {/* Connector 1-2 */}
+            <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 2 }}>
+              <svg className="roadmap-connector-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="roadmap-line-grad-h-1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
+                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
+                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
+                  </linearGradient>
+                </defs>
+                <line x1="0" y1="10" x2="100" y2="10" stroke="url(#roadmap-line-grad-h-1)" strokeWidth="2.5" />
+              </svg>
+            </div>
 
-                <div className="process-outputs">
-                  <span>What leaves this phase</span>
-                  <ul>
-                    {phaseOutputs[activeStep].map((output) => (
-                      <li key={output}>
-                        <Check className="h-3.5 w-3.5" />
-                        {output}
-                      </li>
-                    ))}
-                  </ul>
+            {/* Step 2 */}
+            <div className="roadmap-step-card" style={{ gridRow: 1, gridColumn: 3 }}>
+              <div className="roadmap-icon-wrap">
+                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
+                  <defs>
+                    <linearGradient id="roadmap-shine-grad-2" x1="100%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
+                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
+                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
+                  <g className="roadmap-crystal-dot">
+                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-2)" strokeWidth="2.5" strokeLinecap="round" />
+                  </g>
+                </svg>
+                <div className="roadmap-icon-inner">
+                  <Map size={28} strokeWidth={2} />
                 </div>
-              </motion.div>
-            </AnimatePresence>
+              </div>
+              <div className="roadmap-step-label">
+                <span className="roadmap-step-number">PHASE 02</span>
+                <h3>{processSteps[1].title}</h3>
+              </div>
+              <div className="roadmap-step-popup">
+                <p>{processSteps[1].description}</p>
+              </div>
+            </div>
 
-            <div className="process-stage-progress">
-              {processSteps.map((phase, index) => (
-                <button
-                  key={phase.number}
-                  type="button"
-                  onClick={() => selectStep(index)}
-                  className={index <= activeStep ? "is-filled" : ""}
-                  aria-label={`Show ${phase.title} phase`}
-                />
-              ))}
+            {/* Connector 2-3 */}
+            <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 4 }}>
+              <svg className="roadmap-connector-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="roadmap-line-grad-h-2" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
+                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
+                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
+                  </linearGradient>
+                </defs>
+                <line x1="0" y1="10" x2="100" y2="10" stroke="url(#roadmap-line-grad-h-2)" strokeWidth="2.5" />
+              </svg>
+            </div>
+
+            {/* Step 3 */}
+            <div className="roadmap-step-card" style={{ gridRow: 1, gridColumn: 5 }}>
+              <div className="roadmap-icon-wrap">
+                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
+                  <defs>
+                    <linearGradient id="roadmap-shine-grad-3" x1="100%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
+                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
+                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
+                  <g className="roadmap-crystal-dot">
+                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-3)" strokeWidth="2.5" strokeLinecap="round" />
+                  </g>
+                </svg>
+                <div className="roadmap-icon-inner">
+                  <Layers size={28} strokeWidth={2} />
+                </div>
+              </div>
+              <div className="roadmap-step-label">
+                <span className="roadmap-step-number">PHASE 03</span>
+                <h3>{processSteps[2].title}</h3>
+              </div>
+              <div className="roadmap-step-popup">
+                <p>{processSteps[2].description}</p>
+              </div>
+            </div>
+
+            {/* Connector 3-4 */}
+            <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 6 }}>
+              <svg className="roadmap-connector-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="roadmap-line-grad-h-3" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
+                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
+                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
+                  </linearGradient>
+                </defs>
+                <line x1="0" y1="10" x2="100" y2="10" stroke="url(#roadmap-line-grad-h-3)" strokeWidth="2.5" />
+              </svg>
+            </div>
+
+            {/* Step 4 */}
+            <div className="roadmap-step-card" style={{ gridRow: 1, gridColumn: 7 }}>
+              <div className="roadmap-icon-wrap">
+                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
+                  <defs>
+                    <linearGradient id="roadmap-shine-grad-4" x1="100%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
+                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
+                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
+                  <g className="roadmap-crystal-dot">
+                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-4)" strokeWidth="2.5" strokeLinecap="round" />
+                  </g>
+                </svg>
+                <div className="roadmap-icon-inner">
+                  <Palette size={28} strokeWidth={2} />
+                </div>
+              </div>
+              <div className="roadmap-step-label">
+                <span className="roadmap-step-number">PHASE 04</span>
+                <h3>{processSteps[3].title}</h3>
+              </div>
+              <div className="roadmap-step-popup">
+                <p>{processSteps[3].description}</p>
+              </div>
+            </div>
+
+            {/* Vertical Connector 4-5 */}
+            <div className="roadmap-vertical-connector" style={{ gridRow: 2, gridColumn: 7 }}>
+              <svg className="roadmap-vertical-connector-svg" viewBox="0 0 20 180" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="roadmap-line-grad-v" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
+                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
+                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
+                  </linearGradient>
+                </defs>
+                <line x1="10" y1="0" x2="10" y2="180" stroke="url(#roadmap-line-grad-v)" strokeWidth="2.5" />
+              </svg>
+            </div>
+
+            {/* Step 5 */}
+            <div className="roadmap-step-card" style={{ gridRow: 3, gridColumn: 7 }}>
+              <div className="roadmap-icon-wrap">
+                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
+                  <defs>
+                    <linearGradient id="roadmap-shine-grad-5" x1="100%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
+                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
+                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
+                  <g className="roadmap-crystal-dot">
+                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-5)" strokeWidth="2.5" strokeLinecap="round" />
+                  </g>
+                </svg>
+                <div className="roadmap-icon-inner">
+                  <Code size={28} strokeWidth={2} />
+                </div>
+              </div>
+              <div className="roadmap-step-label">
+                <span className="roadmap-step-number">PHASE 05</span>
+                <h3>{processSteps[4].title}</h3>
+              </div>
+              <div className="roadmap-step-popup">
+                <p>{processSteps[4].description}</p>
+              </div>
+            </div>
+
+            {/* Connector 5-6 */}
+            <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 6 }}>
+              <svg className="roadmap-connector-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="roadmap-line-grad-h-4" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
+                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
+                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
+                  </linearGradient>
+                </defs>
+                <line x1="100" y1="10" x2="0" y2="10" stroke="url(#roadmap-line-grad-h-4)" strokeWidth="2.5" />
+              </svg>
+            </div>
+
+            {/* Step 6 */}
+            <div className="roadmap-step-card" style={{ gridRow: 3, gridColumn: 5 }}>
+              <div className="roadmap-icon-wrap">
+                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
+                  <defs>
+                    <linearGradient id="roadmap-shine-grad-6" x1="100%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
+                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
+                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
+                  <g className="roadmap-crystal-dot">
+                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-6)" strokeWidth="2.5" strokeLinecap="round" />
+                  </g>
+                </svg>
+                <div className="roadmap-icon-inner">
+                  <FileText size={28} strokeWidth={2} />
+                </div>
+              </div>
+              <div className="roadmap-step-label">
+                <span className="roadmap-step-number">PHASE 06</span>
+                <h3>{processSteps[5].title}</h3>
+              </div>
+              <div className="roadmap-step-popup">
+                <p>{processSteps[5].description}</p>
+              </div>
+            </div>
+
+            {/* Connector 6-7 */}
+            <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 4 }}>
+              <svg className="roadmap-connector-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="roadmap-line-grad-h-5" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
+                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
+                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
+                  </linearGradient>
+                </defs>
+                <line x1="100" y1="10" x2="0" y2="10" stroke="url(#roadmap-line-grad-h-5)" strokeWidth="2.5" />
+              </svg>
+            </div>
+
+            {/* Step 7 */}
+            <div className="roadmap-step-card" style={{ gridRow: 3, gridColumn: 3 }}>
+              <div className="roadmap-icon-wrap">
+                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
+                  <defs>
+                    <linearGradient id="roadmap-shine-grad-7" x1="100%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
+                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
+                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
+                  <g className="roadmap-crystal-dot">
+                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-7)" strokeWidth="2.5" strokeLinecap="round" />
+                  </g>
+                </svg>
+                <div className="roadmap-icon-inner">
+                  <Cpu size={28} strokeWidth={2} />
+                </div>
+              </div>
+              <div className="roadmap-step-label">
+                <span className="roadmap-step-number">PHASE 07</span>
+                <h3>{processSteps[6].title}</h3>
+              </div>
+              <div className="roadmap-step-popup">
+                <p>{processSteps[6].description}</p>
+              </div>
+            </div>
+
+            {/* Connector 7-8 */}
+            <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 2 }}>
+              <svg className="roadmap-connector-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
+                <defs>
+                  <linearGradient id="roadmap-line-grad-h-6" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
+                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
+                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
+                  </linearGradient>
+                </defs>
+                <line x1="100" y1="10" x2="0" y2="10" stroke="url(#roadmap-line-grad-h-6)" strokeWidth="2.5" />
+              </svg>
+            </div>
+
+            {/* Step 8 */}
+            <div className="roadmap-step-card" style={{ gridRow: 3, gridColumn: 1 }}>
+              <div className="roadmap-icon-wrap">
+                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
+                  <defs>
+                    <linearGradient id="roadmap-shine-grad-8" x1="100%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
+                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
+                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
+                  <g className="roadmap-crystal-dot">
+                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-8)" strokeWidth="2.5" strokeLinecap="round" />
+                  </g>
+                </svg>
+                <div className="roadmap-icon-inner">
+                  <Zap size={28} strokeWidth={2} />
+                </div>
+              </div>
+              <div className="roadmap-step-label">
+                <span className="roadmap-step-number">PHASE 08</span>
+                <h3>{processSteps[7].title}</h3>
+              </div>
+              <div className="roadmap-step-popup">
+                <p>{processSteps[7].description}</p>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div className="process-step-list">
-            <div className="process-step-list-label">
-              <span>Full workflow</span>
-              <span>Select a phase</span>
-            </div>
-
-            {processSteps.map((phase, index) => (
-              <button
-                key={phase.number}
-                type="button"
-                onClick={() => selectStep(index)}
-                onMouseEnter={() => selectStep(index)}
-                className={`process-step-row ${activeStep === index ? "is-active" : ""}`}
-              >
-                <span className="process-step-number">{phase.number}</span>
-                <span className="process-step-copy">
-                  <strong>{phase.title}</strong>
-                  <span>{phase.description}</span>
-                </span>
-                <span className="process-step-arrow">
-                  <ArrowUpRight className="h-4 w-4" />
-                </span>
-              </button>
-            ))}
-          </div>
+        <div className="process-more-cta">
+          <Link href="/process" className="button button-muted group">
+            Know in detail
+            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:rotate-45" />
+          </Link>
         </div>
       </div>
     </section>

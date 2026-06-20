@@ -73,7 +73,7 @@ export default function Hero() {
         <div className="hero-copy">
           <div className="hero-reveal hero-kicker">
             <span className="signal-dot" />
-            Digital product agency
+            Brand Visibility and Growth Agency
             <span className="text-primary-light">/ 2026</span>
           </div>
 
@@ -84,15 +84,14 @@ export default function Hero() {
           </h1>
 
           <p className="hero-reveal hero-intro">
-            We design and build sharp websites, SaaS products, and AI-powered
-            experiences for teams ready to move.
+            We build search presence, conversion systems, and AI visibility for specialty food brands ready to grow.
           </p>
         </div>
 
         <div className="hero-reveal hero-mark-wrap">
           <div className="hero-mark-halo" />
           <AgencyMark className="hero-mark" />
-          <span className="hero-mark-label">WebLab / digital systems</span>
+          <span className="hero-mark-label">AigleOn Labs / digital growth systems</span>
         </div>
 
         <aside className="hero-proof hero-reveal" aria-label="Agency highlights">
@@ -110,15 +109,15 @@ export default function Hero() {
                 sizes="240px"
               />
             </div>
-            <strong>50+</strong>
+            <strong>10+</strong>
             <span>digital products shipped</span>
           </div>
 
           <div className="proof-card proof-card-stat">
-            <strong>98%</strong>
+            <strong>97%</strong>
             <span>Client satisfaction</span>
             <div className="proof-line" />
-            <p>Small senior team. Direct communication. No hand-offs.</p>
+            <p>Small senior team. Direct communication for your ease.</p>
           </div>
         </aside>
 
@@ -149,7 +148,7 @@ export default function Hero() {
 
           <div className="hero-availability">
             <span className="signal-dot" />
-            Booking select projects for Q3
+            Booking select projects now
           </div>
         </div>
       </div>
