@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { ArrowUpRight, Check, RefreshCw, Zap } from "lucide-react";
 import SectionBadge from "@/components/ui/SectionBadge";
 
@@ -102,6 +103,8 @@ export default function Packages() {
     const contactSection = document.getElementById("contact");
     if (contactSection) {
       contactSection.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.location.href = "/contact";
     }
   };
 
@@ -508,7 +511,7 @@ export default function Packages() {
 
       <div className="pkg-bg-glow" />
       <div className="relative z-10 max-w-7xl mx-auto">
-        <header className="max-w-2xl mb-16 md:mb-20">
+        <header className="max-w-2xl" style={{ marginBottom: "clamp(64px, 10vw, 110px)" }}>
           <SectionBadge label="Service Tiers" number="08" />
           <h2 className="mt-6 text-white font-display text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[0.95]">
             Sized to fit<br />
@@ -517,6 +520,12 @@ export default function Packages() {
           <p className="mt-6 text-white/50 text-base md:text-lg leading-relaxed">
             Choose a plan that fits your growth stage. Click anywhere on a card to flip and view complete scope and international pricing.
           </p>
+          <div className="mt-8">
+            <Link href="/services" className="inline-flex items-center gap-2 text-sm font-medium text-[#36b8ff] hover:text-[#60c9ff] transition-colors group">
+              <span>View our complete list of Services & Systems</span>
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:rotate-45" />
+            </Link>
+          </div>
         </header>
 
         {/* Pricing Cards Grid */}

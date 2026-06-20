@@ -12,10 +12,9 @@ const Services = dynamic(() => import("@/components/sections/Services"));
 const CustomerSystem = dynamic(() => import("@/components/sections/CustomerSystem"));
 const Achievements = dynamic(() => import("@/components/sections/Achievements"));
 const WhyChooseUs = dynamic(() => import("@/components/sections/WhyChooseUs"));
-const Founders = dynamic(() => import("@/components/sections/Founders"));
-const OurStory = dynamic(() => import("@/components/sections/OurStory"));
 const Process = dynamic(() => import("@/components/sections/Process"));
-const Packages = dynamic(() => import("@/components/sections/Packages"));
+const OurStory = dynamic(() => import("@/components/sections/OurStory"));
+const Founders = dynamic(() => import("@/components/sections/Founders"));
 
 const SmoothScroll = dynamic(
   () => import("@/components/providers/SmoothScroll"),
@@ -32,19 +31,36 @@ export default function Home() {
       <MouseFollowLight />
       <Navbar />
       <main>
+        {/* 1. Hook */}
         <Hero />
         <Marquee />
+
+        {/* 2. Problem — why they need us */}
         <Problem />
+
+        {/* 3. Services — what we offer */}
         <Services />
+
+        {/* 4. CustomerSystem — deeper dive into our system */}
         <CustomerSystem />
+
+        {/* 5. Achievements — credibility proof */}
         <Achievements />
-        <WhyChooseUs />
-        <Founders />
+
+        {/* 6. Our Story — humanises the brand right after stats */}
         <OurStory />
+
+        {/* 7. Why Choose Us — trust building */}
+        <WhyChooseUs />
+
+        {/* 8. Process — how we work */}
         <Process />
-        <Packages />
+
+        {/* 9. Closing — team */}
+        <Founders />
       </main>
       <Footer />
     </SmoothScroll>
   );
 }
+

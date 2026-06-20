@@ -111,17 +111,13 @@ export default function Process() {
               </div>
             </div>
 
-            {/* Connector 1-2 */}
-            <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 2 }}>
-              <svg className="roadmap-connector-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="roadmap-line-grad-h-1" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
-                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
-                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
-                  </linearGradient>
-                </defs>
-                <line x1="0" y1="10" x2="100" y2="10" stroke="url(#roadmap-line-grad-h-1)" strokeWidth="2.5" />
+            {/* Connector 1-2 — tail moves left → right */}
+            <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 2, alignSelf: "start" }}>
+              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "-2px", height: "4px" }}>
+                <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
+                <line pathLength="100" x1="0" y1="2" x2="100%" y2="2" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
+                  <animate attributeName="stroke-dashoffset" from="20" to="-110" dur="4s" repeatCount="indefinite" />
+                </line>
               </svg>
             </div>
 
@@ -154,17 +150,13 @@ export default function Process() {
               </div>
             </div>
 
-            {/* Connector 2-3 */}
-            <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 4 }}>
-              <svg className="roadmap-connector-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="roadmap-line-grad-h-2" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
-                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
-                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
-                  </linearGradient>
-                </defs>
-                <line x1="0" y1="10" x2="100" y2="10" stroke="url(#roadmap-line-grad-h-2)" strokeWidth="2.5" />
+            {/* Connector 2-3 — tail moves left → right */}
+            <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 4, alignSelf: "start" }}>
+              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "-2px", height: "4px" }}>
+                <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
+                <line pathLength="100" x1="0" y1="2" x2="100%" y2="2" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
+                  <animate attributeName="stroke-dashoffset" from="20" to="-110" dur="4s" repeatCount="indefinite" />
+                </line>
               </svg>
             </div>
 
@@ -197,17 +189,13 @@ export default function Process() {
               </div>
             </div>
 
-            {/* Connector 3-4 */}
-            <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 6 }}>
-              <svg className="roadmap-connector-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="roadmap-line-grad-h-3" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
-                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
-                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
-                  </linearGradient>
-                </defs>
-                <line x1="0" y1="10" x2="100" y2="10" stroke="url(#roadmap-line-grad-h-3)" strokeWidth="2.5" />
+            {/* Connector 3-4 — tail moves left → right */}
+            <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 6, alignSelf: "start" }}>
+              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "-2px", height: "4px" }}>
+                <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
+                <line pathLength="100" x1="0" y1="2" x2="100%" y2="2" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
+                  <animate attributeName="stroke-dashoffset" from="20" to="-110" dur="4s" repeatCount="indefinite" />
+                </line>
               </svg>
             </div>
 
@@ -240,17 +228,13 @@ export default function Process() {
               </div>
             </div>
 
-            {/* Vertical Connector 4-5 */}
-            <div className="roadmap-vertical-connector" style={{ gridRow: 2, gridColumn: 7 }}>
-              <svg className="roadmap-vertical-connector-svg" viewBox="0 0 20 180" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="roadmap-line-grad-v" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
-                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
-                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
-                  </linearGradient>
-                </defs>
-                <line x1="10" y1="0" x2="10" y2="180" stroke="url(#roadmap-line-grad-v)" strokeWidth="2.5" />
+            {/* Vertical Connector 4-5 — tail moves top → bottom */}
+            <div className="roadmap-vertical-connector" style={{ gridRow: 2, gridColumn: 7, alignSelf: "stretch", position: "relative" }}>
+              <svg className="roadmap-vertical-connector-svg" style={{ overflow: "visible", position: "absolute", top: "-4px", height: "calc(100% + 8px)", left: "50%", marginLeft: "-10px", width: "20px" }}>
+                <line x1="10" y1="0" x2="10" y2="100%" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
+                <line pathLength="100" x1="10" y1="0" x2="10" y2="100%" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
+                  <animate attributeName="stroke-dashoffset" from="20" to="-110" dur="4s" repeatCount="indefinite" />
+                </line>
               </svg>
             </div>
 
@@ -283,17 +267,13 @@ export default function Process() {
               </div>
             </div>
 
-            {/* Connector 5-6 */}
-            <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 6 }}>
-              <svg className="roadmap-connector-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="roadmap-line-grad-h-4" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
-                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
-                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
-                  </linearGradient>
-                </defs>
-                <line x1="100" y1="10" x2="0" y2="10" stroke="url(#roadmap-line-grad-h-4)" strokeWidth="2.5" />
+            {/* Connector 5-6 — tail moves right → left */}
+            <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 6, alignSelf: "start" }}>
+              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "-2px", height: "4px" }}>
+                <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
+                <line pathLength="100" x1="0" y1="2" x2="100%" y2="2" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
+                  <animate attributeName="stroke-dashoffset" from="-110" to="20" dur="4s" repeatCount="indefinite" />
+                </line>
               </svg>
             </div>
 
@@ -326,17 +306,13 @@ export default function Process() {
               </div>
             </div>
 
-            {/* Connector 6-7 */}
-            <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 4 }}>
-              <svg className="roadmap-connector-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="roadmap-line-grad-h-5" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
-                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
-                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
-                  </linearGradient>
-                </defs>
-                <line x1="100" y1="10" x2="0" y2="10" stroke="url(#roadmap-line-grad-h-5)" strokeWidth="2.5" />
+            {/* Connector 6-7 — tail moves right → left */}
+            <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 4, alignSelf: "start" }}>
+              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "-2px", height: "4px" }}>
+                <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
+                <line pathLength="100" x1="0" y1="2" x2="100%" y2="2" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
+                  <animate attributeName="stroke-dashoffset" from="-110" to="20" dur="4s" repeatCount="indefinite" />
+                </line>
               </svg>
             </div>
 
@@ -369,17 +345,13 @@ export default function Process() {
               </div>
             </div>
 
-            {/* Connector 7-8 */}
-            <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 2 }}>
-              <svg className="roadmap-connector-svg" viewBox="0 0 100 20" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="roadmap-line-grad-h-6" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stopColor="rgba(54,184,255,0.15)" />
-                    <stop offset="50%" stopColor="rgba(54,184,255,0.7)" />
-                    <stop offset="100%" stopColor="rgba(54,184,255,0.15)" />
-                  </linearGradient>
-                </defs>
-                <line x1="100" y1="10" x2="0" y2="10" stroke="url(#roadmap-line-grad-h-6)" strokeWidth="2.5" />
+            {/* Connector 7-8 — tail moves right → left */}
+            <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 2, alignSelf: "start" }}>
+              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "-2px", height: "4px" }}>
+                <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
+                <line pathLength="100" x1="0" y1="2" x2="100%" y2="2" stroke="#36b8ff" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="20 110">
+                  <animate attributeName="stroke-dashoffset" from="-110" to="20" dur="4s" repeatCount="indefinite" />
+                </line>
               </svg>
             </div>
 

@@ -6,6 +6,7 @@ import { services } from "@/data/projects";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SectionBadge from "@/components/ui/SectionBadge";
+import Link from "next/link";
 import {
   Search,
   Palette,
@@ -14,6 +15,7 @@ import {
   MessageCircle,
   Zap,
   Brain,
+  ArrowUpRight,
 } from "lucide-react";
 
 const SmoothScroll = dynamic(
@@ -85,6 +87,13 @@ export default function ServicesPage() {
                   </div>
                 );
               })}
+            </div>
+
+            <div style={{ marginTop: "64px", display: "flex", justifyContent: "center" }}>
+              <Link href="/pricing" className="button button-muted group">
+                Find what do you need (Service Tiers)
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:rotate-45" />
+              </Link>
             </div>
           </div>
         </section>

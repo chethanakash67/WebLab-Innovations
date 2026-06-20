@@ -3033,10 +3033,10 @@ body::before {
 
 .roadmap-snake-grid {
   display: grid;
-  grid-template-columns: 1fr 60px 1fr 60px 1fr 60px 1fr;
-  grid-template-rows: auto 100px auto;
+  grid-template-columns: 96px 1fr 96px 1fr 96px 1fr 96px;
+  grid-template-rows: auto 120px auto;
   width: 100%;
-  align-items: start;
+  align-items: center;
 }
 
 .roadmap-step-card {
@@ -3091,6 +3091,46 @@ body::before {
   }
 }
 
+/* Horizontal connector blue tail — travels left→right over 100 viewBox units */
+@keyframes connectorFlowH {
+  0%   { stroke-dashoffset: 110; }
+  100% { stroke-dashoffset: -30; }
+}
+
+/* Horizontal connector blue tail — travels right→left (reverse row) */
+@keyframes connectorFlowHR {
+  0%   { stroke-dashoffset: -110; }
+  100% { stroke-dashoffset: 30; }
+}
+
+/* Vertical connector blue tail — travels top→bottom over 120 viewBox units */
+@keyframes connectorFlowV {
+  0%   { stroke-dashoffset: 140; }
+  100% { stroke-dashoffset: -30; }
+}
+
+.roadmap-line-track {
+  opacity: 0.12;
+}
+
+.roadmap-line-flow-h {
+  stroke-dasharray: 28 82;
+  stroke-dashoffset: 110;
+  animation: connectorFlowH 2.4s linear infinite;
+}
+
+.roadmap-line-flow-hr {
+  stroke-dasharray: 28 82;
+  stroke-dashoffset: -110;
+  animation: connectorFlowHR 2.4s linear infinite;
+}
+
+.roadmap-line-flow-v {
+  stroke-dasharray: 30 90;
+  stroke-dashoffset: 140;
+  animation: connectorFlowV 2.4s linear infinite;
+}
+
 .roadmap-icon-inner {
   position: relative;
   z-index: 2;
@@ -3117,33 +3157,34 @@ body::before {
   align-items: center;
   justify-content: center;
   height: 96px;
-  width: 200px;
-  margin-left: -70px;
-  margin-right: -70px;
+  width: 100%;
   position: relative;
-  z-index: 1; /* Drawn behind the icon wraps */
+  z-index: 1;
+  overflow: visible;
 }
 
 .roadmap-connector-svg {
   width: 100%;
-  height: 16px;
+  height: 100%;
+  overflow: visible;
 }
 
 .roadmap-vertical-connector {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 200px;
-  margin-top: -65px;
-  margin-bottom: -55px;
+  height: 100%;
+  min-height: 100px;
   position: relative;
-  z-index: 1; /* Drawn behind the icon wraps */
+  z-index: 1;
   width: 100%;
+  overflow: visible;
 }
 
 .roadmap-vertical-connector-svg {
   height: 100%;
   width: 20px;
+  overflow: visible;
 }
 
 /* Statically Visible Labels */
@@ -3153,6 +3194,8 @@ body::before {
   gap: 4px;
   align-items: center;
   margin-top: 12px;
+  width: max-content;
+  max-width: 160px; /* Prevent it from being completely unbounded */
 }
 
 .roadmap-step-number {

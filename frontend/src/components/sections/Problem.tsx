@@ -91,7 +91,9 @@ export default function Problem() {
             
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold tracking-widest uppercase animate-red-glow">AI Blindspot</span>
+                <span className="inline-flex items-center justify-center px-3.5 py-1 text-[10px] font-semibold tracking-widest uppercase rounded-md bg-red-950/20 border border-red-500/25 animate-red-glow">
+                  AI Blindspot
+                </span>
                 <HelpCircle className="h-5 w-5 text-[#36b8ff]/70" />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -130,7 +132,9 @@ export default function Problem() {
             
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold tracking-widest uppercase animate-red-glow">Friction Penalty</span>
+                <span className="inline-flex items-center justify-center px-3.5 py-1 text-[10px] font-semibold tracking-widest uppercase rounded-md bg-red-950/20 border border-red-500/25 animate-red-glow">
+                  Friction Penalty
+                </span>
                 <AlertCircle className="h-5 w-5 text-[#36b8ff]/70" />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -191,8 +195,10 @@ export default function Problem() {
             
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold tracking-widest uppercase animate-red-glow">Performance Crash</span>
-                <Flame className="h-5 w-5 text-[#36b8ff]/70" />
+                <span className="inline-flex items-center justify-center px-3.5 py-1 text-[10px] font-semibold tracking-widest uppercase rounded-md bg-red-950/20 border border-red-500/25 animate-red-glow">
+                  Performance Crash
+                </span>
+                <Flame className="h-7 w-7 text-[#36b8ff]/70" />
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                 <h3 className="text-xl font-display font-semibold text-white">

@@ -8,8 +8,6 @@ import { founders } from "@/data/projects";
 
 const footerLinks = {
   navigation: [
-    { label: "Studio", popupKey: "studio" as any, href: undefined },
-    { label: "Services", popupKey: "services" as any, href: undefined },
     { label: "Work", popupKey: undefined, href: "/work" },
     { label: "Testimonials", popupKey: undefined, href: "/testimonials" },
     { label: "FAQ", popupKey: undefined, href: "/faq" },
@@ -59,7 +57,7 @@ const footerPopups = {
   contact: {
     eyebrow: "Contact",
     title: "Talk To AigleOn Labs",
-    body: "Email chethanakash67@gmail.com or call 8919870959. We usually respond within 24 hours.",
+    body: "Email contact@theaigleonlabs.dev or call 8919870959. We usually respond within 24 hours.",
   },
   "ui-ux-design": {
     eyebrow: "Capability",
@@ -102,14 +100,16 @@ export default function Footer() {
               <span>you are.</span>
             </h2>
           </div>
-          <Link
-            href="/contact"
+          <a
+            href="https://wa.me/918919870959?text=hello,%20I'm%20intterested%20for%20a%20service%20from%20your%20agency,%20please%20explain%20me"
+            target="_blank"
+            rel="noopener noreferrer"
             className="footer-cta-button"
             style={{ textDecoration: "none" }}
           >
             Start a project
             <ArrowUpRight className="h-5 w-5" />
-          </Link>
+          </a>
         </div>
 
         <div className="footer-main">
@@ -176,15 +176,15 @@ export default function Footer() {
             </div>
 
             <div className="footer-contact-list">
-              <a href="mailto:chethanakash67@gmail.com">
+              <a href="mailto:contact@theaigleonlabs.dev" style={{ position: "relative", zIndex: 50 }}>
                 <Mail className="h-4 w-4" />
                 <span>
                   <small>Email</small>
-                  <strong>chethanakash67@gmail.com</strong>
+                  <strong>contact@theaigleonlabs.dev</strong>
                 </span>
                 <ArrowUpRight className="ml-auto h-4 w-4" />
               </a>
-              <a href="tel:+918919870959">
+              <a href="tel:+918919870959" style={{ position: "relative", zIndex: 50 }}>
                 <Phone className="h-4 w-4" />
                 <span>
                   <small>Phone</small>
@@ -269,7 +269,7 @@ export default function Footer() {
           <span>© {new Date().getFullYear()} AigleOn Labs Studio</span>
           <span className="footer-availability">
             <span className="signal-dot" />
-            Available for select Q3 projects
+            Available for projects
           </span>
           <span>India / Working worldwide</span>
         </div>

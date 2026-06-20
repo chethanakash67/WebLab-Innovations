@@ -92,16 +92,20 @@ export default function Services() {
           ))}
         </div>
 
-        <div className="services-more-cta">
+        <div className="services-more-cta" style={{ display: "flex", gap: "24px", justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
           <Link href="/services" className="button button-muted group">
-            Explore All Services & Systems
+            Explore All Services
+            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:rotate-45" />
+          </Link>
+          <Link href="/pricing" className="button button-muted group">
+            Find the Suitable Package.
             <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:rotate-45" />
           </Link>
         </div>
 
         <div className="services-additional-note">
           <p>
-            <span>* Other AI Systems:</span> According to the brand's requirement or request, we also build Agentic AI systems for company's internal work. This can be anything asked by the brand if very important or they need it at any cost — we'll then do at a custom price.
+            <span>* Other AI Systems:</span> According to the brand's requirement or request, we also build Agentic AI systems for company's internal work. This can be anything asked by the brand if very important or they need it at any cost, we'll then do at a custom price.
           </p>
         </div>
       </div>

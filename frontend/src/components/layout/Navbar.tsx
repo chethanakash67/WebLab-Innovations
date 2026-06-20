@@ -89,10 +89,15 @@ export default function Navbar() {
               <span className="signal-dot" />
               Available for Enquiry
             </div>
-            <Link href="/contact" className="nav-contact">
+            <a
+              href="https://wa.me/918919870959?text=hello,%20I'm%20intterested%20for%20a%20service%20from%20your%20agency,%20please%20explain%20me"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="nav-contact"
+            >
               Start a project
               <ArrowUpRight className="h-4 w-4" />
-            </Link>
+            </a>
           </div>
 
           <button
@@ -178,10 +183,15 @@ export default function Navbar() {
                 <br />
                 Let&apos;s make it real.
               </p>
-              <Link href="/contact" onClick={() => setMobileOpen(false)}>
+              <a
+                href="https://wa.me/918919870959?text=hello,%20I'm%20intterested%20for%20a%20service%20from%20your%20agency,%20please%20explain%20me"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setMobileOpen(false)}
+              >
                 Start a project
                 <ArrowUpRight className="h-4 w-4" />
-              </Link>
+              </a>
             </div>
           </motion.div>
         )}
