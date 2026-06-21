@@ -899,6 +899,79 @@ body::before {
   text-transform: uppercase;
 }
 
+@keyframes slow-quote-glow {
+  0%, 100% {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2), 0 0 8px rgba(54, 184, 255, 0.05);
+    border-color: rgba(54, 184, 255, 0.1);
+    transform: translateY(0);
+  }
+  50% {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 15px rgba(54, 184, 255, 0.15);
+    border-color: rgba(54, 184, 255, 0.25);
+    transform: translateY(-8px);
+  }
+}
+
+.hero-quote-box {
+  position: relative;
+  overflow: hidden;
+  cursor: none;
+  margin-top: 18px;
+  border: 1px solid rgba(54, 184, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(54, 184, 255, 0.03);
+  backdrop-filter: blur(12px);
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-display), sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.6;
+  text-align: center;
+  letter-spacing: 0.02em;
+  max-width: 500px;
+  animation: slow-quote-glow 6s ease-in-out infinite;
+}
+
+.hero-quote-content {
+  padding: 16px 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-quote-magnified {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  transform: scale(1.6);
+  z-index: 2;
+  will-change: transform, clip-path;
+}
+
+.hero-quote-magnified .hero-quote-content {
+  color: #fff; /* Make magnified text slightly brighter */
+}
+
+.hero-quote-ring {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 1.5px solid rgba(54, 184, 255, 0.4);
+  box-shadow: 0 0 15px rgba(54, 184, 255, 0.2), inset 0 0 10px rgba(54, 184, 255, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 3;
+  transition: opacity 0.15s ease;
+  backdrop-filter: blur(2px);
+  background: rgba(54, 184, 255, 0.05);
+}
+
+.hero-quote-box span {
+  color: #36b8ff;
+  font-weight: 600;
+}
+
 .hero-proof {
   display: flex;
   width: 224px;
@@ -1542,6 +1615,12 @@ body::before {
   line-height: 1.6;
 }
 
+.project-desc-expanded {
+  max-width: 380px !important;
+}
+
+
+
 .project-panel-title {
   position: absolute;
   z-index: 1;
@@ -1635,14 +1714,14 @@ body::before {
 
 .project-meta {
   position: absolute;
-  top: 15px;
-  right: 0;
-  left: 0;
+  top: -10px;
+  left: 11%;
   display: flex;
-  justify-content: space-between;
-  padding-left: 50%;
+  gap: 32px;
   color: rgba(255, 255, 255, 0.46);
-  font-size: 9px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .project-editorial-reverse .project-gradient-panel {
@@ -1653,9 +1732,16 @@ body::before {
   text-align: left;
 }
 
+
+
 .project-editorial-reverse .project-image-card {
   right: 11%;
   left: auto;
+}
+
+.project-editorial-reverse .project-meta {
+  left: auto;
+  right: 11%;
 }
 
 .project-editorial-reverse .project-caption {

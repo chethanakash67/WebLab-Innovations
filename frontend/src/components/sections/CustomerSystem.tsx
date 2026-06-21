@@ -255,14 +255,16 @@ const seededRandom = (seed: number) => {
   return value - Math.floor(value);
 };
 
+const toFixed4 = (num: number) => Number(num.toFixed(4));
+
 const orbitParticles = Array.from({ length: 40 }, (_, id) => ({
   id,
-  x: seededRandom(id + 1) * 100,
-  y: seededRandom(id + 41) * 100,
-  size: seededRandom(id + 81) * 2.5 + 1,
-  delay: seededRandom(id + 121) * 8,
-  duration: seededRandom(id + 161) * 6 + 8,
-  opacity: seededRandom(id + 201) * 0.4 + 0.1,
+  x: toFixed4(seededRandom(id + 1) * 100),
+  y: toFixed4(seededRandom(id + 41) * 100),
+  size: toFixed4(seededRandom(id + 81) * 2.5 + 1),
+  delay: toFixed4(seededRandom(id + 121) * 8),
+  duration: toFixed4(seededRandom(id + 161) * 6 + 8),
+  opacity: toFixed4(seededRandom(id + 201) * 0.4 + 0.1),
 }));
 
 

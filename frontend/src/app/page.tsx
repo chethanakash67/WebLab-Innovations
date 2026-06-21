@@ -17,10 +17,7 @@ const Process = dynamic(() => import("@/components/sections/Process"));
 const OurStory = dynamic(() => import("@/components/sections/OurStory"));
 const Founders = dynamic(() => import("@/components/sections/Founders"));
 
-const SmoothScroll = dynamic(
-  () => import("@/components/providers/SmoothScroll"),
-  { ssr: false }
-);
+import SmoothScroll from "@/components/providers/SmoothScroll";
 const MouseFollowLight = dynamic(
   () => import("@/components/ui/MouseFollowLight"),
   { ssr: false }

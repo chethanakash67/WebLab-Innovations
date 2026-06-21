@@ -18,10 +18,7 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 
-const SmoothScroll = dynamic(
-  () => import("@/components/providers/SmoothScroll"),
-  { ssr: false }
-);
+import SmoothScroll from "@/components/providers/SmoothScroll";
 
 const MouseFollowLight = dynamic(
   () => import("@/components/ui/MouseFollowLight"),

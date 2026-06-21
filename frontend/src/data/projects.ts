@@ -7,6 +7,11 @@ export interface Project {
   link: string;
   images: string[];
   featured: boolean;
+  clientTestimonial?: {
+    quote: string;
+    author: string;
+    role: string;
+  };
 }
 
 export const projects: Project[] = [
@@ -16,7 +21,7 @@ export const projects: Project[] = [
     title: "Tabun Chai",
     type: "Restaurant Website",
     description:
-      "Premium restaurant website with modern UI, menu showcase, responsive experience, and strong visual storytelling.",
+      "We completely transformed Tabun Chai's digital presence into a premium, responsive restaurant website. By focusing on a modern UI, high-quality menu showcase, and strong visual storytelling, we built an engaging experience. The intuitive layout and conversion-focused design significantly improved their online engagement and simplified the ordering process for their local customers.",
     link: "https://tabun-chai.vercel.app/",
     images: [
       "/workpics/tabun-1.png",
@@ -27,6 +32,11 @@ export const projects: Project[] = [
       "/workpics/tabun-6.png",
     ],
     featured: true,
+    clientTestimonial: {
+      quote: "His dedication towards work is what inspires me, like the order was given and within 2 days, he delivered a cleanly designed Customer page for my cafe, and also gave constant support for update cycles and bugs that users encountered.",
+      author: "S Ramesh",
+      role: "Owner, Tabun Chai"
+    }
   },
   {
     id: "dropiq",
@@ -34,7 +44,7 @@ export const projects: Project[] = [
     title: "DropIQ",
     type: "SaaS Platform",
     description:
-      "Modern SaaS dashboard and analytics platform focused on lead generation and conversion tracking.",
+      "DropIQ is a modern SaaS analytics platform engineered specifically for tracking lead generation and boosting conversion rates. We developed a powerful, clean dashboard that translates complex data metrics into simple, actionable insights. The seamless user experience empowers businesses to track their marketing funnels with precision and scale effectively.",
     link: "https://dropiq-nine.vercel.app/",
     images: [
       "/workpics/dropiq-1.png",
@@ -44,6 +54,11 @@ export const projects: Project[] = [
       "/workpics/dropiq-5.png",
     ],
     featured: true,
+    clientTestimonial: {
+      quote: "They took our complex data requirements and turned them into a beautifully simple dashboard. The new interface is incredibly intuitive, and our users have been raving about the smooth experience since launch.",
+      author: "Priya Menon",
+      role: "Product Lead, DropIQ"
+    }
   },
   {
     id: "narayana-school-ctr",
@@ -51,12 +66,17 @@ export const projects: Project[] = [
     title: "Narayana School Chittoor",
     type: "Educational Website",
     description:
-      "A high-end, professional educational website built for Narayana Schools (Chittoor branch). Features a clean minimalist dark mode, custom GSAP animations, and Lenis smooth scrolling.",
+      "We designed a high-end, professional educational platform for Narayana Schools (Chittoor branch) to elevate their digital standard. Featuring a sleek minimalist dark mode, custom GSAP animations, and Lenis smooth scrolling, the site feels incredibly premium. It perfectly balances administrative functionality with an engaging, modern aesthetic.",
     link: "https://narayanaschoolctr.vercel.app",
     images: [
       "/workpics/narayana-1.png",
     ],
     featured: true,
+    clientTestimonial: {
+      quote: "The website transformation was phenomenal. The smooth animations and professional dark mode give our institution a cutting-edge digital presence that stands out. The team delivered exactly what we envisioned.",
+      author: "Dr. K. Srinivas",
+      role: "Principal, Narayana School"
+    }
   },
 ];
 

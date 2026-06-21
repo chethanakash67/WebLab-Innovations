@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Mail, Phone, X } from "lucide-react";
+import { ArrowUpRight, Mail, Phone, X, Copy, Check } from "lucide-react";
 import AgencyMark from "@/components/ui/AgencyMark";
 import { founders } from "@/data/projects";
 
@@ -85,7 +85,14 @@ type FooterPopupKey = keyof typeof footerPopups;
 
 export default function Footer() {
   const [activePopup, setActivePopup] = useState<FooterPopupKey | null>(null);
+  const [copied, setCopied] = useState(false);
   const popup = activePopup ? footerPopups[activePopup] : null;
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText("contact@theaigleonlabs.dev");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <footer className="site-footer">
@@ -176,15 +183,45 @@ export default function Footer() {
             </div>
 
             <div className="footer-contact-list">
-              <a href="mailto:contact@theaigleonlabs.dev" style={{ position: "relative", zIndex: 50 }}>
-                <Mail className="h-4 w-4" />
-                <span>
-                  <small>Email</small>
-                  <strong>contact@theaigleonlabs.dev</strong>
-                </span>
-                <ArrowUpRight className="ml-auto h-4 w-4" />
-              </a>
-              <a href="tel:+918919870959" style={{ position: "relative", zIndex: 50 }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <a
+                  href="mailto:contact@theaigleonlabs.dev?subject=Project%20Inquiry&body=Hello%20AigleOn%20Labs%20Team,%0A%0AI'm%20interested%20in%20discussing%20a%20project%20with%20you."
+                  style={{ position: "relative", zIndex: 50, width: "100%" }}
+                >
+                  <Mail className="h-4 w-4" />
+                  <span>
+                    <small>Email</small>
+                    <strong>contact@theaigleonlabs.dev</strong>
+                  </span>
+                  <ArrowUpRight className="ml-auto h-4 w-4" />
+                </a>
+                <button
+                  onClick={handleCopyEmail}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '11px',
+                    color: copied ? '#4ade80' : 'rgba(255, 255, 255, 0.4)',
+                    background: 'transparent',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: '4px 8px',
+                    width: 'fit-content',
+                    transition: 'color 0.2s',
+                    position: "relative",
+                    zIndex: 50,
+                    marginLeft: '4px'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = copied ? '#4ade80' : 'rgba(255, 255, 255, 0.8)'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = copied ? '#4ade80' : 'rgba(255, 255, 255, 0.4)'}
+                  aria-label="Copy email address"
+                >
+                  {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                  {copied ? "Email copied to clipboard!" : "Copy email address"}
+                </button>
+              </div>
+              <a href="tel:+918919870959" style={{ position: "relative", zIndex: 50, height: "68px" }}>
                 <Phone className="h-4 w-4" />
                 <span>
                   <small>Phone</small>

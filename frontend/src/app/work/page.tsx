@@ -5,10 +5,7 @@ import Navbar from "@/components/layout/Navbar";
 import FeaturedWork from "@/components/sections/FeaturedWork";
 import Footer from "@/components/layout/Footer";
 
-const SmoothScroll = dynamic(
-  () => import("@/components/providers/SmoothScroll"),
-  { ssr: false }
-);
+import SmoothScroll from "@/components/providers/SmoothScroll";
 const MouseFollowLight = dynamic(
   () => import("@/components/ui/MouseFollowLight"),
   { ssr: false }

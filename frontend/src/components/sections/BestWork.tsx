@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ArrowUpRight } from "lucide-react";
 import SectionBadge from "@/components/ui/SectionBadge";
 import "@/app/bento.css";
 
@@ -99,6 +100,22 @@ export default function BestWork() {
   const [activeStatsTab, setActiveStatsTab] = useState<string | null>(null);
   const [isImagePopped, setIsImagePopped] = useState(false);
   const [isImageHovered, setIsImageHovered] = useState(false);
+  const [loadVideos, setLoadVideos] = useState(false);
+
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setLoadVideos(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "600px" }
+    );
+    observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (badgeRef.current) {
@@ -198,7 +215,7 @@ export default function BestWork() {
               style={item.id === 'font-screenshot' ? { cursor: 'pointer' } : {}}
             >
               <div className={`bento-device-frame bento-device-${item.device}`}>
-                {item.type === "video" && (
+                {item.type === "video" && loadVideos && (
                   <video
                     src={item.src}
                     autoPlay
@@ -220,6 +237,8 @@ export default function BestWork() {
                     src={item.src as string}
                     alt={item.alt}
                     fill
+                    placeholder="blur"
+                    blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg=="
                     className="bento-media"
                     style={item.id === "font-screenshot" ? { objectFit: "contain" } : {}}
                     sizes="(max-width: 768px) 100vw, 50vw"
@@ -282,6 +301,10 @@ export default function BestWork() {
                         What results they got? <span>→</span>
                       </button>
                     </div>
+                    
+                    <a href="https://tabun-chai.vercel.app/" target="_blank" rel="noopener noreferrer" className="bento-project-link">
+                      View the project ↗
+                    </a>
 
                     <div className={`stats-popup-card ${activeStatsTab ? 'open' : ''}`}>
                       {activeStatsTab && (
@@ -302,10 +325,10 @@ export default function BestWork() {
           ))}
         </div>
 
-        <div className="testimonial-block" style={{ maxWidth: '1050px', margin: '140px auto 0 auto' }}>
+        <div className="testimonial-block" style={{ maxWidth: '850px', margin: '140px auto 0 auto' }}>
           <div className="testimonial-card">
             <div className="testimonial-header">
-              <h3 className="testimonial-heading">What did they say?</h3>
+              <h3 className="testimonial-heading">What did <span style={{ color: '#e6a15c', fontSize: '1.15em' }}>they say?</span></h3>
               <div className="testimonial-stars">
                 ★★★★<span className="half-star">★</span> <span className="rating-number">4.6</span>
               </div>
@@ -327,7 +350,7 @@ export default function BestWork() {
 
         <div style={{ textAlign: 'center', marginTop: '60px' }}>
           <Link href="/work" className="bento-cta-btn">
-            Check out our projects <span>→</span>
+            Check out our projects <ArrowUpRight className="h-4 w-4" />
           </Link>
         </div>
       </div>

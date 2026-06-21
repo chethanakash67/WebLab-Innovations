@@ -7,10 +7,7 @@ import Footer from "@/components/layout/Footer";
 
 const Packages = dynamic(() => import("@/components/sections/Packages"));
 
-const SmoothScroll = dynamic(
-  () => import("@/components/providers/SmoothScroll"),
-  { ssr: false }
-);
+import SmoothScroll from "@/components/providers/SmoothScroll";
 
 const MouseFollowLight = dynamic(
   () => import("@/components/ui/MouseFollowLight"),

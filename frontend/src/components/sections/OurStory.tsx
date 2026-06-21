@@ -177,14 +177,14 @@ export default function OurStory() {
           <div className="story-content flex flex-col gap-8">
             <p className="leading-relaxed max-w-[700px]">
               <SplitText
-                text="It started in the labs of IIIT, where we spent nights building custom apps, hacking together AI pipelines, and analyzing search algorithms. We noticed a major shift: businesses were struggling to stand out not just on Google, but across ChatGPT and modern AI search engines. There was a clear gap between beautiful designs and the technical intelligence that search engines actually trust."
-                highlights={["labs of IIIT", "ChatGPT and modern AI search engines", "technical intelligence"]}
+                text="It started on a phone call, 10:30 on a weekend night. Two friends, both tired of grinding the same DSA sheets for the same jobs everyone around them was chasing. That call wasn't a business plan, just us wanting to build with the skills and knowledge we actually had. Over the next two years, that turned into late nights shipping small apps and tools, just to see if real people would use something we built."
+                highlights={["phone call", "Two friends", "building custom apps", "same jobs"]}
               />
             </p>
             <p className="leading-relaxed max-w-[700px]">
               <SplitText
-                text="This led to the birth of The AigleOn Labs. By combining Chethan's eye for polished, conversion-oriented user interfaces with Sai's expertise in SEO-first systems and AI integrations, we set out to build digital products that look premium and rank dominantly. We don't just build websites; we design complete visibility engines built for the future of search."
-                highlights={["The AigleOn Labs", "conversion-oriented user interfaces", "SEO-first systems and AI integrations", "visibility engines built for the future of search"]}
+                text="Somewhere in that process, we noticed specialty food and artisan brands kept getting skipped. Because nobody had ever explained why a nice-looking website still doesn't get found, or sell. Most of them had never even heard of AEO. That gap became The AigleOn Labs, Chethan's eye for interfaces that actually convert, and Sai's grip on the technical side that gets a brand found on Google and AI search. Our mission is simple: pretty and converting are not the same thing, and we're here to close that gap, for brands and businesses."
+                highlights={["specialty food and artisan brands","why a nice-looking website still doesn't get found","never even heard of AEO","visibility engines built for the future of search"]}
               />
             </p>
 

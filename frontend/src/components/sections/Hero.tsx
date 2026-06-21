@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,12 +8,26 @@ import { ArrowDown, ArrowUpRight } from "lucide-react";
 import AgencyMark from "@/components/ui/AgencyMark";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { useReactiveGlow } from "@/hooks/useReactiveGlow";
+import heroArtwork from "../../../public/art/robot-hands-hero.png";
+import dropIqPic from "../../../public/workpics/dropiq-1.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
+  const [quoteHovered, setQuoteHovered] = useState(false);
+  const [quoteMousePos, setQuoteMousePos] = useState({ x: 0, y: 0 });
+  const quoteRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const artworkRef = useRef<HTMLDivElement>(null);
+
+  const handleQuoteMouseMove = (e: React.MouseEvent) => {
+    if (!quoteRef.current) return;
+    const rect = quoteRef.current.getBoundingClientRect();
+    setQuoteMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
+  };
 
   useReactiveGlow(heroRef, { restingX: 52, restingY: 46 });
 
@@ -56,10 +70,11 @@ export default function Hero() {
     <section ref={heroRef} id="home" className="hero-section">
       <div ref={artworkRef} className="hero-artwork" aria-hidden="true">
         <Image
-          src="/art/robot-hands-hero.png"
+          src={heroArtwork}
           alt=""
           fill
           priority
+          placeholder="blur"
           className="object-cover"
           sizes="100vw"
         />
@@ -92,6 +107,54 @@ export default function Hero() {
           <div className="hero-mark-halo" />
           <AgencyMark className="hero-mark" />
           <span className="hero-mark-label">AigleOn Labs / digital growth systems</span>
+          <div 
+            className="hero-quote-box"
+            ref={quoteRef}
+            onMouseEnter={() => setQuoteHovered(true)}
+            onMouseLeave={() => setQuoteHovered(false)}
+            onMouseMove={handleQuoteMouseMove}
+          >
+            <div className="hero-quote-content">
+              &quot;<span>Audit first</span> model for brands, <br /> with a <span>live demo </span> on the call.&quot;
+            </div>
+
+            {/* Magnifier Glass Container (Matches reference logic) */}
+            <div 
+              style={{
+                position: 'absolute',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                overflow: 'hidden',
+                pointerEvents: 'none',
+                left: quoteMousePos.x,
+                top: quoteMousePos.y,
+                transform: 'translate(-50%, -50%)',
+                opacity: quoteHovered ? 1 : 0,
+                border: '1.5px solid rgba(54, 184, 255, 0.4)',
+                boxShadow: '0 0 15px rgba(54, 184, 255, 0.2), inset 0 0 10px rgba(54, 184, 255, 0.1)',
+                backgroundColor: '#020303', // Solid background
+                zIndex: 10
+              }}
+            >
+              {/* Scaled Text Inside Magnifier */}
+              <div 
+                className="hero-quote-content"
+                style={{
+                  position: 'absolute',
+                  left: -quoteMousePos.x * 1.6 + 20,
+                  top: -quoteMousePos.y * 1.6 + 20,
+                  width: quoteRef.current ? quoteRef.current.offsetWidth : 420,
+                  transformOrigin: 'top left',
+                  transform: 'scale(1.6)',
+                  color: '#fff',
+                  padding: '16px 32px' // Explicitly match the outer content padding
+                }}
+              >
+                &quot;<span>Audit first</span> model for brands, <br /> with a <span>live demo </span> on the call.&quot;
+              </div>
+            </div>
+          </div>
         </div>
 
         <aside className="hero-proof hero-reveal" aria-label="Agency highlights">
@@ -102,15 +165,16 @@ export default function Hero() {
             </div>
             <div className="proof-screen">
               <Image
-                src="/workpics/dropiq-1.png"
+                src={dropIqPic}
                 alt="DropIQ product interface"
                 fill
+                placeholder="blur"
                 className="object-cover"
                 sizes="240px"
               />
             </div>
-            <strong>10+</strong>
-            <span>digital products shipped</span>
+            <strong>8+</strong>
+            <span>projects delivered</span>
           </div>
 
           <div className="proof-card proof-card-stat">

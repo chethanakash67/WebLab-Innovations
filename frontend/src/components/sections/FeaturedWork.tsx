@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowUpRight } from "lucide-react";
 import { projects } from "@/data/projects";
 import SectionBadge from "@/components/ui/SectionBadge";
+import "@/app/bento.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -71,11 +72,18 @@ export default function FeaturedWork() {
                   <span className="project-reveal project-panel-title">
                     {project.title}
                   </span>
-                  <span className="project-reveal project-panel-label">
-                    [ About this project ]
-                  </span>
-                  <p className="project-reveal">{project.description}</p>
+                  <p className="project-reveal project-desc-expanded">{project.description}</p>
                 </div>
+                {project.clientTestimonial && (
+                  <div className="project-testimonial-overlap project-reveal">
+                    <div className="quote-icon">&quot;</div>
+                    <p className="quote-text">&quot;{project.clientTestimonial.quote}&quot;</p>
+                    <div className="quote-author">
+                      <strong>{project.clientTestimonial.author}</strong>
+                      <span>{project.clientTestimonial.role}</span>
+                    </div>
+                  </div>
+                )}
 
                 <a
                   href={project.link}
@@ -88,6 +96,8 @@ export default function FeaturedWork() {
                     src={project.images[0]}
                     alt={project.title}
                     fill
+                    placeholder="blur"
+                    blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg=="
                     className="object-cover transition-transform duration-1000 group-hover:scale-[1.035]"
                     sizes="(max-width: 768px) 100vw, 65vw"
                   />

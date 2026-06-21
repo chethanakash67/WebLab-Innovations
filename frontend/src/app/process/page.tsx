@@ -13,10 +13,7 @@ import SectionBadge from "@/components/ui/SectionBadge";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const SmoothScroll = dynamic(
-  () => import("@/components/providers/SmoothScroll"),
-  { ssr: false }
-);
+import SmoothScroll from "@/components/providers/SmoothScroll";
 
 const MouseFollowLight = dynamic(
   () => import("@/components/ui/MouseFollowLight"),
