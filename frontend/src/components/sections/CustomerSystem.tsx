@@ -238,16 +238,16 @@ const customerFaqs: CustomerFaq[] = [
 /* ─── Orbital Node Angles ─── */
 
 const orbitPositions = [
-  // First orbit (inner) - 4 items (on four sides)
-  { angle: 0, orbit: 1 },
-  { angle: 90, orbit: 1 },
-  { angle: 180, orbit: 1 },
-  { angle: 270, orbit: 1 },
-  // Second orbit (outer) - 4 items (on diagonal sides)
-  { angle: 45, orbit: 2 },
-  { angle: 135, orbit: 2 },
-  { angle: 225, orbit: 2 },
-  { angle: 315, orbit: 2 },
+  // First orbit (now outer) - 4 items (on four sides)
+  { angle: 0, orbit: 2 },
+  { angle: 90, orbit: 2 },
+  { angle: 180, orbit: 2 },
+  { angle: 270, orbit: 2 },
+  // Second orbit (now inner) - 4 items (on diagonal sides)
+  { angle: 45, orbit: 1 },
+  { angle: 135, orbit: 1 },
+  { angle: 225, orbit: 1 },
+  { angle: 315, orbit: 1 },
 ];
 
 const seededRandom = (seed: number) => {

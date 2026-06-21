@@ -190,7 +190,7 @@ export default function BestWork() {
       <div className="mx-auto max-w-[1500px]">
         <div className="process-heading" style={{ marginBottom: "60px" }}>
           <div>
-            <SectionBadge label="Featured Project" number="04" />
+            <SectionBadge label="Featured Project" number="03" />
             <h2>
               Our Best
               <br />

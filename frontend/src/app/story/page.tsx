@@ -49,19 +49,27 @@ export default function StoryPage() {
                   <ul className="story-stats-list">
                     <li className="story-stats-row">
                       <span className="story-stats-label">Founders</span>
-                      <span className="story-stats-value">Chethan Akash &amp; Sai Videsh</span>
+                      <span className="story-stats-value text-right">Sai Videsh &amp; Chethan Akash</span>
                     </li>
                     <li className="story-stats-row">
-                      <span className="story-stats-label">HQ</span>
-                      <span className="story-stats-value">India / Global</span>
+                      <span className="story-stats-label">Founded</span>
+                      <span className="story-stats-value text-right">2026, Bangalore</span>
+                    </li>
+                    <li className="story-stats-row" style={{ alignItems: "flex-start", flexDirection: "column", gap: "6px" }}>
+                      <span className="story-stats-label">Core Specialities</span>
+                      <span className="story-stats-value" style={{ textAlign: "left" }}>Conversion-focused UI/UX, Technical SEO, AEO (AI Search Visibility)</span>
+                    </li>
+                    <li className="story-stats-row" style={{ alignItems: "flex-start", flexDirection: "column", gap: "6px" }}>
+                      <span className="story-stats-label">Niche Focus</span>
+                      <span className="story-stats-value" style={{ textAlign: "left" }}>Specialty food &amp; artisan brands (coffee roasters, chocolatiers, craft beverage)</span>
                     </li>
                     <li className="story-stats-row">
-                      <span className="story-stats-label">Core Specialties</span>
-                      <span className="story-stats-value">UI/UX, SEO, GEO, AEO</span>
+                      <span className="story-stats-label">Markets Served</span>
+                      <span className="story-stats-value text-right">India &amp; Global</span>
                     </li>
-                    <li className="story-stats-row">
-                      <span className="story-stats-label">Academic Roots</span>
-                      <span className="story-stats-value">IIIT</span>
+                    <li className="story-stats-row" style={{ alignItems: "flex-start", flexDirection: "column", gap: "6px" }}>
+                      <span className="story-stats-label">Mission Target</span>
+                      <span className="story-stats-value" style={{ textAlign: "left" }}>100+ businesses educated on digital visibility in the first 3 months</span>
                     </li>
                   </ul>
                 </div>
@@ -69,77 +77,88 @@ export default function StoryPage() {
                 <div className="story-sidebar-card">
                   <h3 className="text-white">Our Philosophy</h3>
                   <p>
-                    We believe the internet is transitioning from static list-based searches (Google indexing) to dynamic, direct answers powered by LLMs and Agentic workflows. Our mission is to ensure your brand is not just visually stunning, but technically optimal to be recommended by these systems.
+                    We believe in showing, not telling. Before we ever pitch a service, we run a free audit and a live demo, right there on the call, of exactly where a brand stands today on Google and on AI search like ChatGPT. We'd rather a founder see the gap with their own eyes than take our word for it, because the moment they see it, they understand why we exist.
                   </p>
                 </div>
               </aside>
 
               <div className="story-timeline">
-                {/* Milestone 1 */}
+                {/* Phase 01 */}
                 <article className="story-timeline-item">
                   <div className="story-timeline-dot" />
                   <header className="mb-4">
                     <div className="story-timeline-meta">
                       <Calendar className="h-3.5 w-3.5" />
-                      <span>Phase 1: The Incubation at IIIT</span>
+                      <span>Phase 01</span>
                     </div>
-                    <h3>Where Code Met Design</h3>
+                    <h3>The Call</h3>
                   </header>
                   <div className="story-timeline-content">
-                    <p className="text-primary-light font-medium">
-                      [Placeholder Details - To be updated with exact story]
+                    <p>
+                      A weekend night, half past ten, and a phone call that wasn't planned to mean anything. One of us at IIIT, the other at SRM, both quietly worn out from chasing the same DSA sheets and the same 9-to-5 dream everyone around us seemed to want without ever asking why. We weren't pitching each other an idea. We were just two people admitting we wanted to build with what we actually knew, not what a resume expected from us.
                     </p>
                     <p>
-                      Our story begins in the classrooms and laboratories of IIIT. Spending countless nights working on advanced software systems, we noticed a persistent disconnect: engineering products were often built with incredible logic but lacked visual clarity, while beautiful websites often lacked semantic technical depth.
-                    </p>
-                    <p>
-                      We began collaborating—Chethan focusing on refining user interfaces and interaction flows, and Sai optimizing search systems, schemas, and performance architectures. Together, we designed digital solutions for academic projects that immediately gained attention for their seamless utility and aesthetics.
+                      By the time we hung up, there was no business plan on the table, no funding lined up, no mentor guiding the next step. There was only a decision. We agreed to stop preparing for a future someone else had already written for us, and to start shaping one ourselves, even without knowing exactly where it would lead.
                     </p>
                   </div>
                 </article>
 
-                {/* Milestone 2 */}
-                <article className="story-timeline-item">
-                  <div className="story-timeline-dot" />
-                  <header className="mb-4">
-                    <div className="story-timeline-meta">
-                      <Award className="h-3.5 w-3.5" />
-                      <span>Phase 2: The Shift to AI &amp; Agentic Search</span>
-                    </div>
-                    <h3>Identifying the Paradigm Shift</h3>
-                  </header>
-                  <div className="story-timeline-content">
-                    <p className="text-primary-light font-medium">
-                      [Placeholder Details - To be updated with exact story]
-                    </p>
-                    <p>
-                      As Large Language Models and AI systems began replacing traditional search processes, we recognized that simply ranking on Google page one was no longer enough. Modern users ask ChatGPT, Claude, and Perplexity for recommendations, which bypass traditional link lists entirely.
-                    </p>
-                    <p>
-                      We realized that local and global brands needed a new kind of visibility partner. They needed an agency that understood Generative Engine Optimization (GEO) and Answer Engine Optimization (AEO), ensuring that search agents recommend their business directly in generated answers.
-                    </p>
-                  </div>
-                </article>
-
-                {/* Milestone 3 */}
+                {/* Phase 02 */}
                 <article className="story-timeline-item">
                   <div className="story-timeline-dot" />
                   <header className="mb-4">
                     <div className="story-timeline-meta">
                       <Rocket className="h-3.5 w-3.5" />
-                      <span>Phase 3: The Birth of The AigleOn Labs</span>
+                      <span>Phase 02</span>
                     </div>
-                    <h3>Building the Visibility Engine</h3>
+                    <h3>Building Without Knowing Why</h3>
                   </header>
                   <div className="story-timeline-content">
-                    <p className="text-primary-light font-medium">
-                      [Placeholder Details - To be updated with exact story]
+                    <p>
+                      What followed was months of late nights, shipping small apps and bits of software, mostly just to find out if anyone outside our heads would actually use what we made. There was no specific problem we were chasing yet. We were learning by doing, putting things into the world and watching what people picked up and what they walked past.
                     </p>
                     <p>
-                      We founded The AigleOn Labs with a singular core standard: to build digital products that are pixel-perfect, lightning-fast, and search-optimized by default. By merging premium brand UI design with structured semantic markup, schema, and API-first AI agents, we give businesses the visibility they deserve.
+                      A lot of what we built went nowhere, and looking back, that mattered more than it felt like at the time. Every dead end quietly taught us something about the gap between what feels impressive to build and what someone genuinely needs. Somewhere in those months, the question in our heads changed, from what can we build, to who is actually waiting for this.
+                    </p>
+                  </div>
+                </article>
+
+                {/* Phase 03 */}
+                <article className="story-timeline-item">
+                  <div className="story-timeline-dot" />
+                  <header className="mb-4">
+                    <div className="story-timeline-meta">
+                      <Target className="h-3.5 w-3.5" />
+                      <span>Phase 03</span>
+                    </div>
+                    <h3>Finding the Gap</h3>
+                  </header>
+                  <div className="story-timeline-content">
+                    <p>
+                      Somewhere in all that building, we started looking closer at specialty food and artisan brands, coffee roasters, chocolate makers, small businesses with a real product and a real story behind it. My friend had been drawn to these brands for a while, and the more we looked, the more it made sense to me too. They weren't bad businesses. They were just invisible, in ways nobody had bothered to explain to them.
                     </p>
                     <p>
-                      Today, we continue to serve ambitious SaaS startups and local businesses, helping them transition into the new era of search engines and interactive customer workflows.
+                      Most of them had a website because someone told them they needed one, not because they understood what it was supposed to do. Nobody had told them why a good-looking page still doesn't get found on Google, or why ChatGPT recommends a competitor instead of them. That gap, between having a product worth buying and being findable at all, is where we decided to plant ourselves.
+                    </p>
+                  </div>
+                </article>
+
+                {/* Phase 04 */}
+                <article className="story-timeline-item">
+                  <div className="story-timeline-dot" />
+                  <header className="mb-4">
+                    <div className="story-timeline-meta">
+                      <Award className="h-3.5 w-3.5" />
+                      <span>Phase 04</span>
+                    </div>
+                    <h3>The AigleOn Labs</h3>
+                  </header>
+                  <div className="story-timeline-content">
+                    <p>
+                      That's how The AigleOn Labs came together. Chethan brought the eye for interfaces that don't just sit there looking nice but actually move someone from curious to convinced. I brought the technical side, SEO, AEO, the stuff that decides whether a brand even shows up when someone's searching or asking an AI for a recommendation.
+                    </p>
+                    <p>
+                      Our mission isn't complicated to say, even if it's harder to deliver. We want to reach over 100 businesses in the next few months, talk to them directly, and show them what's actually happening behind their website. Because vibe coding can make something look fine, but looking fine and converting a visitor into a customer have never been the same thing.
                     </p>
                   </div>
                 </article>

@@ -72,7 +72,7 @@ export default function Problem() {
       <div className="mx-auto max-w-[1500px] relative z-10" style={{ paddingLeft: "clamp(20px, 5vw, 64px)", paddingRight: "clamp(20px, 5vw, 64px)" }}>
         <header>
           <div className="problem-reveal" style={{ opacity: 0 }}>
-            <SectionBadge label="The Core Problems" number="02" />
+            <SectionBadge label="The Core Problems" number="01" />
           </div>
           <h2 className="text-4xl lg:text-5xl font-display font-medium tracking-tight mt-6 text-white problem-reveal" style={{ opacity: 0, lineHeight: 1.2 }}>
             Why gorgeous websites
@@ -91,7 +91,7 @@ export default function Problem() {
             
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center justify-center px-3.5 py-1 text-[10px] font-semibold tracking-widest uppercase rounded-md bg-red-950/20 border border-red-500/25 animate-red-glow">
+                <span className="animate-red-glow" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "8px 24px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", borderRadius: "9999px", whiteSpace: "nowrap", border: "1px solid rgba(239, 68, 68, 0.3)", backgroundColor: "rgba(153, 27, 27, 0.2)" }}>
                   AI Blindspot
                 </span>
                 <HelpCircle className="h-5 w-5 text-[#36b8ff]/70" />
@@ -115,14 +115,19 @@ export default function Problem() {
             </div>
 
             {/* Visual simulation of AI prompt failure */}
-            <div className="w-full bg-[#08090a] border border-white/5 rounded-2xl p-4 font-mono text-[11px] text-white/40">
-              <div className="flex items-center gap-1.5 border-b border-white/5 pb-2 mb-2">
-                <Terminal className="h-3.5 w-3.5 text-[#36b8ff]/70" />
-                <span className="text-white/60">LLM Recommendation Query</span>
+            <div className="w-full bg-[#08090a] border border-white/5 rounded-2xl p-5 font-mono text-[11px] text-white/40">
+              <div className="flex items-center gap-2 border-b border-white/5 pb-3 mb-3">
+                <Terminal className="h-4 w-4 text-[#36b8ff]/70" />
+                <span className="text-white/60 text-xs">LLM Recommendation Query</span>
               </div>
-              <div className="text-white/70 mb-1">&gt; Find top local services near me:</div>
-              <div className="text-[#36b8ff]/80 mb-2">● [Scanning web data...]</div>
-              <div className="text-white/30 italic">"I couldn't find verified schema records or structured references for your business. Recommending competitors instead..."</div>
+              <div className="flex flex-col gap-2.5">
+                <div className="text-white/70 text-xs">&gt; Find top local services near me:</div>
+                <div className="text-[#36b8ff]/80 text-xs">● [Scanning web data...]</div>
+                <div className="text-white/40 italic leading-relaxed text-xs">
+                  <p>"I couldn't find verified schema records or structured references for your business.</p>
+                  <p className="mt-2">Recommending competitors instead..."</p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -132,7 +137,7 @@ export default function Problem() {
             
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center justify-center px-3.5 py-1 text-[10px] font-semibold tracking-widest uppercase rounded-md bg-red-950/20 border border-red-500/25 animate-red-glow">
+                <span className="animate-red-glow" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "8px 24px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", borderRadius: "9999px", whiteSpace: "nowrap", border: "1px solid rgba(239, 68, 68, 0.3)", backgroundColor: "rgba(153, 27, 27, 0.2)" }}>
                   Friction Penalty
                 </span>
                 <AlertCircle className="h-5 w-5 text-[#36b8ff]/70" />
@@ -156,10 +161,10 @@ export default function Problem() {
             </div>
 
             {/* Visual funnel conversion representation */}
-            <div className="w-full bg-[#08090a] border border-white/5 rounded-2xl p-4 text-[11px] text-white/40">
-              <div className="space-y-3">
+            <div className="w-full bg-[#08090a] border border-white/5 rounded-2xl p-5 text-[11px] text-white/40">
+              <div className="flex flex-col gap-4">
                 <div>
-                  <div className="flex justify-between text-[10px] text-white/50 mb-1">
+                  <div className="flex justify-between text-xs text-white/60 mb-2">
                     <span>Ad Traffic / Visits</span>
                     <span className="text-white">100%</span>
                   </div>
@@ -168,16 +173,16 @@ export default function Problem() {
                   </div>
                 </div>
                 <div>
-                  <div className="flex justify-between text-[10px] text-white/50 mb-1">
+                  <div className="flex justify-between text-xs text-white/60 mb-2">
                     <span>Engagement</span>
-                    <span className="text-white/60">32%</span>
+                    <span className="text-white/70">32%</span>
                   </div>
                   <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
                     <div className="h-full w-[32%] bg-[#36b8ff]/30" />
                   </div>
                 </div>
                 <div>
-                  <div className="flex justify-between text-[10px] text-[#36b8ff]/80 font-semibold mb-1">
+                  <div className="flex justify-between text-xs text-[#36b8ff]/90 font-semibold mb-2">
                     <span>Conversions (Form Fills)</span>
                     <span>1.2%</span>
                   </div>
@@ -195,7 +200,7 @@ export default function Problem() {
             
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
               <div className="flex items-center justify-between">
-                <span className="inline-flex items-center justify-center px-3.5 py-1 text-[10px] font-semibold tracking-widest uppercase rounded-md bg-red-950/20 border border-red-500/25 animate-red-glow">
+                <span className="animate-red-glow" style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", padding: "8px 24px", fontSize: "10px", fontWeight: 700, letterSpacing: "0.15em", textTransform: "uppercase", borderRadius: "9999px", whiteSpace: "nowrap", border: "1px solid rgba(239, 68, 68, 0.3)", backgroundColor: "rgba(153, 27, 27, 0.2)" }}>
                   Performance Crash
                 </span>
                 <Flame className="h-7 w-7 text-[#36b8ff]/70" />
@@ -219,12 +224,12 @@ export default function Problem() {
             </div>
 
             {/* Visual performance gauge representation */}
-            <div className="w-full bg-[#08090a] border border-white/5 rounded-2xl p-4 flex items-center justify-between">
+            <div className="w-full bg-[#08090a] border border-white/5 rounded-2xl p-5 flex items-center justify-between">
               <div className="relative w-16 h-16 rounded-full border-4 border-[#36b8ff]/20 flex items-center justify-center">
                 <div className="absolute inset-0 rounded-full border-4 border-[#36b8ff] border-t-transparent animate-spin-slow" />
-                <span className="font-mono text-base font-bold text-[#36b8ff]">38</span>
+                <span className="font-mono text-lg font-bold text-[#36b8ff]">38</span>
               </div>
-              <div className="text-[10px] text-white/40 space-y-1.5 text-right font-mono">
+              <div className="text-xs text-white/50 space-y-2.5 text-right font-mono">
                 <div>LCP: <span className="text-[#36b8ff] font-semibold">5.4s</span></div>
                 <div>CLS: <span className="text-[#36b8ff] font-semibold">0.42</span></div>
                 <div>FID: <span className="text-[#36b8ff] font-semibold">240ms</span></div>

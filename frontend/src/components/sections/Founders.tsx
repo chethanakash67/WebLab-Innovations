@@ -42,7 +42,7 @@ export default function Founders() {
       <div className="team-watermark">TEAM</div>
       <div className="mx-auto grid max-w-[1500px] gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
         <div className="team-heading">
-          <SectionBadge label="Team Members" number="07" />
+          <SectionBadge label="Team Members" number="09" />
           <div className="overflow-hidden">
             <h2 className="team-title-line">Creative</h2>
           </div>

@@ -81,7 +81,7 @@ export default function Process() {
 
         <header className="process-header">
           <div className="process-reveal">
-            <SectionBadge label="Our Process" number="10" />
+            <SectionBadge label="Our Process" number="08" />
           </div>
           <p className="process-reveal">
             [ One clear route ]

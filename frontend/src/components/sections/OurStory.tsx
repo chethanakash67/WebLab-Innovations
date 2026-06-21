@@ -114,18 +114,18 @@ export default function OurStory() {
     ScrollTrigger.refresh();
 
     const ctx = gsap.context(() => {
-      // Typewriter reveal from opacity 0 to 1
+      // Typewriter reveal: Starts translucent gray (opacity 0.25), turns solid white (opacity 1)
       gsap.fromTo(".story-char",
-        { opacity: 0 },
+        { opacity: 0.35 },
         {
           opacity: 1,
-          duration: 0.01,
-          stagger: 0.01, // 10ms per letter reveal
-          ease: "none",
+          duration: 0.1,
+          stagger: 0.015, // 15ms per letter reveal
+          ease: "power2.out",
           scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 80%",
-            once: true,
+            trigger: ".story-content",
+            start: "top 85%",
+            toggleActions: "play reset play reset",
           },
         }
       );
@@ -162,7 +162,7 @@ export default function OurStory() {
       <div className="mx-auto max-w-[1500px]">
         <div className="grid gap-12 lg:grid-cols-[1fr_1.2fr] lg:gap-24 items-start">
           <header className="story-header story-reveal">
-            <SectionBadge label="Our Origins" number="08" />
+            <SectionBadge label="Our Origins" number="06" />
             <h2 className="text-4xl lg:text-5xl font-display font-medium tracking-tight mt-6 text-white">
               How a simple idea
               <br />
@@ -189,12 +189,9 @@ export default function OurStory() {
             </p>
 
             <div className="mt-4">
-              <Link
-                href="/story"
-                className="story-cta-link inline-flex items-center gap-4 group border border-white/10 hover:border-primary-light/40 bg-white/[0.02] hover:bg-primary-light/[0.04] text-white hover:text-primary-light px-10 py-4 rounded-full font-semibold transition-all duration-300 font-display"
-              >
-                <span>Know our whole story</span>
-                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+              <Link href="/story" className="button button-muted group">
+                Know our whole story
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:rotate-45" />
               </Link>
             </div>
           </div>
