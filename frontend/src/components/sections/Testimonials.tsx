@@ -262,9 +262,9 @@ export default function Testimonials() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={testimonial.id}
-                initial={{ opacity: 0, y: 28 }}
+                initial={{  y: 28 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -24 }}
+                exit={{  y: -24 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="testimonial-quote"
               >

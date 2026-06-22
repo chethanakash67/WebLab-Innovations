@@ -22,7 +22,7 @@ export default function FeaturedWork() {
         gsap.from(project.querySelector(".project-image-card"), {
           y: 80,
           rotate: 2,
-          opacity: 0,
+          
           duration: 1.1,
           ease: "power3.out",
           scrollTrigger: { trigger: project, start: "top 72%" },
@@ -30,7 +30,7 @@ export default function FeaturedWork() {
 
         gsap.from(project.querySelectorAll(".project-reveal"), {
           y: 36,
-          opacity: 0,
+          
           duration: 0.8,
           stagger: 0.1,
           ease: "power3.out",

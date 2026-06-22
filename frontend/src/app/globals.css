@@ -10532,3 +10532,11 @@ section:hover .section-marker-line,
 .pill-anim-1 {
   animation: pill-float-1 ease-in-out infinite;
 }
+
+
+/* ─── Global Animation Helpers ─── */
+.blur-reveal {
+  opacity: 0.1;
+  filter: blur(3px);
+  will-change: opacity, filter;
+}

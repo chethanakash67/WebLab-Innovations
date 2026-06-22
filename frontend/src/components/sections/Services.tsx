@@ -17,7 +17,7 @@ export default function Services() {
     const ctx = gsap.context(() => {
       gsap.from(".service-display-line", {
         yPercent: 100,
-        opacity: 0,
+        
         duration: 1.1,
         stagger: 0.12,
         ease: "power4.out",
@@ -29,7 +29,7 @@ export default function Services() {
 
       gsap.from(".service-row", {
         y: 40,
-        opacity: 0,
+        
         duration: 0.8,
         stagger: 0.08,
         ease: "power3.out",

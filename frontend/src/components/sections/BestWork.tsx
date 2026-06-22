@@ -171,7 +171,7 @@ export default function BestWork() {
     const ctx = gsap.context(() => {
       gsap.from(".bento-item", {
         y: 60,
-        opacity: 0,
+        
         duration: 1,
         stagger: 0.1,
         ease: "power3.out",

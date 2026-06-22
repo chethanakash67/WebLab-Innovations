@@ -74,7 +74,7 @@ export default function Problem() {
           <div className="problem-reveal" style={{ opacity: 0 }}>
             <SectionBadge label="The Core Problems" number="01" />
           </div>
-          <h2 className="text-4xl lg:text-5xl font-display font-medium tracking-tight mt-6 text-white problem-reveal" style={{ opacity: 0, lineHeight: 1.2 }}>
+          <h2 className="text-4xl lg:text-5xl font-display font-medium tracking-tight mt-6 text-white problem-reveal" style={{  lineHeight: 1.2 }}>
             Why gorgeous websites
             <br />
             <span className="text-[#36b8ff]/80">still fail to grow.</span>
@@ -86,7 +86,7 @@ export default function Problem() {
 
         <div className="problem-cards-grid grid md:grid-cols-2 lg:grid-cols-3" style={{ gap: "32px", marginTop: "clamp(48px, 6vw, 72px)" }}>
           {/* Card 1: AI Search Blindspot */}
-          <div className="problem-card border border-white/10 rounded-3xl bg-white/[0.01] backdrop-blur-sm relative overflow-hidden transition-all duration-300 hover:border-[#36b8ff]/30 group" style={{ opacity: 0, padding: "32px", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "28px", minHeight: "480px" }}>
+          <div className="problem-card border border-white/10 rounded-3xl bg-white/[0.01] backdrop-blur-sm relative overflow-hidden transition-all duration-300 hover:border-[#36b8ff]/30 group" style={{  padding: "32px", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "28px", minHeight: "480px" }}>
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#36b8ff]/5 rounded-full blur-2xl pointer-events-none group-hover:bg-[#36b8ff]/10 transition-all duration-300" />
             
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -132,7 +132,7 @@ export default function Problem() {
           </div>
 
           {/* Card 2: Friction Penalty */}
-          <div className="problem-card border border-white/10 rounded-3xl bg-white/[0.01] backdrop-blur-sm relative overflow-hidden transition-all duration-300 hover:border-[#36b8ff]/30 group" style={{ opacity: 0, padding: "32px", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "28px", minHeight: "480px" }}>
+          <div className="problem-card border border-white/10 rounded-3xl bg-white/[0.01] backdrop-blur-sm relative overflow-hidden transition-all duration-300 hover:border-[#36b8ff]/30 group" style={{  padding: "32px", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "28px", minHeight: "480px" }}>
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#36b8ff]/5 rounded-full blur-2xl pointer-events-none group-hover:bg-[#36b8ff]/10 transition-all duration-300" />
             
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
@@ -195,7 +195,7 @@ export default function Problem() {
           </div>
 
           {/* Card 3: Speed Penalty */}
-          <div className="problem-card border border-white/10 rounded-3xl bg-white/[0.01] backdrop-blur-sm relative overflow-hidden transition-all duration-300 hover:border-[#36b8ff]/30 group" style={{ opacity: 0, padding: "32px", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "28px", minHeight: "480px" }}>
+          <div className="problem-card border border-white/10 rounded-3xl bg-white/[0.01] backdrop-blur-sm relative overflow-hidden transition-all duration-300 hover:border-[#36b8ff]/30 group" style={{  padding: "32px", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "28px", minHeight: "480px" }}>
             <div className="absolute top-0 right-0 w-32 h-32 bg-[#36b8ff]/5 rounded-full blur-2xl pointer-events-none group-hover:bg-[#36b8ff]/10 transition-all duration-300" />
             
             <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>

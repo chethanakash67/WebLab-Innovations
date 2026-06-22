@@ -24,7 +24,7 @@ export default function WhyChooseUs() {
     const ctx = gsap.context(() => {
       gsap.from(".why-title", {
         y: 80,
-        opacity: 0,
+        
         duration: 1.2,
         ease: "power3.out",
         scrollTrigger: {
@@ -53,7 +53,7 @@ export default function WhyChooseUs() {
 
       gsap.from(".why-orb-scene", {
         scale: 0.82,
-        opacity: 0,
+        
         duration: 1.5,
         ease: "power3.out",
         scrollTrigger: {

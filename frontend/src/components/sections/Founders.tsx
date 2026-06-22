@@ -17,7 +17,7 @@ export default function Founders() {
     const ctx = gsap.context(() => {
       gsap.from(".team-title-line", {
         x: -80,
-        opacity: 0,
+        
         duration: 1,
         stagger: 0.12,
         ease: "power3.out",
@@ -26,7 +26,7 @@ export default function Founders() {
 
       gsap.from(".team-member-row", {
         y: 48,
-        opacity: 0,
+        
         duration: 0.8,
         stagger: 0.15,
         ease: "power3.out",

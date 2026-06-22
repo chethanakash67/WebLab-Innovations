@@ -504,9 +504,9 @@ export default function CustomerSystem() {
               <motion.aside
                 key={`orbit-popup-${activeSystem.number}`}
                 className="cs-orbit-popup"
-                initial={{ opacity: 0, y: 24, scale: 0.94, filter: "blur(10px)" }}
+                initial={{  y: 24, scale: 0.94, filter: "blur(10px)" }}
                 animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: 16, scale: 0.96, filter: "blur(8px)" }}
+                exit={{  y: 16, scale: 0.96, filter: "blur(8px)" }}
                 transition={{ duration: 0.48, ease: [0.25, 0.1, 0.25, 1] }}
                 aria-live="polite"
               >

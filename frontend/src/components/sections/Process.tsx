@@ -27,7 +27,7 @@ export default function Process() {
     const ctx = gsap.context(() => {
       gsap.from(".process-reveal", {
         y: 48,
-        opacity: 0,
+        
         duration: 0.9,
         stagger: 0.09,
         ease: "power3.out",
@@ -39,7 +39,7 @@ export default function Process() {
 
       gsap.from(".roadmap-step-card", {
         y: 40,
-        opacity: 0,
+        
         duration: 0.8,
         stagger: 0.06,
         ease: "power3.out",

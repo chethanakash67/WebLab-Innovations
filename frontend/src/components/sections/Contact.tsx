@@ -87,7 +87,7 @@ export default function Contact() {
     const ctx = gsap.context(() => {
       gsap.from(".contact-reveal", {
         y: 52,
-        opacity: 0,
+        
         duration: 0.95,
         stagger: 0.1,
         ease: "power3.out",
@@ -99,7 +99,7 @@ export default function Contact() {
 
       gsap.from(".contact-panel", {
         y: 80,
-        opacity: 0,
+        
         duration: 1.15,
         ease: "power3.out",
         scrollTrigger: {

@@ -83,6 +83,21 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${syne.variable}`}>
       <body className="min-h-screen bg-background text-foreground antialiased">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                if (window.location.hash) {
+                  sessionStorage.setItem('scrollHash', window.location.hash);
+                  history.replaceState(null, null, window.location.pathname + window.location.search);
+                }
+                if ('scrollRestoration' in history) {
+                  history.scrollRestoration = 'manual';
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
         {children}
       </body>
     </html>
