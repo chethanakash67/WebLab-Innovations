@@ -22,11 +22,16 @@ const MouseFollowLight = dynamic(
   () => import("@/components/ui/MouseFollowLight"),
   { ssr: false }
 );
+const BackToTop = dynamic(
+  () => import("@/components/ui/BackToTop"),
+  { ssr: false }
+);
 
 export default function Home() {
   return (
     <SmoothScroll>
       <MouseFollowLight />
+      <BackToTop />
       <Navbar />
       <main>
         {/* 1. Hook */}

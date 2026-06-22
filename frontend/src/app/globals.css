@@ -10540,3 +10540,58 @@ section:hover .section-marker-line,
   filter: blur(3px);
   will-change: opacity, filter;
 }
+
+/* ─── Back To Top Button ─── */
+.back-to-top {
+  position: fixed;
+  z-index: 90;
+  bottom: 32px;
+  right: 32px;
+  display: grid;
+  width: 48px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid rgba(54, 184, 255, 0.25);
+  border-radius: 50%;
+  background: rgba(4, 6, 8, 0.6);
+  color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 10px rgba(54, 184, 255, 0.05);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px) scale(0.8);
+  transition: 
+    opacity 300ms ease,
+    transform 300ms ease,
+    border-color 300ms ease, 
+    color 300ms ease, 
+    background 300ms ease, 
+    box-shadow 300ms ease;
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.back-to-top:hover {
+  border-color: rgba(54, 184, 255, 0.6);
+  color: #fff;
+  background: rgba(54, 184, 255, 0.15);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(54, 184, 255, 0.25);
+  transform: translateY(-3px) scale(1.05);
+}
+
+.back-to-top:active {
+  transform: translateY(-1px) scale(0.95);
+}
+
+@media (max-width: 768px) {
+  .back-to-top {
+    bottom: 24px;
+    right: 24px;
+    width: 42px;
+  }
+}
