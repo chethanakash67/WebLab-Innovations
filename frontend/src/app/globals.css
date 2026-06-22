@@ -474,6 +474,9 @@ body::before {
   right: 20px;
   left: 20px;
   pointer-events: none;
+  opacity: 0.1;
+  filter: blur(3px);
+  will-change: opacity, filter;
 }
 
 .nav-shell {
@@ -762,8 +765,17 @@ body::before {
   position: absolute;
   z-index: 0;
   inset: -3%;
-  opacity: 0.9;
-  will-change: transform;
+  opacity: 0.4;
+  filter: blur(3px);
+  transform: scale(1.08);
+  will-change: transform, opacity, filter;
+}
+
+.hero-reveal {
+  opacity: 0.1;
+  filter: blur(3px);
+  transform: translateY(36px);
+  will-change: transform, opacity, filter;
 }
 
 .hero-vignette {

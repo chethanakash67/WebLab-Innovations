@@ -33,9 +33,10 @@ export default function Hero() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".hero-reveal", {
-        y: 36,
-        opacity: 0,
+      gsap.to(".hero-reveal", {
+        y: 0,
+        opacity: 1,
+        filter: "blur(0px)",
         duration: 1,
         stagger: 0.12,
         ease: "power3.out",
@@ -43,11 +44,14 @@ export default function Hero() {
       });
 
       if (artworkRef.current) {
-        gsap.fromTo(
-          artworkRef.current,
-          { scale: 1.08, opacity: 0 },
-          { scale: 1, opacity: 1, duration: 1.8, ease: "power3.out" }
-        );
+        gsap.to(artworkRef.current, {
+          scale: 1,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 1.8,
+          ease: "power3.out",
+          delay: 0.15,
+        });
 
         gsap.to(artworkRef.current, {
           yPercent: 8,
