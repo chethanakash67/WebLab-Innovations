@@ -22,12 +22,12 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Process() {
   const sectionRef = useRef<HTMLElement>(null);
+  const mobileGlowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(".process-reveal", {
         y: 48,
-        
         duration: 0.9,
         stagger: 0.09,
         ease: "power3.out",
@@ -39,7 +39,6 @@ export default function Process() {
 
       gsap.from(".roadmap-step-card", {
         y: 40,
-        
         duration: 0.8,
         stagger: 0.06,
         ease: "power3.out",
@@ -47,6 +46,93 @@ export default function Process() {
           trigger: ".roadmap-snake-container",
           start: "top 80%",
         },
+      });
+
+      // ── Mobile-only: scroll-activated glow line + icon highlights ──
+      const mm = gsap.matchMedia();
+      mm.add("(max-width: 768px)", () => {
+        const container = sectionRef.current?.querySelector(".roadmap-snake-container") as HTMLElement | null;
+        const glowEl = mobileGlowRef.current;
+        const iconWraps = Array.from(
+          sectionRef.current?.querySelectorAll(".roadmap-icon-wrap") ?? []
+        ) as HTMLElement[];
+
+        if (!container || !glowEl || iconWraps.length === 0) return;
+
+        // Measure positions after layout
+        const setupGlow = () => {
+          const cRect = container.getBoundingClientRect();
+          const first = iconWraps[0].getBoundingClientRect();
+          const last  = iconWraps[iconWraps.length - 1].getBoundingClientRect();
+          const lineTop    = first.top  + first.height  / 2 - cRect.top;
+          const lineBottom = last.top   + last.height   / 2 - cRect.top;
+          const lineHeight = lineBottom - lineTop;
+
+          gsap.set(glowEl, {
+            top: lineTop,
+            height: lineHeight,
+            scaleY: 0,
+            transformOrigin: "top left",
+          });
+
+          // Scrub the fill as the section scrolls through the viewport
+          gsap.to(glowEl, {
+            scaleY: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: container,
+              start: "top 55%",
+              end:   "bottom 55%",
+              scrub: 1.2,
+            },
+          });
+
+          // Sequential scroll glow — each element within a card activates
+          // independently as it crosses the viewport trigger point.
+          // Flow: icon first → label second → description last.
+          const cards = Array.from(
+            sectionRef.current?.querySelectorAll(".roadmap-step-card") ?? []
+          ) as HTMLElement[];
+
+          cards.forEach((card) => {
+            const icon  = card.querySelector(".roadmap-icon-wrap") as HTMLElement | null;
+            const label = card.querySelector(".roadmap-step-label") as HTMLElement | null;
+            const popup = card.querySelector(".roadmap-step-popup") as HTMLElement | null;
+
+            // 1. Icon — triggers when icon center crosses 65% viewport
+            if (icon) {
+              ScrollTrigger.create({
+                trigger: icon,
+                start: "center 65%",
+                onEnter:     () => card.classList.add("is-glowing-icon"),
+                onLeaveBack: () => card.classList.remove("is-glowing-icon"),
+              });
+            }
+
+            // 2. Label/heading — triggers when label crosses 70% viewport
+            if (label) {
+              ScrollTrigger.create({
+                trigger: label,
+                start: "top 70%",
+                onEnter:     () => card.classList.add("is-glowing-label"),
+                onLeaveBack: () => card.classList.remove("is-glowing-label"),
+              });
+            }
+
+            // 3. Description — triggers when popup crosses 72% viewport
+            if (popup) {
+              ScrollTrigger.create({
+                trigger: popup,
+                start: "top 72%",
+                onEnter:     () => card.classList.add("is-glowing-popup"),
+                onLeaveBack: () => card.classList.remove("is-glowing-popup"),
+              });
+            }
+          });
+        };
+
+        // Run after first paint so getBoundingClientRect is reliable
+        requestAnimationFrame(setupGlow);
       });
     }, sectionRef);
 
@@ -103,6 +189,8 @@ export default function Process() {
         </div>
 
         <div className="roadmap-snake-container">
+          {/* Mobile scroll-glow progress line — hidden on desktop via CSS */}
+          <div className="roadmap-mobile-glow-line" ref={mobileGlowRef} aria-hidden="true" />
           <div className="roadmap-snake-grid">
             {/* Step 1 */}
             <div className="roadmap-step-card" style={{ gridRow: 1, gridColumn: 1 }}>
