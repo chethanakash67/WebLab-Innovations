@@ -235,6 +235,20 @@ body::before {
   animation: shimmer 3s linear infinite;
 }
 
+@keyframes wave-flow {
+  0% { transform: translateX(-15%); }
+  50% { transform: translateX(15%); }
+  100% { transform: translateX(-15%); }
+}
+
+.animate-wave-flow {
+  animation: wave-flow 12s ease-in-out infinite;
+}
+
+.animate-wave-flow-reverse {
+  animation: wave-flow 16s ease-in-out infinite reverse;
+}
+
 /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Glassmorphism ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
 .glass {
   background: rgba(16, 17, 20, 0.6);
