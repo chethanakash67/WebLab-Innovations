@@ -616,7 +616,7 @@ export default function TabunChaiPage() {
                   Why This Matters
                 </h2>
                 <div className="inline-block bg-[#e6a15c]/10 border border-[#e6a15c]/20 rounded-full px-5 py-2 mx-auto" style={{ padding: '12px 24px', borderRadius: '999px' }}>
-                  <p className="text-[#e6a15c] font-bold uppercase text-sm text-center" style={{ letterSpacing: '0.2em', lineHeight: '1.45', padding: '2px 0' }}>Industry Data & Benchmarks</p>
+                  <p suppressHydrationWarning className="text-[#e6a15c] font-bold uppercase text-sm text-center" style={{ letterSpacing: '0.2em', lineHeight: '1.45', padding: '2px 0' }}>Industry Data & Benchmarks</p>
                 </div>
               </div>
               <div className="bg-[#11151a] border border-gray-800 rounded-2xl w-full max-w-lg" style={{ padding: '16px' }}>
