@@ -1,12 +1,15 @@
 "use client";
 
+import { useState, useEffect } from "react";
+import { useRef } from "react";
 import dynamic from "next/dynamic";
 import "../globals.css";
+import { motion } from "framer-motion";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SectionBadge from "@/components/ui/SectionBadge";
 import SmoothScroll from "@/components/providers/SmoothScroll";
-import { CheckCircle2, TrendingUp, Search, Smartphone, Users, MapPin, ArrowRight } from "lucide-react";
+import { CheckCircle2, TrendingUp, Search, Smartphone, Users, MapPin, ArrowRight, ArrowLeft, Cpu, FileCode2, MessageSquare } from "lucide-react";
 
 const MouseFollowLight = dynamic(
   () => import("@/components/ui/MouseFollowLight"),
@@ -124,12 +127,121 @@ const caseStudySections = [
   }
 ];
 
+const getCoordinatesForPoint = (sectionId: string, pointIndex: number) => {
+  const coords: Record<string, { x: number; y: number }[]> = {
+    "01": [
+      { x: 50, y: 55 }, // Above-the-Fold Clarity (Center Hero Card)
+      { x: 50, y: 82 }, // Fitts's Law & Thumb Zone (Bottom CTA buttons)
+      { x: 70, y: 28 }  // Loss Aversion & Urgency (Top Spec Chip / Live Badge)
+    ],
+    "02": [
+      { x: 77, y: 60 }, // Live Countdown Timers (Top Timer)
+      { x: 28.7, y: 52 }, // Progressive Disclosure (Center Active Offer)
+      { x: 50, y: 78 }  // Social Proof Proximity (Bottom Metrics)
+    ],
+    "03": [
+      { x: 72, y: 56 }, // Interactive Flip Cards (Left reviews)
+      { x: 52, y: 40 }, // Jakob's Law (Right Review Profile/Stars)
+      { x: 50, y: 26 }, // Anchoring Effect (Top Score Bar)
+      { x: 60, y: 75 }  // Von Restorff Effect (Overlapping photo stack)
+    ],
+    "04": [
+      { x: 30, y: 42 }, // Visual Isolation (Flagship Branch Card)
+      { x: 50, y: 90 }, // Mental Models (Trust Footer Contacts)
+      { x: 54, y: 53 }, // Thumb Zone Design (Call Button on Left Card)
+      { x: 75, y: 28 }  // Mere-Exposure Effect (Call Button on Right Card)
+    ]
+  };
+  return coords[sectionId]?.[pointIndex] || { x: 50, y: 50 };
+};
+
+const getImageNameForSection = (sectionId: string) => {
+  const images: Record<string, string> = {
+    "01": "Hero image.png",
+    "02": "Time Sensitive offers.png",
+    "03": "testimonials.png",
+    "04": "location and contact.png"
+  };
+  return images[sectionId] || "";
+};
+
 export default function TabunChaiPage() {
+  const [section3Slide, setSection3Slide] = useState(0);
+  const [section3Fading, setSection3Fading] = useState(false);
+  const [section3Started, setSection3Started] = useState(false);
+  const section3Ref = useRef<HTMLDivElement>(null);
+
+  const toggleSection3Slide = () => {
+    setSection3Started(true);
+    setSection3Slide((prev) => (prev === 0 ? 1 : 0));
+    setSection3Fading(false);
+  };
+
+  useEffect(() => {
+    const target = section3Ref.current;
+    if (!target || section3Started) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setSection3Started(true);
+        }
+      },
+      {
+        threshold: 0.35,
+      }
+    );
+
+    observer.observe(target);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [section3Started]);
+
+  useEffect(() => {
+    if (!section3Started) {
+      return;
+    }
+
+    const HOLD = 5000;  // fully visible hold time
+    const FADE = 1500;  // matches CSS transition
+
+    let holdT: ReturnType<typeof setTimeout>;
+    let swapT: ReturnType<typeof setTimeout>;
+
+    const runCycle = () => {
+      holdT = setTimeout(() => {
+        setSection3Fading(true);
+        swapT = setTimeout(() => {
+          setSection3Slide((prev) => (prev === 0 ? 1 : 0));
+          setSection3Fading(false);
+        }, FADE);
+      }, HOLD);
+    };
+
+    runCycle();
+
+    return () => {
+      clearTimeout(holdT);
+      clearTimeout(swapT);
+    };
+  }, [section3Started, section3Slide]);
+
+
   return (
     <SmoothScroll>
       <MouseFollowLight />
       <Navbar />
-      <main className="w-full flex flex-col items-center overflow-hidden" style={{ paddingTop: "140px", minHeight: "100vh", position: "relative", zIndex: 10, background: "#0a0f19" }}>
+      <motion.main
+        className="w-full flex flex-col items-center overflow-hidden"
+        style={{ paddingTop: "140px", minHeight: "100vh", position: "relative", zIndex: 10, background: "#0a0f19" }}
+        initial={{ opacity: 0, y: 18, filter: "blur(14px)" }}
+        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+      >
         
         {/* HERO SECTION */}
         <section className="section-padding relative overflow-hidden w-full flex justify-center" style={{ paddingBottom: '64px', borderBottom: "1px solid rgba(230, 161, 92, 0.1)" }}>
@@ -350,17 +462,115 @@ export default function TabunChaiPage() {
             <div className="w-full" style={{ display: 'flex', flexDirection: 'column', gap: '128px' }}>
               
               {caseStudySections.map((section, idx) => (
-                <div key={section.id} className="annotated-block flex flex-col items-center w-full">
+                <div
+                  key={section.id}
+                  ref={section.id === "03" ? section3Ref : undefined}
+                  className="annotated-block flex flex-col items-center w-full"
+                >
                   <div className="flex items-center justify-center border-b border-[#e6a15c]/10 w-full" style={{ gap: '20px', marginBottom: '32px', paddingBottom: '16px' }}>
                     <span className="text-[#e6a15c] font-mono text-3xl font-bold">{section.id}</span>
                     <h3 className="text-4xl font-semibold text-[#f4ebd9] text-center" style={{ fontFamily: "var(--font-display)" }}>{section.title}</h3>
                   </div>
                   
-                  {/* Image Placeholder */}
-                  <div className="relative w-full max-w-[1400px] aspect-[16/9] md:aspect-[21/9] bg-[#0d121c] border border-[#e6a15c]/20 rounded-[2rem] overflow-hidden shadow-2xl flex items-center justify-center" style={{ marginBottom: '56px' }}>
-                    <div className="absolute inset-0 bg-gradient-to-br from-[#11151a] to-[#0a0f19]" />
-                    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5" />
-                    <p className="text-gray-500 font-mono uppercase text-base relative z-10 text-center w-full" style={{ letterSpacing: '0.1em' }}>[ {section.title} Screenshot Placeholder ]</p>
+                  {/* Image Container with Interactive UX Hotspots */}
+                  <div className="relative w-full max-w-[1400px] bg-[#0d121c] border border-[#e6a15c]/20 rounded-[2rem] overflow-hidden shadow-2xl group/img" style={{ marginBottom: '56px' }}>
+                    {section.id === "03" ? (
+                      <div className="relative w-full h-[400px] md:h-[600px] lg:h-[700px] xl:h-[750px] overflow-hidden">
+                        {/* Slide 1: Testimonials — visible when slide=0 & not fading, or slide=1 & fading in */}
+                        <img 
+                          src="/testimonials.png" 
+                          alt="Testimonials Layout" 
+                          className="absolute inset-0 w-full h-full object-contain select-none"
+                          style={{
+                            opacity: section3Slide === 0 ? (section3Fading ? 0 : 1) : (section3Fading ? 1 : 0),
+                            transition: 'opacity 1500ms ease-in-out',
+                            zIndex: section3Slide === 0 ? 10 : 5
+                          }}
+                        />
+                        {/* Slide 2: Live Moments — visible when slide=1 & not fading, or slide=0 & fading in */}
+                        <img 
+                          src="/live%20moments.png" 
+                          alt="Live Moments Photo Stack" 
+                          className="absolute inset-0 w-full h-full object-contain select-none"
+                          style={{
+                            opacity: section3Slide === 1 ? (section3Fading ? 0 : 1) : (section3Fading ? 1 : 0),
+                            transition: 'opacity 1500ms ease-in-out',
+                            zIndex: section3Slide === 1 ? 10 : 5
+                          }}
+                        />
+
+                        <button
+                          type="button"
+                          aria-label={section3Slide === 0 ? "Show live moments" : "Show testimonials"}
+                          onClick={toggleSection3Slide}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 z-40 flex items-center justify-center rounded-full border border-[#e6a15c]/35 bg-[#0b0f18]/75 backdrop-blur-md transition-all duration-300 hover:border-[#e6a15c]/70 hover:bg-[#0b0f18]/92 hover:shadow-[0_0_20px_rgba(230,161,92,0.16)]"
+                          style={{ width: '46px', height: '78px', padding: '0' }}
+                        >
+                          {section3Slide === 0 ? (
+                            <ArrowRight className="h-5 w-5 text-[#f4ebd9] transition-transform duration-300 group-hover:translate-x-0.5" />
+                          ) : (
+                            <ArrowLeft className="h-5 w-5 text-[#f4ebd9] transition-transform duration-300 group-hover:-translate-x-0.5" />
+                          )}
+                        </button>
+                      </div>
+                    ) : (
+                      <img 
+                        src={`/${getImageNameForSection(section.id)}`} 
+                        alt={section.title} 
+                        className="w-full h-auto block object-contain select-none max-h-[750px] mx-auto" 
+                      />
+                    )}
+                    
+                    {/* Dark gradient overlay that makes hotspots and details pop slightly */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/15 pointer-events-none z-20" />
+
+                    {/* Interactive hotspots overlay */}
+                    {section.points.map((point, i) => {
+                      const coord = getCoordinatesForPoint(section.id, i);
+
+                      // For section 03: mirror the exact opacity of the corresponding image
+                      // Dots 0,1,2 → testimonials image: slide===0 ? (fading?0:1) : (fading?1:0)
+                      // Dot 3       → live moments image: slide===1 ? (fading?0:1) : (fading?1:0)
+                      const dotOpacity = section.id !== "03"
+                        ? 1
+                        : i < 3
+                          ? (section3Slide === 0 ? (section3Fading ? 0 : 1) : (section3Fading ? 1 : 0))
+                          : (section3Slide === 1 ? (section3Fading ? 0 : 1) : (section3Fading ? 1 : 0));
+
+                      const dotPointerEvents = section.id !== "03"
+                        ? 'auto'
+                        : dotOpacity > 0.5 ? 'auto' : 'none';
+
+                      return (
+                        <div
+                          key={i}
+                          className="absolute group/badge cursor-pointer"
+                          style={{
+                            left: `${coord.x}%`,
+                            top: `${coord.y}%`,
+                            transform: 'translate(-50%, -50%)',
+                            opacity: dotOpacity,
+                            transition: 'opacity 1500ms ease-in-out',
+                            pointerEvents: dotPointerEvents,
+                            zIndex: 30
+                          }}
+                        >
+                          {/* Pulse effect */}
+                          <span className="absolute -inset-2 rounded-full bg-[#e6a15c]/40 animate-ping pointer-events-none" />
+                          
+                          {/* Circle Badge */}
+                          <div className="w-8 h-8 rounded-full bg-[#e6a15c] text-[#0a0f19] flex items-center justify-center font-bold font-mono text-sm border-2 border-white shadow-[0_0_20px_rgba(230,161,92,0.6)] group-hover/badge:bg-white group-hover/badge:text-[#0a0f19] transition-colors duration-300">
+                            {i + 1}
+                          </div>
+
+                          {/* Tooltip */}
+                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 bg-[#11151a] border border-[#e6a15c]/35 text-[#f4ebd9] text-xs font-mono py-1.5 px-3 whitespace-nowrap opacity-0 scale-95 group-hover/badge:opacity-100 group-hover/badge:scale-100 transition-all duration-300 pointer-events-none rounded-md shadow-2xl z-40">
+                            <span className="text-[#e6a15c] font-bold block text-[10px] uppercase mb-0.5 tracking-wider">UX Rule {i + 1}</span>
+                            {point.title}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
 
                   {/* Explanations Grid */}
@@ -405,8 +615,8 @@ export default function TabunChaiPage() {
                 <h2 className="text-4xl md:text-6xl font-bold text-[#f4ebd9] text-center w-full" style={{ fontFamily: "var(--font-display)", marginBottom: '16px' }}>
                   Why This Matters
                 </h2>
-                <div className="inline-block bg-[#e6a15c]/10 border border-[#e6a15c]/20 rounded-full px-5 py-2 mx-auto">
-                  <p className="text-[#e6a15c] font-bold uppercase text-sm text-center" style={{ letterSpacing: '0.2em' }}>Industry Data & Benchmarks</p>
+                <div className="inline-block bg-[#e6a15c]/10 border border-[#e6a15c]/20 rounded-full px-5 py-2 mx-auto" style={{ padding: '12px 24px', borderRadius: '999px' }}>
+                  <p className="text-[#e6a15c] font-bold uppercase text-sm text-center" style={{ letterSpacing: '0.2em', lineHeight: '1.45', padding: '2px 0' }}>Industry Data & Benchmarks</p>
                 </div>
               </div>
               <div className="bg-[#11151a] border border-gray-800 rounded-2xl w-full max-w-lg" style={{ padding: '16px' }}>
@@ -442,6 +652,182 @@ export default function TabunChaiPage() {
           </div>
         </section>
 
+        {/* FUTURE ROADMAP / ADVANCEMENTS SECTION */}
+        <section className="section-padding relative border-t border-[#e6a15c]/10 w-full flex justify-center" style={{ paddingTop: '96px', paddingBottom: '96px', background: "#080c14" }}>
+          <div className="absolute top-0 right-1/4 w-[600px] h-[300px] bg-[#e6a15c]/3 rounded-full blur-[100px] pointer-events-none" />
+          <div className="w-full max-w-[1400px] flex flex-col items-center px-4">
+            
+            {/* Header */}
+            <div className="w-full text-center flex flex-col items-center" style={{ marginBottom: '64px' }}>
+              <SectionBadge label="Future Scope" number="05" />
+              <h2 className="text-4xl md:text-6xl font-bold text-[#f4ebd9] text-center w-full" style={{ fontFamily: "var(--font-display)", marginTop: '24px', marginBottom: '16px' }}>
+                Advancements that can be done for user growth & retention
+              </h2>
+              <p className="text-gray-400 text-lg text-center w-full max-w-3xl" style={{ lineHeight: '1.6' }}>
+                Beyond visual and layout optimizations, these architectural advancements are designed to capture high-intent search traffic and build an automated repeat-customer flywheel.
+              </p>
+            </div>
+
+            {/* Grid of Advancements */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 w-full gap-8">
+              
+              {/* Card 1: AEO */}
+              <div className="relative group bg-[#0e1320] border border-[#e6a15c]/15 hover:border-[#e6a15c]/40 transition-all duration-300 flex flex-col rounded-none hover:shadow-[0_0_30px_rgba(230,161,92,0.08)] cursor-pointer overflow-hidden" style={{ padding: '40px 32px', borderTop: '4px solid rgba(230, 161, 92, 0.3)' }}>
+                {/* Tech scan grid lines background */}
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(230,161,92,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(230,161,92,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
+                
+                {/* Corner Label */}
+                <div className="absolute top-4 right-4 font-mono text-[10px] text-gray-500 tracking-wider">
+                  [ ADVANCEMENT 01 ]
+                </div>
+
+                {/* Icon & Title */}
+                <div className="flex items-center gap-4 relative z-10" style={{ marginBottom: '28px' }}>
+                  <div className="w-12 h-12 border border-[#e6a15c]/30 text-[#e6a15c] flex items-center justify-center rounded-none shrink-0 relative after:absolute after:-inset-1 after:border after:border-[#e6a15c]/10">
+                    <Cpu className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-[#f4ebd9] text-2xl font-bold group-hover:text-[#e6a15c] transition-colors" style={{ fontFamily: "var(--font-display)" }}>
+                    Hyper-Local AEO
+                  </h3>
+                </div>
+
+                {/* Concept */}
+                <div className="relative z-10" style={{ marginBottom: '24px' }}>
+                  <span className="font-mono text-[11px] uppercase text-[#e6a15c]/80 tracking-wider mb-2 block font-semibold">
+                    // The Concept
+                  </span>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    Traditional SEO tries to rank you on a page of 10 blue links. AEO (Answer Engine Optimization) structures your data so that when a user asks ChatGPT, Perplexity, or Google's AI Overview, <span className="text-[#f4ebd9] italic font-light">"Where is the best late-night chai spot near Balaji Colony?"</span>, the AI gives Tabun Chai as the definitive, single answer.
+                  </p>
+                </div>
+
+                {/* Process */}
+                <div className="relative z-10" style={{ marginBottom: '32px' }}>
+                  <span className="font-mono text-[11px] uppercase text-[#e6a15c]/80 tracking-wider mb-2 block font-semibold">
+                    // Implementation Process
+                  </span>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    We write natural-language Q&A clusters within the site's code that directly answer highly specific local queries (e.g., <span className="text-[#f4ebd9] italic font-light">"Does Tabun Chai serve snacks late at night?"</span>). We then aggressively link your menu and exact coordinates to AI data-scraping sources, ensuring LLMs view you as the localized authority.
+                  </p>
+                </div>
+
+                {/* Output */}
+                <div className="bg-[#e6a15c]/5 border-l-2 border-[#e6a15c] relative z-10 mt-auto" style={{ padding: '20px' }}>
+                  <span className="font-mono text-[10px] uppercase text-[#e6a15c] tracking-widest mb-1.5 block font-bold">
+                    Expected Output
+                  </span>
+                  <p className="text-gray-200 text-[13px] leading-relaxed font-semibold">
+                    35% to 50% increase in Zero-Click visibility. Bypasses standard Google search competition. Customers get the direct answer to go to you, drastically increasing high-intent footfall.
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 2: Schema */}
+              <div className="relative group bg-[#0e1320] border border-[#e6a15c]/15 hover:border-[#e6a15c]/40 transition-all duration-300 flex flex-col rounded-none hover:shadow-[0_0_30px_rgba(230,161,92,0.08)] cursor-pointer overflow-hidden" style={{ padding: '40px 32px', borderTop: '4px solid rgba(230, 161, 92, 0.3)' }}>
+                {/* Tech scan grid lines background */}
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(230,161,92,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(230,161,92,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
+                
+                {/* Corner Label */}
+                <div className="absolute top-4 right-4 font-mono text-[10px] text-gray-500 tracking-wider">
+                  [ ADVANCEMENT 02 ]
+                </div>
+
+                {/* Icon & Title */}
+                <div className="flex items-center gap-4 relative z-10" style={{ marginBottom: '28px' }}>
+                  <div className="w-12 h-12 border border-[#e6a15c]/30 text-[#e6a15c] flex items-center justify-center rounded-none shrink-0 relative after:absolute after:-inset-1 after:border after:border-[#e6a15c]/10">
+                    <FileCode2 className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-[#f4ebd9] text-2xl font-bold group-hover:text-[#e6a15c] transition-colors" style={{ fontFamily: "var(--font-display)" }}>
+                    Live-Menu Schema
+                  </h3>
+                </div>
+
+                {/* Concept */}
+                <div className="relative z-10" style={{ marginBottom: '24px' }}>
+                  <span className="font-mono text-[11px] uppercase text-[#e6a15c]/80 tracking-wider mb-2 block font-semibold">
+                    // The Concept
+                  </span>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    Right now, Google knows you are a website. Schema markup translates your exact menu, prices, and 5-star aggregate ratings into a machine-readable language so Google can display them directly on the search results page before the user even clicks your link.
+                  </p>
+                </div>
+
+                {/* Process */}
+                <div className="relative z-10" style={{ marginBottom: '32px' }}>
+                  <span className="font-mono text-[11px] uppercase text-[#e6a15c]/80 tracking-wider mb-2 block font-semibold">
+                    // Implementation Process
+                  </span>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    We inject specific JSON-LD code blocks (LocalBusiness, Menu, and AggregateRating schemas) deep into the website's <code className="text-[#f4ebd9] bg-[#1a2233] px-1 py-0.5 font-mono text-xs font-light">&lt;head&gt;</code>. This securely tags every item (e.g., Garam Chai - ₹15) and your 4.8/5 rating so search engine crawlers can instantly pull and display it.
+                  </p>
+                </div>
+
+                {/* Output */}
+                <div className="bg-[#e6a15c]/5 border-l-2 border-[#e6a15c] relative z-10 mt-auto" style={{ padding: '20px' }}>
+                  <span className="font-mono text-[10px] uppercase text-[#e6a15c] tracking-widest mb-1.5 block font-bold">
+                    Expected Output
+                  </span>
+                  <p className="text-gray-200 text-[13px] leading-relaxed font-semibold">
+                    20% to 30% increase in Organic Click-Through Rate (CTR). Displays bright gold stars, menu items, and pricing directly on Google results to capture intent and win clicks.
+                  </p>
+                </div>
+              </div>
+
+              {/* Card 3: WhatsApp CRM */}
+              <div className="relative group bg-[#0e1320] border border-[#e6a15c]/15 hover:border-[#e6a15c]/40 transition-all duration-300 flex flex-col rounded-none hover:shadow-[0_0_30px_rgba(230,161,92,0.08)] cursor-pointer overflow-hidden" style={{ padding: '40px 32px', borderTop: '4px solid rgba(230, 161, 92, 0.3)' }}>
+                {/* Tech scan grid lines background */}
+                <div className="absolute inset-0 bg-[linear-gradient(rgba(230,161,92,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(230,161,92,0.02)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none" />
+                
+                {/* Corner Label */}
+                <div className="absolute top-4 right-4 font-mono text-[10px] text-gray-500 tracking-wider">
+                  [ ADVANCEMENT 03 ]
+                </div>
+
+                {/* Icon & Title */}
+                <div className="flex items-center gap-4 relative z-10" style={{ marginBottom: '28px' }}>
+                  <div className="w-12 h-12 border border-[#e6a15c]/30 text-[#e6a15c] flex items-center justify-center rounded-none shrink-0 relative after:absolute after:-inset-1 after:border after:border-[#e6a15c]/10">
+                    <MessageSquare className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-[#f4ebd9] text-2xl font-bold group-hover:text-[#e6a15c] transition-colors" style={{ fontFamily: "var(--font-display)" }}>
+                    Automated CRM Loop
+                  </h3>
+                </div>
+
+                {/* Concept */}
+                <div className="relative z-10" style={{ marginBottom: '24px' }}>
+                  <span className="font-mono text-[11px] uppercase text-[#e6a15c]/80 tracking-wider mb-2 block font-semibold">
+                    // The Concept
+                  </span>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    You are currently funneling users from the website to WhatsApp to order or ask questions. We upgrade this into a closed-loop loyalty engine that automatically brings them back without manual effort from your staff.
+                  </p>
+                </div>
+
+                {/* Process */}
+                <div className="relative z-10" style={{ marginBottom: '32px' }}>
+                  <span className="font-mono text-[11px] uppercase text-[#e6a15c]/80 tracking-wider mb-2 block font-semibold">
+                    // Implementation Process
+                  </span>
+                  <p className="text-gray-400 text-sm leading-relaxed">
+                    We transition the basic WhatsApp link to a WhatsApp Business API integration. When a user messages you, they are tagged. Exactly 7 days later, at 4:30 PM (before evening peak), the system autonomously sends: <span className="text-[#f4ebd9] italic font-light">"Hey! Time for a break. Show this text for 15% off chai + momos tonight."</span>
+                  </p>
+                </div>
+
+                {/* Output */}
+                <div className="bg-[#e6a15c]/5 border-l-2 border-[#e6a15c] relative z-10 mt-auto" style={{ padding: '20px' }}>
+                  <span className="font-mono text-[10px] uppercase text-[#e6a15c] tracking-widest mb-1.5 block font-bold">
+                    Expected Output
+                  </span>
+                  <p className="text-gray-200 text-[13px] leading-relaxed font-semibold">
+                    40% to 60% increase in Repeat Customer Rate. This automated loop turns a one-time website visitor into a habitual, loyal regular with zero extra manual labor.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </section>
+
         {/* CLIENT NOTE */}
         <section className="section-padding text-center relative overflow-hidden bg-[#0a0f19] w-full flex justify-center" style={{ paddingTop: '128px', paddingBottom: '128px' }}>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#e6a15c]/5 pointer-events-none" />
@@ -458,7 +844,7 @@ export default function TabunChaiPage() {
           </div>
         </section>
 
-      </main>
+      </motion.main>
       <Footer />
     </SmoothScroll>
   );
