@@ -13,11 +13,9 @@ const footerLinks = {
     { label: "FAQ", popupKey: undefined, href: "/faq" },
     { label: "Contact", popupKey: undefined, href: "/contact" },
   ],
-  services: [
-    { label: "UI & UX Design", popupKey: "ui-ux-design" as any, href: undefined },
-    { label: "SEO-First Development", popupKey: "seo-development" as any, href: undefined },
-    { label: "SEO & AEO", popupKey: "seo-aeo" as any, href: undefined },
-    { label: "AI & Automation", popupKey: "ai-automation" as any, href: undefined },
+  details: [
+    { label: "Our Story", popupKey: undefined, href: "/story" },
+    { label: "T&C", popupKey: undefined, href: "/TERMS%20AND%20CONDITIONS%20AIGLEON%20LABS.pdf" },
   ],
   social: [
     {
@@ -226,8 +224,8 @@ export default function Footer() {
                 onPopup={setActivePopup}
               />
               <FooterColumn
-                title="Capabilities"
-                links={footerLinks.services}
+                title="Details"
+                links={footerLinks.details}
                 onPopup={setActivePopup}
               />
               <FooterColumn title="Connect" links={footerLinks.social} external />
@@ -325,7 +323,7 @@ function FooterColumn({
         {links.map((link) => (
           <li key={link.label}>
             {link.href ? (
-              link.href.startsWith("/") ? (
+              link.href.startsWith("/") && !link.href.endsWith(".pdf") ? (
                 <Link href={link.href}>
                   {link.label}
                   <ArrowUpRight className="h-3.5 w-3.5" />

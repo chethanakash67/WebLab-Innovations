@@ -1207,7 +1207,7 @@
 .bento-cta-btn:active {
   background: #36b8ff !important;
   border-color: #36b8ff !important;
-  color: #ffffff !important;
+  color: #000000 !important;
   box-shadow: 0 0 25px rgba(54, 184, 255, 0.45);
   transform: translateY(-1px);
 }
@@ -1220,7 +1220,7 @@
 .bento-cta-btn:hover svg,
 .bento-cta-btn:focus svg,
 .bento-cta-btn:active svg {
-  color: #ffffff !important;
+  color: #000000 !important;
 }
 
 @keyframes float-testimonial {

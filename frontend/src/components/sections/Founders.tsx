@@ -42,12 +42,46 @@ export default function Founders() {
       <div className="team-watermark">TEAM</div>
       <div className="mx-auto grid max-w-[1500px] gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
         <div className="team-heading">
-          <SectionBadge label="Team Members" number="09" />
+          <SectionBadge label="Founders" number="09" />
           <div className="overflow-hidden">
-            <h2 className="team-title-line">Creative</h2>
+            <h2
+              className="team-title-line font-display text-white"
+              style={{
+                fontWeight: 400,
+                fontSize: "clamp(2rem, 3.8vw, 4.5rem)",
+                lineHeight: 0.88,
+                letterSpacing: "-0.07em",
+                marginBottom: "4px"
+              }}
+            >
+              A
+            </h2>
           </div>
           <div className="overflow-hidden">
-            <h2 className="team-title-line text-primary-light">Team</h2>
+            <h2
+              className="team-title-line font-display text-primary-light"
+              style={{
+                fontWeight: 400,
+                fontSize: "clamp(3.2rem, 7.8vw, 9.2rem)",
+                lineHeight: 0.82,
+                letterSpacing: "-0.08em"
+              }}
+            >
+              Team of Two
+            </h2>
+          </div>
+          <div className="overflow-hidden">
+            <h2
+              className="team-title-line font-display text-white"
+              style={{
+                fontWeight: 400,
+                fontSize: "clamp(3.2rem, 7.8vw, 9.2rem)",
+                lineHeight: 0.82,
+                letterSpacing: "-0.08em"
+              }}
+            >
+              Started This.
+            </h2>
           </div>
           <p>
             Two disciplines, one standard: make the work clear, memorable, and

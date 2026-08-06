@@ -19,7 +19,7 @@ const syne = Syne({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://theaigleonlabs.dev"),
-  title: "AigleOn Labs | Premium Web Design & Development Agency",
+  title: "AigleOn Labs | Your Digital Team",
   description:
     "AigleOn Labs builds high-performance websites, SaaS platforms, dashboards, and AI-powered digital products. We craft award-winning digital experiences.",
   keywords: [

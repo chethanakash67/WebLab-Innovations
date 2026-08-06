@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Check, LoaderCircle, Quote, Star } from "lucide-react";
+import { ArrowUpRight, Check, ChevronRight, LoaderCircle, Quote, Star } from "lucide-react";
 import { testimonials } from "@/data/projects";
 import SectionBadge from "@/components/ui/SectionBadge";
 

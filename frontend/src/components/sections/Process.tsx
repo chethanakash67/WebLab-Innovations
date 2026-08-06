@@ -170,16 +170,16 @@ export default function Process() {
           
           <h2 style={{
             fontFamily: themeTitleFont,
-            fontSize: 'clamp(2.25rem, 4.5vw, 3.25rem)',
-            fontWeight: 700,
-            lineHeight: 1.15,
+            fontSize: 'clamp(3rem, 6.5vw, 7rem)',
+            fontWeight: 400,
+            lineHeight: 0.84,
+            letterSpacing: '-0.08em',
             color: '#ffffff',
-            marginBottom: '14px',
-            letterSpacing: '-0.02em'
+            marginBottom: '14px'
           }}>
             Our complete
             <br />
-            <span style={{ color: '#36b8ff' }}>
+            <span style={{ color: '#36b8ff', fontWeight: 400 }}>
               action process.
             </span>
           </h2>
@@ -271,8 +271,8 @@ export default function Process() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#36b8ff',
-                  fontWeight: 800,
-                  fontSize: '18px',
+                  fontWeight: 400,
+                  fontSize: '20px',
                   marginBottom: '12px'
                 }}>
                   1
@@ -331,8 +331,8 @@ export default function Process() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#36b8ff',
-                  fontWeight: 800,
-                  fontSize: '18px',
+                  fontWeight: 400,
+                  fontSize: '20px',
                   marginBottom: '12px'
                 }}>
                   2
@@ -391,8 +391,8 @@ export default function Process() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#36b8ff',
-                  fontWeight: 800,
-                  fontSize: '18px',
+                  fontWeight: 400,
+                  fontSize: '20px',
                   marginBottom: '12px'
                 }}>
                   3
@@ -455,8 +455,8 @@ export default function Process() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#36b8ff',
-                  fontWeight: 800,
-                  fontSize: '18px',
+                  fontWeight: 400,
+                  fontSize: '20px',
                   marginBottom: '12px'
                 }}>
                   4
@@ -515,8 +515,8 @@ export default function Process() {
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: '#36b8ff',
-                  fontWeight: 800,
-                  fontSize: '18px',
+                  fontWeight: 400,
+                  fontSize: '20px',
                   marginBottom: '12px'
                 }}>
                   5
@@ -631,7 +631,7 @@ export default function Process() {
               <CreditCard style={{ width: '14px', height: '14px' }} />
               <span>Transparent Milestone Model</span>
             </div>
-            <h3 style={{ fontFamily: themeTitleFont, fontSize: 'clamp(1.35rem, 2.5vw, 1.75rem)', fontWeight: 700, color: '#ffffff', margin: 0 }}>
+            <h3 style={{ fontFamily: themeTitleFont, fontSize: 'clamp(1.6rem, 2.8vw, 2.2rem)', fontWeight: 400, letterSpacing: '-0.06em', color: '#ffffff', margin: 0 }}>
               Our Transparent Payment Structure
             </h3>
           </div>
@@ -652,7 +652,7 @@ export default function Process() {
               >
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-                    <span style={{ fontFamily: themeTitleFont, fontSize: '1.85rem', fontWeight: 800, color: '#36b8ff' }}>{m.percentage}</span>
+                    <span style={{ fontFamily: themeTitleFont, fontSize: '2.5rem', fontWeight: 400, letterSpacing: '-0.06em', color: '#36b8ff' }}>{m.percentage}</span>
                     <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', backgroundColor: 'rgba(255,255,255,0.06)', padding: '3px 10px', borderRadius: '9999px', border: '1px solid rgba(255,255,255,0.1)' }}>
                       Stage 0{idx + 1}
                     </span>
@@ -733,8 +733,8 @@ export default function Process() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 color: '#36b8ff',
-                fontWeight: 900,
-                fontSize: '20px',
+                fontWeight: 400,
+                fontSize: '22px',
                 flexShrink: 0
               }}>
                 {activeStepModal.stepId}

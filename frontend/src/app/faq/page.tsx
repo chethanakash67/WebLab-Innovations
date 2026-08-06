@@ -66,52 +66,100 @@ export default function FAQPage() {
     setActiveFaqIndex(activeFaqIndex === index ? null : index);
   };
 
+  const themeTitleFont = "var(--font-syne), var(--font-display), sans-serif";
+
   return (
     <SmoothScroll>
       <MouseFollowLight />
       <Navbar />
-      <main style={{ paddingTop: "140px", minHeight: "80vh", position: "relative", zIndex: 10 }}>
-        <section className="section-padding" style={{ position: "relative" }}>
-          <div className="mx-auto max-w-[1500px]">
-            <header className="services-page-header">
+      <main style={{ paddingTop: "120px", minHeight: "80vh", position: "relative", zIndex: 10 }}>
+        <section className="section-padding" style={{ position: "relative", padding: "40px 16px" }}>
+          <div className="mx-auto max-w-[1100px]">
+            <header className="services-page-header" style={{ marginBottom: "40px" }}>
               <div>
                 <SectionBadge label="Information" number="05" />
-                <h2>
+                <h2 style={{ fontFamily: themeTitleFont, fontSize: "clamp(2rem, 4vw, 3.25rem)", fontWeight: 700, color: "#ffffff", marginTop: "12px" }}>
                   Common Questions
                   <br />
-                  <span>&amp; Answers.</span>
+                  <span style={{ color: "#36b8ff" }}>&amp; Answers.</span>
                 </h2>
               </div>
-              <p>
-                [ FAQ ]
-                <br />
+              <p style={{ color: "#94a3b8", fontSize: "0.95rem", lineHeight: "1.6", marginTop: "12px" }}>
                 Detailed answers and technical clarifications for business owners looking to optimize their customer systems and operations.
               </p>
             </header>
 
-            <div className="faq-page-list">
+            <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
               {faqList.map((faq, index) => {
                 const isActive = index === activeFaqIndex;
                 return (
                   <article
                     key={faq.id}
-                    className={`faq-page-item ${isActive ? "is-active" : ""}`}
+                    style={{
+                      position: "relative",
+                      backgroundColor: isActive ? "rgba(7, 12, 24, 0.95)" : "rgba(7, 12, 24, 0.6)",
+                      border: isActive ? "1px solid rgba(54, 184, 255, 0.45)" : "1px solid rgba(255, 255, 255, 0.1)",
+                      borderRadius: "20px",
+                      overflow: "hidden",
+                      boxShadow: isActive ? "0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(54, 184, 255, 0.15)" : "0 4px 16px rgba(0, 0, 0, 0.3)",
+                      transition: "all 0.25s ease"
+                    }}
                   >
                     <button
                       type="button"
-                      className="faq-page-trigger"
                       aria-expanded={isActive}
                       onClick={() => toggleFaq(index)}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        width: "100%",
+                        padding: "20px 20px",
+                        backgroundColor: "transparent",
+                        border: "none",
+                        cursor: "pointer",
+                        textAlign: "left"
+                      }}
                     >
-                      <div className="faq-page-trigger-content">
-                        <span className="faq-page-topic">{faq.topic}</span>
-                        <strong className="faq-page-question">{faq.question}</strong>
+                      <div style={{ paddingRight: "16px", flex: 1 }}>
+                        <span style={{
+                          display: "inline-block",
+                          fontSize: "0.75rem",
+                          fontWeight: 700,
+                          textTransform: "uppercase",
+                          letterSpacing: "0.08em",
+                          color: "#36b8ff",
+                          marginBottom: "6px"
+                        }}>
+                          {faq.topic}
+                        </span>
+                        <strong style={{
+                          display: "block",
+                          fontFamily: themeTitleFont,
+                          fontSize: "clamp(1.05rem, 3vw, 1.25rem)",
+                          fontWeight: 600,
+                          color: "#ffffff",
+                          lineHeight: 1.35
+                        }}>
+                          {faq.question}
+                        </strong>
                       </div>
-                      <span className="faq-page-toggle">
+                      <span style={{
+                        width: "36px",
+                        height: "36px",
+                        borderRadius: "9999px",
+                        backgroundColor: isActive ? "#36b8ff" : "rgba(255, 255, 255, 0.08)",
+                        color: isActive ? "#000000" : "#36b8ff",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        transition: "all 0.2s ease"
+                      }}>
                         {isActive ? (
-                          <Minus size={18} strokeWidth={2} />
+                          <Minus size={18} strokeWidth={2.5} />
                         ) : (
-                          <Plus size={18} strokeWidth={2} />
+                          <Plus size={18} strokeWidth={2.5} />
                         )}
                       </span>
                     </button>
@@ -119,17 +167,41 @@ export default function FAQPage() {
                     <AnimatePresence initial={false}>
                       {isActive && (
                         <motion.div
-                          className="faq-page-reveal"
                           initial={{ height: 0, opacity: 0 }}
                           animate={{ height: "auto", opacity: 1 }}
                           exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.35, ease: "easeInOut" }}
+                          transition={{ duration: 0.3, ease: "easeInOut" }}
+                          style={{ overflow: "hidden" }}
                         >
-                          <div className="faq-page-short-answer">
-                            <Sparkles size={13} strokeWidth={2} aria-hidden="true" />
-                            {faq.short}
+                          <div style={{ 
+                            padding: "0 20px 24px 20px", 
+                            borderTop: "1px solid rgba(255, 255, 255, 0.08)", 
+                            paddingTop: "16px",
+                            backgroundColor: "rgba(3, 6, 13, 0.5)"
+                          }}>
+                            <div style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "8px",
+                              fontSize: "0.85rem",
+                              fontWeight: 600,
+                              color: "#36b8ff",
+                              marginBottom: "12px"
+                            }}>
+                              <Sparkles size={15} strokeWidth={2} style={{ flexShrink: 0 }} />
+                              <span style={{ lineHeight: 1.4 }}>{faq.short}</span>
+                            </div>
+                            <p style={{
+                              color: "#cbd5e1",
+                              fontSize: "0.9rem",
+                              lineHeight: 1.65,
+                              margin: 0,
+                              wordBreak: "break-word",
+                              overflowWrap: "break-word"
+                            }}>
+                              {faq.answer}
+                            </p>
                           </div>
-                          <p className="faq-page-full-answer">{faq.answer}</p>
                         </motion.div>
                       )}
                     </AnimatePresence>

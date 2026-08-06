@@ -676,7 +676,16 @@ export default function CustomerSystem() {
                           opacity: { duration: 0.35, delay: 0.1 },
                         }}
                       >
-                        <div className="cs-brief-reveal-inner">
+                        <div 
+                          className="cs-brief-reveal-inner"
+                          style={{
+                            margin: "0 16px 20px 16px",
+                            padding: "16px 16px 20px 16px",
+                            borderRadius: "14px",
+                            wordBreak: "break-word",
+                            overflowWrap: "break-word"
+                          }}
+                        >
                           {/* Holographic grid overlay */}
                           <div
                             className="cs-brief-holo-grid"
@@ -684,7 +693,7 @@ export default function CustomerSystem() {
                           />
 
                           {/* Full 2-line answer with typewriter */}
-                          <div className="cs-brief-answer">
+                          <div className="cs-brief-answer" style={{ color: "rgba(255, 255, 255, 0.85)", fontSize: "0.9rem", lineHeight: 1.65 }}>
                             <TypewriterText
                               key={`faq-${index}`}
                               text={faq.answer}
@@ -692,7 +701,7 @@ export default function CustomerSystem() {
                           </div>
 
                           {/* Bottom topic pill */}
-                          <div className="cs-brief-answer-footer">
+                          <div className="cs-brief-answer-footer" style={{ marginTop: "14px", paddingTop: "12px" }}>
                             <span className="cs-brief-answer-topic">
                               {faq.topic}
                             </span>
