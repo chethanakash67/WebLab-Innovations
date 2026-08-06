@@ -198,7 +198,7 @@ export default function WhatWeOffer() {
               className="button button-primary"
               onClick={scrollToCta}
             >
-              Check the Price
+              Contact
               <ArrowUpRight className="h-4 w-4 transition-transform duration-300" />
             </button>
           </div>
@@ -241,11 +241,9 @@ export default function WhatWeOffer() {
                 </ul>
               </div>
 
-              {activeSystem.priceNote && (
-                <div className="offer-popup-price">
-                  <span>{activeSystem.priceNote}</span>
-                </div>
-              )}
+              <div className="offer-popup-price" style={{ marginTop: "16px" }}>
+                <span style={{ fontSize: "0.85rem", color: "#36b8ff", fontWeight: 600 }}>* Contact for pricing</span>
+              </div>
             </div>
 
             <div className="offer-popup-actions">
@@ -253,7 +251,7 @@ export default function WhatWeOffer() {
                 className="button button-primary"
                 onClick={scrollToCta}
               >
-                Check the Price
+                Contact
                 <ArrowUpRight className="h-4 w-4" />
               </button>
               <button

@@ -86,10 +86,47 @@ export default function Footer() {
   const [copied, setCopied] = useState(false);
   const popup = activePopup ? footerPopups[activePopup] : null;
 
+  const [subEmail, setSubEmail] = useState("");
+  const [subLoading, setSubLoading] = useState(false);
+  const [subMsg, setSubMsg] = useState("");
+  const [subStatus, setSubStatus] = useState<"success" | "error" | null>(null);
+
   const handleCopyEmail = () => {
     navigator.clipboard.writeText("contact@theaigleonlabs.dev");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSubscribeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!subEmail.trim()) return;
+
+    setSubLoading(true);
+    setSubMsg("");
+    setSubStatus(null);
+
+    try {
+      const res = await fetch("/api/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: subEmail }),
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        setSubStatus("success");
+        setSubMsg(data.message || "Subscribed successfully!");
+        setSubEmail("");
+      } else {
+        setSubStatus("error");
+        setSubMsg(data.message || "Failed to subscribe. Please try again.");
+      }
+    } catch {
+      setSubStatus("error");
+      setSubMsg("Something went wrong. Please try again later.");
+    } finally {
+      setSubLoading(false);
+    }
   };
 
   return (
@@ -187,6 +224,14 @@ export default function Footer() {
                   <span>
                     <small>Phone</small>
                     <strong>8919870959</strong>
+                  </span>
+                  <ArrowUpRight className="ml-auto h-4 w-4" />
+                </a>
+                <a href="tel:+917396733009" style={{ position: "relative", zIndex: 50 }}>
+                  <Phone className="h-4 w-4" />
+                  <span>
+                    <small>Phone</small>
+                    <strong>7396733009</strong>
                   </span>
                   <ArrowUpRight className="ml-auto h-4 w-4" />
                 </a>
@@ -296,8 +341,89 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Research Work Subscription Row */}
+        <div 
+          style={{
+            borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+            paddingTop: "24px",
+            paddingBottom: "24px",
+            marginTop: "28px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "14px",
+            alignItems: "center",
+            textAlign: "center"
+          }}
+        >
+          <p style={{ margin: 0, fontSize: "0.9rem", color: "rgba(255, 255, 255, 0.75)", maxWidth: "600px" }}>
+            Wanna know more things about businesses, systems and AI? <span style={{ color: "#36b8ff", fontWeight: 600 }}>Join our community.</span>
+          </p>
+
+          <form 
+            onSubmit={handleSubscribeSubmit}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              maxWidth: "460px",
+              width: "100%"
+            }}
+          >
+            <input
+              type="email"
+              required
+              placeholder="Enter your email address..."
+              value={subEmail}
+              onChange={(e) => setSubEmail(e.target.value)}
+              disabled={subLoading}
+              style={{
+                flex: 1,
+                height: "42px",
+                padding: "0 14px",
+                backgroundColor: "rgba(255, 255, 255, 0.04)",
+                border: "1px solid rgba(255, 255, 255, 0.15)",
+                borderRadius: "10px",
+                color: "#ffffff",
+                fontSize: "0.85rem",
+                outline: "none",
+                transition: "border-color 0.2s"
+              }}
+              onFocus={(e) => e.target.style.borderColor = "#36b8ff"}
+              onBlur={(e) => e.target.style.borderColor = "rgba(255, 255, 255, 0.15)"}
+            />
+            <button
+              type="submit"
+              disabled={subLoading}
+              style={{
+                height: "42px",
+                padding: "0 18px",
+                backgroundColor: "#36b8ff",
+                color: "#000000",
+                fontWeight: 650,
+                fontSize: "0.85rem",
+                borderRadius: "10px",
+                border: "none",
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "6px",
+                whiteSpace: "nowrap",
+                transition: "opacity 0.2s"
+              }}
+            >
+              {subLoading ? "Subscribing..." : "Subscribe"}
+              <ArrowUpRight className="h-4 w-4" />
+            </button>
+          </form>
+          {subMsg && (
+            <span style={{ fontSize: "0.8rem", color: subStatus === "success" ? "#36b8ff" : "#ef4444" }}>
+              {subMsg}
+            </span>
+          )}
+        </div>
+
         <div className="footer-bottom">
-          <span>© {new Date().getFullYear()} AigleOn Labs Studio</span>
+          <span>© {new Date().getFullYear()} AigleOn Labs</span>
         </div>
 
       </div>

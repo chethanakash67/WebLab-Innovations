@@ -224,6 +224,10 @@ export default function Services() {
                   ))}
                 </ul>
               </div>
+
+              <div className="offer-popup-price" style={{ marginTop: "16px" }}>
+                <span style={{ fontSize: "0.85rem", color: "#36b8ff", fontWeight: 600 }}>* Contact for pricing</span>
+              </div>
             </div>
 
             <div className="offer-popup-actions">
@@ -231,7 +235,7 @@ export default function Services() {
                 className="button button-primary"
                 onClick={scrollToCta}
               >
-                Check the Price
+                Contact
                 <ArrowUpRight className="h-4 w-4" />
               </button>
               <button

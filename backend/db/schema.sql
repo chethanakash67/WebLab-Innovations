@@ -70,3 +70,14 @@ CREATE INDEX IF NOT EXISTS library_catalog_type_idx
 
 CREATE INDEX IF NOT EXISTS library_catalog_published_created_idx
   ON library_catalog (published, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS research_subscriptions (
+  id BIGSERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  status TEXT NOT NULL DEFAULT 'active',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS research_subscriptions_created_idx
+  ON research_subscriptions (created_at DESC);
+

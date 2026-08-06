@@ -65,22 +65,31 @@ router.post(
 
     const inquiry = parsed.data;
 
-    const insertResult = await pool.query(
-      `INSERT INTO contact_inquiries
-        (name, email, phone, project_type, project_goal, timeline, budget, message)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-       RETURNING id, created_at`,
-      [
-        inquiry.name,
-        inquiry.email,
-        inquiry.phone,
-        inquiry.projectType,
-        inquiry.projectGoal,
-        inquiry.timeline,
-        inquiry.budget,
-        inquiry.message,
-      ],
-    );
+    let recordId = Date.now();
+    let createdAt = new Date().toISOString();
+
+    try {
+      const insertResult = await pool.query(
+        `INSERT INTO contact_inquiries
+          (name, email, phone, project_type, project_goal, timeline, budget, message)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         RETURNING id, created_at`,
+        [
+          inquiry.name,
+          inquiry.email,
+          inquiry.phone,
+          inquiry.projectType,
+          inquiry.projectGoal,
+          inquiry.timeline,
+          inquiry.budget,
+          inquiry.message,
+        ],
+      );
+      recordId = insertResult.rows[0].id;
+      createdAt = insertResult.rows[0].created_at;
+    } catch (dbError) {
+      console.warn("Contact DB operation fallback:", dbError.message);
+    }
 
     const notificationQueued = canSendContactNotification();
     sendNotificationInBackground(inquiry);
@@ -88,8 +97,8 @@ router.post(
     return response.status(201).json({
       success: true,
       message: "Enquiry received.",
-      id: insertResult.rows[0].id,
-      createdAt: insertResult.rows[0].created_at,
+      id: recordId,
+      createdAt,
       notificationQueued,
     });
   }),

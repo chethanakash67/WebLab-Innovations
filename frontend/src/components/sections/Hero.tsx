@@ -182,12 +182,36 @@ export default function Hero() {
           }}
         >
           We build{" "}
-          <span className="hero-highlight">
+          <span 
+            className="hero-highlight"
+            style={{
+              backgroundColor: "rgba(255, 230, 0, 0.8)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+              color: "#000000",
+              padding: "2px 8px",
+              borderRadius: "4px",
+              fontWeight: 650,
+              boxShadow: "0 2px 10px rgba(255, 230, 0, 0.15)"
+            }}
+          >
             end to end engines
           </span>{" "}
           for your digital growth, covering both user-facing experiences and
           internal workflows for{" "}
-          <span className="hero-highlight">
+          <span 
+            className="hero-highlight"
+            style={{
+              backgroundColor: "rgba(255, 230, 0, 0.8)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+              color: "#000000",
+              padding: "2px 8px",
+              borderRadius: "4px",
+              fontWeight: 650,
+              boxShadow: "0 2px 10px rgba(255, 230, 0, 0.15)"
+            }}
+          >
             luxury and premium brands
           </span>
           .

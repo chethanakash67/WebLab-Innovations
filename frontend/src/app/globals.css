@@ -908,16 +908,7 @@ body::before {
   line-height: 1.7;
 }
 
-.hero-highlight {
-  position: relative;
-  color: #fff;
-  background: rgba(54, 184, 255, 0.32);
-  border-radius: 0.2em;
-  padding: 0.08em 0.18em;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-  font-weight: 500;
-}
+
 
 .hero-mark-wrap {
   position: absolute;
