@@ -44,22 +44,22 @@ export default function Marquee() {
 
   return (
     <section className="marquee-section relative pt-16 lg:pt-32 pb-8 lg:pb-12 flex items-center">
-      <div className="max-w-[1500px] mx-auto px-6 lg:px-12 w-full flex flex-col md:flex-row items-stretch justify-center gap-6">
+      <div className="max-w-[1500px] mx-auto px-6 lg:px-12 w-full flex flex-row md:flex-row items-stretch justify-center gap-3 md:gap-6">
         
         {/* Left: Static Text Card */}
-        <div className="shrink-0 flex items-center px-12 lg:px-16 py-10 lg:py-12 bg-white/[0.02] rounded-2xl backdrop-blur-md z-20">
-          <h2 className="text-3xl lg:text-5xl font-display font-bold whitespace-nowrap tracking-tight leading-[1.1]">
+        <div className="shrink-0 flex items-center px-5 md:px-12 lg:px-16 py-3 md:py-10 lg:py-12 bg-white/[0.02] rounded-2xl backdrop-blur-md z-20">
+          <h2 className="marquee-heading text-sm font-sans font-light md:text-3xl md:font-display md:font-bold lg:text-5xl whitespace-nowrap tracking-tight leading-[1.1]">
             <span className="text-[#36b8ff] block">Tools we</span>
             <span className="text-white block">work with</span>
           </h2>
         </div>
 
         {/* Right: Scrolling Marquee Card */}
-        <div className="relative flex-1 min-w-0 max-w-[1000px] flex items-center bg-white/[0.02] rounded-2xl backdrop-blur-md py-10 lg:py-12 px-4">
+        <div className="relative flex-1 min-w-0 max-w-[1000px] flex items-center bg-white/[0.02] rounded-2xl backdrop-blur-md py-2 md:py-10 lg:py-12 px-2 md:px-4">
           
           {/* Mask container to handle fading edges seamlessly. Extra padding ensures the tooltips aren't clipped by the mask boundary! */}
           <div 
-            className="w-full py-16 -my-16 px-16 -mx-16"
+            className="w-full py-6 -my-6 px-6 -mx-6 md:py-16 md:-my-16 md:px-16 md:-mx-16"
             style={{ WebkitMaskImage: 'linear-gradient(to right, transparent 5%, black 15%, black 85%, transparent 95%)', maskImage: 'linear-gradient(to right, transparent 5%, black 15%, black 85%, transparent 95%)' }}
           >
             <div

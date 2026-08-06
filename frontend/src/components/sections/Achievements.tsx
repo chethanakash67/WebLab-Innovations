@@ -83,31 +83,33 @@ export default function Achievements() {
         </div>
 
         {/* Heading */}
-        <div className="achievements-heading text-center mb-24">
-          <h2 className="font-display font-bold tracking-tight leading-[0.9]" style={{ fontSize: "clamp(48px, 8vw, 120px)" }}>
-            Built For
-            <br />
+        <div className="achievements-heading text-center mb-10">
+          <h2 className="font-display font-bold tracking-tight leading-[1.0]" style={{ fontSize: "clamp(32px, 5.5vw, 72px)" }}>
+            Built For{" "}
             <span className="gradient-text">Measurable Impact</span>
           </h2>
         </div>
 
-        {/* Stats Grid — staggered layout like the reference */}
-        <div className="stats-grid grid grid-cols-2 lg:grid-cols-4 gap-y-16 gap-x-8 lg:gap-x-12 max-w-5xl mx-auto">
+        {/* 2x2 Grid Layout */}
+        <div className="stats-2x2-grid grid grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-xl md:max-w-2xl mx-auto">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
-              className={`stat-item ${index % 2 === 1 ? "is-lowered" : ""}`}
+              className="stat-card-item flex flex-col items-center justify-center text-center p-4 sm:p-6 md:p-8 rounded-2xl bg-white/[0.025] border border-white/10 backdrop-blur-md hover:border-[#36b8ff]/40 transition-all duration-300 shadow-lg"
             >
               <AnimatedCounter
                 value={stat.value}
                 suffix={stat.suffix}
                 className="stat-counter font-display font-bold gradient-text block"
-                style={{ fontSize: "clamp(56px, 7vw, 100px)" }}
-                duration={2 + index * 0.3}
+                style={{ fontSize: "clamp(26px, 5vw, 42px)", lineHeight: 1.1 }}
+                duration={2 + index * 0.2}
               />
-              <div className="w-16 h-[2px] bg-gradient-to-r from-primary to-primary-light mt-4 mb-4" />
-              <p className="text-muted text-sm leading-relaxed max-w-[180px]">
-                {stat.label}
+
+              <div className="w-8 h-[2px] bg-gradient-to-r from-primary to-primary-light my-3 opacity-60" />
+
+              <p className="text-muted text-xs sm:text-sm font-medium leading-normal tracking-wide m-0">
+                <span className="hidden sm:inline">{stat.label}</span>
+                <span className="inline sm:hidden">{stat.shortLabel || stat.label}</span>
               </p>
             </motion.div>
           ))}

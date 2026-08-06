@@ -99,18 +99,27 @@ export default function Hero() {
           <h1 className="hero-reveal hero-title">
             Your digital
             <br />
-            team, <span>on demand.</span>
+            side, <span>is on us</span>
           </h1>
 
           <p className="hero-reveal hero-intro">
-            We build search presence, conversion systems, and AI visibility for specialty food brands ready to grow.
+            We build{" "}
+            <span className="hero-highlight">
+              end to end engines
+            </span>{" "}
+            for your digital growth, covering both user-facing experiences and
+            internal workflows for{" "}
+            <span className="hero-highlight">
+              luxury and premium brands
+            </span>
+            .
           </p>
         </div>
 
         <div className="hero-reveal hero-mark-wrap">
           <div className="hero-mark-halo" />
           <AgencyMark className="hero-mark" />
-          <span className="hero-mark-label">AigleOn Labs / digital growth systems</span>
+          <span className="hero-mark-label">AigleOn Labs | digital growth systems</span>
           <div 
             className="hero-quote-box"
             ref={quoteRef}
@@ -207,8 +216,13 @@ export default function Hero() {
               </a>
             </MagneticButton>
             <MagneticButton>
-              <a href="#contact" className="button button-primary">
-                Start a project
+              <a
+                href="https://wa.me/917396733009?text=Hi,%20I%20need%20you%20to%20do%20an%20full%20audit%20to%20my%20business.%20let's%20talk"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="button button-primary"
+              >
+                Book a free audit
                 <ArrowUpRight className="h-4 w-4" />
               </a>
             </MagneticButton>

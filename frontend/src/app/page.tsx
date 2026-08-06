@@ -7,7 +7,10 @@ import Marquee from "@/components/sections/Marquee";
 import Footer from "@/components/layout/Footer";
 
 // Dynamic imports for sections below the fold
-const Problem = dynamic(() => import("@/components/sections/Problem"));
+const WhyConsider = dynamic(
+  () => import("@/components/sections/WhyConsider"),
+  { ssr: false }
+);
 const Services = dynamic(() => import("@/components/sections/Services"));
 const BestWork = dynamic(() => import("@/components/sections/BestWork"));
 const CustomerSystem = dynamic(() => import("@/components/sections/CustomerSystem"));
@@ -22,24 +25,18 @@ const MouseFollowLight = dynamic(
   () => import("@/components/ui/MouseFollowLight"),
   { ssr: false }
 );
-const BackToTop = dynamic(
-  () => import("@/components/ui/BackToTop"),
-  { ssr: false }
-);
-
 export default function Home() {
   return (
     <SmoothScroll>
       <MouseFollowLight />
-      <BackToTop />
       <Navbar />
       <main>
         {/* 1. Hook */}
         <Hero />
         <Marquee />
 
-        {/* 2. Problem — why they need us */}
-        <Problem />
+        {/* 2. Why Consider Us — roadmap pillars */}
+        <WhyConsider />
 
         {/* 3. Services — what we offer */}
         <Services />

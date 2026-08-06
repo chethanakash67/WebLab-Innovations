@@ -513,7 +513,7 @@ export default function Packages() {
       <div className="relative z-10 max-w-7xl mx-auto">
         <header className="max-w-2xl" style={{ marginBottom: "clamp(64px, 10vw, 110px)" }}>
           <SectionBadge label="Service Tiers" number="08" />
-          <h2 className="mt-6 text-white font-display text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[0.95]">
+          <h2 className="packages-title mt-6 text-white font-display text-4xl md:text-6xl lg:text-7xl font-semibold tracking-tight leading-[0.95]">
             Sized to fit<br />
             <span className="text-[#36b8ff]">your ambitions.</span>
           </h2>

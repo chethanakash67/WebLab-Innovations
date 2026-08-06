@@ -74,7 +74,7 @@ export default function Problem() {
           <div className="problem-reveal" style={{ opacity: 0 }}>
             <SectionBadge label="The Core Problems" number="01" />
           </div>
-          <h2 className="text-4xl lg:text-5xl font-display font-medium tracking-tight mt-6 text-white problem-reveal" style={{  lineHeight: 1.2 }}>
+          <h2 className="problem-title text-4xl lg:text-5xl font-display font-medium tracking-tight mt-6 text-white problem-reveal" style={{  lineHeight: 1.2 }}>
             Why gorgeous websites
             <br />
             <span className="text-[#36b8ff]/80">still fail to grow.</span>

@@ -63,23 +63,7 @@ export default function WhyChooseUs() {
         },
       });
 
-      // Sticky Zoom Animation
-      const zoomTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: ".zoom-wrapper",
-          start: "bottom bottom",
-          end: "+=75%", // Must be large enough to not skip in a single scroll wheel tick
-          pin: sectionRef.current,
-          scrub: true, // Boolean true prevents smooth-scroll rubber-banding
-        }
-      });
 
-      // Scroll 1: Zoom in on "QUALITY" pill
-      zoomTl.to(".zoom-wrapper", {
-        scale: 1.75,
-        duration: 1,
-        ease: "power1.inOut"
-      });
 
     }, sectionRef);
 
@@ -122,7 +106,7 @@ export default function WhyChooseUs() {
         </p>
 
         {/* Pill layout area */}
-        <div className="zoom-wrapper" style={{ transformOrigin: "44% 55%" }}>
+        <div className="zoom-wrapper">
           <div className="why-visual-area">
             <div className="why-orb-scene" aria-hidden="true">
               <div className="why-orbit why-orbit-outer" />

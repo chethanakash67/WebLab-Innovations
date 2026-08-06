@@ -5,6 +5,7 @@ import helmet from "helmet";
 import { initDatabase } from "./db/init.js";
 import contactRouter from "./routes/contact.js";
 import reviewsRouter from "./routes/reviews.js";
+import libraryRouter from "./routes/library.js";
 import { emailNotificationStatus } from "./services/mailer.js";
 
 const app = express();
@@ -102,6 +103,7 @@ app.get("/health", (_request, response) => {
 
 app.use("/api/contact", contactRouter);
 app.use("/api/reviews", reviewsRouter);
+app.use("/api/library", libraryRouter);
 
 app.use((_request, response) => {
   response.status(404).json({ success: false, message: "Route not found." });

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Syne } from "next/font/google";
 import Script from "next/script";
+import BackToTop from "@/components/ui/BackToTop";
 import "./globals.css";
 
 const inter = Inter({
@@ -84,6 +85,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${syne.variable}`}>
       <body className="min-h-screen bg-background text-foreground antialiased">
+        <BackToTop />
         <Script
           id="scroll-restoration"
           strategy="beforeInteractive"

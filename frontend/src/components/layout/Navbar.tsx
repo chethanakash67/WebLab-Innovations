@@ -90,24 +90,23 @@ export default function Navbar() {
               Available for Enquiry
             </div>
             <a
-              href="https://wa.me/918919870959?text=hello,%20I'm%20intterested%20for%20a%20service%20from%20your%20agency,%20please%20explain%20me"
+              href="https://wa.me/917396733009?text=Hi,%20I%20need%20you%20to%20do%20an%20full%20audit%20to%20my%20business.%20let's%20talk"
               target="_blank"
               rel="noopener noreferrer"
               className="nav-contact"
             >
-              Start a project
+              Book a free audit
               <ArrowUpRight className="h-4 w-4" />
             </a>
           </div>
 
           <button
             type="button"
-            onClick={() => setMobileOpen(true)}
+            onClick={() => setMobileOpen((prev) => !prev)}
             className="nav-mobile-toggle"
             aria-label="Open navigation menu"
             aria-expanded={mobileOpen}
           >
-            <span>Menu</span>
             <span className="nav-burger" aria-hidden="true">
               <span />
               <span />
@@ -120,24 +119,13 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: "-100%" }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: "-100%" }}
-            transition={{ duration: 0.65, ease: [0.76, 0, 0.24, 1] }}
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
             className="mobile-nav"
           >
             <div className="mobile-nav-top">
-              <Link
-                href={isHome ? "#home" : "/"}
-                onClick={() => setMobileOpen(false)}
-                className="nav-brand"
-              >
-                <AgencyMark />
-                <span className="nav-brand-copy">
-                  <strong>AigleOn Labs</strong>
-                  <span>Digital product studio</span>
-                </span>
-              </Link>
               <button
                 type="button"
                 onClick={() => setMobileOpen(false)}
@@ -176,23 +164,6 @@ export default function Navbar() {
                 </Link>
               ))}
             </nav>
-
-            <div className="mobile-nav-bottom">
-              <p>
-                Have a project in mind?
-                <br />
-                Let&apos;s make it real.
-              </p>
-              <a
-                href="https://wa.me/918919870959?text=hello,%20I'm%20intterested%20for%20a%20service%20from%20your%20agency,%20please%20explain%20me"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setMobileOpen(false)}
-              >
-                Start a project
-                <ArrowUpRight className="h-4 w-4" />
-              </a>
-            </div>
           </motion.div>
         )}
       </AnimatePresence>

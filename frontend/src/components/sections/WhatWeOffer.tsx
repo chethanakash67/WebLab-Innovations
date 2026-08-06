@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { X, ArrowUpRight } from "lucide-react";
+import { X, ArrowUpRight, ExternalLink } from "lucide-react";
+import Link from "next/link";
 import SectionBadge from "@/components/ui/SectionBadge";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -13,8 +14,9 @@ interface System {
   number: string;
   title: string;
   tagline: string;
-  story: string;
+  description: string;
   features: string[];
+  priceNote?: string;
 }
 
 const systems: System[] = [
@@ -22,10 +24,8 @@ const systems: System[] = [
     id: "customer-acquisition",
     number: "01",
     title: "Customer Acquisition System",
-    tagline:
-      "We manage the complete flow of acquiring new qualified leads (upcoming customers) through online, excluding high level content creation.",
-    story:
-      "Starting a business is easy, but getting customers online is harder than doing it offline, yet the ROI is far higher when you get it right. This system solves that gap efficiently for your business, built custom to your current situation, market, and budget, so you get the right strategy and its implementation for acquiring new clients.",
+    tagline: "We manage the complete flow of acquiring new qualified leads (upcoming customers) through online, excluding high level content creation.",
+    description: "A complete system to bring qualified leads to your business through digital channels.",
     features: [
       "Portal website for business",
       "WhatsApp integration",
@@ -33,15 +33,14 @@ const systems: System[] = [
       "Appointment booking agent (if needed)",
       "Simple CRM creation and integration",
     ],
+    priceNote: "Starting from ₹XX,XXX/month",
   },
   {
     id: "customer-retention",
     number: "02",
     title: "Customer Retention System",
-    tagline:
-      "We'll manage every customer's profile of your business and make them stick to your brand.",
-    story:
-      "Most businesses spend everything on getting new customers but silently lose the ones they already have. This system turns one-time buyers into loyal repeat customers, so every rupee you've already earned keeps working and compounding for your brand.",
+    tagline: "We'll manage every customer's profile of your business and make them stick to your brand.",
+    description: "A comprehensive system to maximize customer lifetime value and build lasting relationships.",
     features: [
       "Loyalty program designing",
       "Email marketing",
@@ -50,15 +49,14 @@ const systems: System[] = [
       "Feedback capture",
       "Regular recommendations",
     ],
+    priceNote: "Starting from ₹XX,XXX/month",
   },
   {
     id: "ecom-growth",
     number: "03",
     title: "Ecom Growth System",
-    tagline:
-      "We manage the digital side of the complete process of user visiting your site to buying a product.",
-    story:
-      "Your product may be great, but if visitors never become buyers your store is just a silent showroom. This system manages the entire digital journey from visit to purchase, so you earn more from every visitor instead of losing them at checkout.",
+    tagline: "We manage the digital side of the complete process of user visiting your site to buying a product.",
+    description: "End-to-end ecommerce growth system covering acquisition, conversion, and retention.",
     features: [
       "Store creation and optimization",
       "Product conversion possibility increasing",
@@ -67,42 +65,51 @@ const systems: System[] = [
       "Includes Customer Retention System",
       "Analytics for acquisition & retention systems",
     ],
+    priceNote: "Starting from ₹XX,XXX/month",
   },
   {
-    id: "business-automation",
+    id: "system-4",
     number: "04",
-    title: "Business Automation System",
-    tagline:
-      "We set up automation for your repetitive tasks so your business runs itself while you focus on growth.",
-    story:
-      "Scaling a business needs automation to be set up for repetitive tasks. There are many workflows, with and without AI included, and that really saves almost 2x of your time, so you can focus on a new domain to expand. This is exactly what we deliver for you, with our current expertise in technical and market analytics.",
+    title: "System Four",
+    tagline: "Description for system four coming soon.",
+    description: "Details for system four will be added.",
     features: [
-      "Appointment booking",
-      "Client onboarding setup",
-      "CRM integration to inbound & outbound channels (lead capture)",
-      "Customer communication bot",
-      "Automated KPIs notified to owner from analytics",
-      "Other internal workflows that can be automated (specific to business)",
+      "Feature 1",
+      "Feature 2",
+      "Feature 3",
     ],
+    priceNote: "Contact for pricing",
+  },
+  {
+    id: "system-5",
+    number: "05",
+    title: "System Five",
+    tagline: "Description for system five coming soon.",
+    description: "Details for system five will be added.",
+    features: [
+      "Feature 1",
+      "Feature 2",
+      "Feature 3",
+    ],
+    priceNote: "Contact for pricing",
   },
 ];
 
-export default function Services() {
+export default function WhatWeOffer() {
   const sectionRef = useRef<HTMLElement>(null);
   const [activeSystem, setActiveSystem] = useState<System | null>(null);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from(".service-display-line", {
+      gsap.from(".offer-display-line", {
         yPercent: 100,
         duration: 1.1,
         stagger: 0.12,
         ease: "power4.out",
-        immediateRender: false,
         scrollTrigger: {
-          trigger: ".service-display",
-          start: "top 85%",
-          once: true,
+          trigger: ".offer-display",
+          start: "top 78%",
         },
       });
 
@@ -112,15 +119,11 @@ export default function Services() {
         duration: 0.8,
         stagger: 0.08,
         ease: "power3.out",
-        immediateRender: false,
         scrollTrigger: {
           trigger: ".offers-grid",
-          start: "top 85%",
-          once: true,
+          start: "top 82%",
         },
       });
-
-      requestAnimationFrame(() => ScrollTrigger.refresh());
     }, sectionRef);
 
     return () => ctx.revert();
@@ -146,32 +149,35 @@ export default function Services() {
 
   return (
     <>
-      <section ref={sectionRef} id="services" className="section-padding service-section">
+      <section ref={sectionRef} id="what-we-offer" className="section-padding offer-section">
         <div className="mx-auto max-w-[1500px]">
           <div className="section-meta-row">
-            <span>[ Luxury · Premium · Specialty · Artisanal ]</span>
+            <span>[ Full-stack product studio ]</span>
             <SectionBadge label="What We Offer" number="02" />
-            <span>[ 4 Complete Systems ]</span>
+            <span>[ 5 Complete Systems ]</span>
           </div>
 
-          <div className="service-display" aria-label="Our complete systems">
-            <span className="service-ghost service-ghost-top">Systems &</span>
+          <div className="offer-display" aria-label="Our complete systems">
+            <span className="offer-ghost offer-ghost-top">Systems &</span>
             <div className="overflow-hidden">
-              <span className="service-display-line service-index">[02]</span>
-              <h2 className="service-display-line">What</h2>
+              <span className="offer-display-line offer-index">[02]</span>
+              <h2 className="offer-display-line">What</h2>
             </div>
             <div className="overflow-hidden">
-              <h2 className="service-display-line service-display-accent">
+              <h2 className="offer-display-line offer-display-accent">
                 We offer.
               </h2>
             </div>
-            <span className="service-ghost service-ghost-bottom">Complete</span>
+            <span className="offer-ghost offer-ghost-bottom">Complete</span>
           </div>
 
           <div className="offers-grid">
-            {systems.map((system) => (
+            {systems.map((system, index) => (
               <div
                 key={system.id}
+                ref={(el) => {
+                  cardsRef.current[index] = el;
+                }}
                 className="offer-card group"
                 onClick={() => openSystem(system)}
               >
@@ -185,6 +191,16 @@ export default function Services() {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="offers-pricing-cta">
+            <button
+              className="button button-primary"
+              onClick={scrollToCta}
+            >
+              Check the Price
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-300" />
+            </button>
           </div>
         </div>
       </section>
@@ -214,7 +230,7 @@ export default function Services() {
             </div>
 
             <div className="offer-popup-body">
-              <p className="offer-popup-story">{activeSystem.story}</p>
+              <p className="offer-popup-description">{activeSystem.description}</p>
 
               <div className="offer-popup-features">
                 <h4>What's Included</h4>
@@ -224,6 +240,12 @@ export default function Services() {
                   ))}
                 </ul>
               </div>
+
+              {activeSystem.priceNote && (
+                <div className="offer-popup-price">
+                  <span>{activeSystem.priceNote}</span>
+                </div>
+              )}
             </div>
 
             <div className="offer-popup-actions">

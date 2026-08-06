@@ -287,8 +287,8 @@ export const processSteps = [
 ];
 
 export const stats = [
-  { value: 8, suffix: "+", label: "Projects Delivered" },
-  { value: 97, suffix: "%", label: "Client Satisfaction" },
-  { value: 6, suffix: "+", label: "Months Experience" },
-  { value: 100, suffix: "%", label: "Responsive Designs" },
+  { value: 8, suffix: "+", label: "Projects Delivered", shortLabel: "Projects" },
+  { value: 97, suffix: "%", label: "Client Satisfaction", shortLabel: "Satisfaction" },
+  { value: 6, suffix: "+", label: "Months Experience", shortLabel: "Experience" },
+  { value: 100, suffix: "%", label: "Responsive Designs", shortLabel: "Responsive" },
 ];

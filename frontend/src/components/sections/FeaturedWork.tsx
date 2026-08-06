@@ -77,123 +77,73 @@ export default function FeaturedWork() {
             .map((project, index) => (
               <article
                 key={project.id}
-                className={`project-editorial ${index % 2 ? "project-editorial-reverse" : ""}`}
+                className="project-editorial"
               >
-                <div className="project-gradient-panel">
-                  <span className="project-reveal project-panel-title">
-                    {project.title}
-                  </span>
-                  {project.id === "tabun-chai" ? (
-                    <div
-                      className="project-reveal"
-                      style={{
-                        position: "relative",
-                        zIndex: 1,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "flex-end",
-                        gap: "12px",
-                        width: "100%",
-                        marginTop: "22px",
-                        textAlign: "right",
-                      }}
-                    >
-                      <Link
-                        href="/tabun-chai"
-                        style={{
-                          display: "inline-flex",
-                          minHeight: "48px",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "12px",
-                          borderRadius: "999px",
-                          padding: "0 22px",
-                          fontSize: "12px",
-                          fontWeight: 600,
-                          border: "1px solid rgba(255, 255, 255, 0.14)",
-                          background: "rgba(255, 255, 255, 0.08)",
-                          color: "rgba(255, 255, 255, 0.84)",
-                          backdropFilter: "blur(14px)",
-                          WebkitBackdropFilter: "blur(14px)",
-                          transition: "border-color 300ms ease, background 300ms ease, box-shadow 300ms ease, color 300ms ease, transform 300ms ease",
-                          textDecoration: "none",
-                          alignSelf: "flex-end",
-                        }}
-                        onMouseEnter={(event) => {
-                          event.currentTarget.style.borderColor = "#000";
-                          event.currentTarget.style.background = "rgba(255, 255, 255, 0.92)";
-                          event.currentTarget.style.color = "#000";
-                          event.currentTarget.style.boxShadow = "0 0 18px rgba(0, 0, 0, 0.18)";
-                          event.currentTarget.style.transform = "translateY(-1px)";
-                        }}
-                        onMouseLeave={(event) => {
-                          event.currentTarget.style.borderColor = "rgba(255, 255, 255, 0.14)";
-                          event.currentTarget.style.background = "rgba(255, 255, 255, 0.08)";
-                          event.currentTarget.style.color = "rgba(255, 255, 255, 0.84)";
-                          event.currentTarget.style.boxShadow = "none";
-                          event.currentTarget.style.transform = "translateY(0)";
-                        }}
-                      >
-                        View case study
-                        <ExternalLink className="h-4 w-4" />
-                      </Link>
-                      <p className="project-reveal project-desc-expanded">{project.description}</p>
-                    </div>
-                  ) : (
-                    <p className="project-reveal project-desc-expanded">{project.description}</p>
-                  )}
-                </div>
-                {project.clientTestimonial && (
-                  <div className="project-testimonial-overlap project-reveal">
-                    <div className="quote-icon">&quot;</div>
-                    <p className="quote-text">&quot;{project.clientTestimonial.quote}&quot;</p>
-                    <div className="quote-author">
-                      <strong>{project.clientTestimonial.author}</strong>
-                      <span>{project.clientTestimonial.role}</span>
-                    </div>
+                {/* Title at top of project section */}
+                <div className="project-top-header project-reveal">
+                  <div className="project-title-wrap">
+                    <span className="project-num">[{project.number}]</span>
+                    <h3 className="project-title-top">{project.title}</h3>
                   </div>
-                )}
-
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="project-image-card group"
-                  aria-label={`View ${project.title}`}
-                >
-                  <Image
-                    src={project.images[0]}
-                    alt={project.title}
-                    fill
-                    placeholder="blur"
-                    blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg=="
-                    className="object-cover transition-transform duration-1000 group-hover:scale-[1.035]"
-                    sizes="(max-width: 768px) 100vw, 65vw"
-                  />
-                  <span className="project-image-shade" />
-                  <span className="project-open">
-                    <ArrowUpRight className="h-5 w-5" />
-                  </span>
-                </a>
-
-                <div className="project-reveal project-caption">
-                  <span>{project.type}</span>
-                  <h3>
-                    {project.title}
-                    <sup>[{project.number}]</sup>
-                  </h3>
-
+                  <span className="project-type-badge">{project.type}</span>
                 </div>
 
-                <div className="project-reveal project-meta">
-                  <span>Project Type: {project.type}</span>
-                  <span>Date: 2026</span>
+                <div className="project-content-grid">
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="project-image-card group"
+                    aria-label={`View ${project.title}`}
+                  >
+                    <Image
+                      src={project.images[0]}
+                      alt={project.title}
+                      fill
+                      placeholder="blur"
+                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg=="
+                      className="object-cover transition-transform duration-1000 group-hover:scale-[1.035]"
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                    />
+                    <span className="project-image-shade" />
+                    <span className="project-open">
+                      <ArrowUpRight className="h-4 w-4" />
+                    </span>
+                  </a>
+
+                  <div className="project-desc-col">
+                    <div className="project-gradient-panel">
+                      <div className="project-desc-wrapper project-reveal">
+                        <p className="project-desc-text">{project.description}</p>
+                        {project.id === "tabun-chai" && (
+                          <Link
+                            href="/tabun-chai"
+                            className="project-case-study-btn"
+                          >
+                            View case study
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </Link>
+                        )}
+                      </div>
+                    </div>
+
+                    {project.clientTestimonial && (
+                      <div className="project-testimonial-floating project-reveal">
+                        <div className="quote-icon">&quot;</div>
+                        <p className="quote-text">&quot;{project.clientTestimonial.quote}&quot;</p>
+                        <div className="quote-author">
+                          <strong>{project.clientTestimonial.author}</strong>
+                          <span>{project.clientTestimonial.role}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </article>
             ))}
         </div>
 
-        <section className="audit-section" style={{ marginTop: "112px", paddingTop: "64px", borderTop: "1px solid rgba(255, 255, 255, 0.1)" }}>
+        <section className="audit-section" style={{ marginTop: "56px", paddingTop: "36px", borderTop: "1px solid rgba(255, 255, 255, 0.1)" }}>
           <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between" style={{ marginBottom: "40px" }}>
             <div>
               <SectionBadge label="Free Audit Samples" number="04" />
@@ -206,90 +156,54 @@ export default function FeaturedWork() {
             </p>
           </div>
 
-          <article className="audit-card relative overflow-hidden rounded-[2rem] border border-[#e6a15c]/15 bg-[#11151a]/90 p-6 shadow-[0_30px_80px_rgba(0,0,0,0.35)] md:p-8" style={{ marginTop: "16px", padding: "32px" }}>
+          <article className="audit-card relative overflow-hidden rounded-[1.5rem] border border-[#e6a15c]/15 bg-[#11151a]/90 shadow-[0_30px_80px_rgba(0,0,0,0.35)] sm:rounded-[2rem]">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(230,161,92,0.12),transparent_42%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.04),transparent_38%)]" />
-            <div className="relative grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-              <div className="space-y-5">
+            <div className="relative flex flex-col gap-6 lg:grid lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+              <div className="space-y-3.5 sm:space-y-5">
                 <div
-                  className="inline-flex items-center rounded-full border border-[#e6a15c]/20 bg-white/5 px-5 py-3 text-xs font-semibold uppercase tracking-[0.28em] text-[#e6a15c]"
+                  className="inline-flex items-center rounded-full border border-[#e6a15c]/20 bg-white/5 px-3.5 py-1.5 text-[9.5px] font-semibold uppercase tracking-[0.22em] text-[#e6a15c] sm:text-xs"
                   style={{
-                    letterSpacing: "0.28em",
+                    letterSpacing: "0.22em",
                     lineHeight: "1",
-                    marginTop: "4px",
-                    marginBottom: "22px",
+                    marginTop: "2px",
+                    marginBottom: "10px",
                     animation: "auditBadgeGlow 5.5s ease-in-out infinite",
                     boxShadow: "0 0 10px rgba(230, 161, 92, 0.12), inset 0 0 0 1px rgba(230, 161, 92, 0.12)",
                   }}
                 >
                   Audit 1
                 </div>
-                <h3 className="text-2xl font-semibold text-[#f4ebd9] md:text-3xl" style={{ fontFamily: "var(--font-display)" }}>
+                <h3 className="break-words font-semibold text-[#f4ebd9]" style={{ fontFamily: "var(--font-display)" }}>
                   Brand Visibility and Conversion Audit
                 </h3>
-                <p className="max-w-2xl text-sm leading-7 text-[#f4ebd9]/75 md:text-base">
+                <p className="break-words text-[#f4ebd9]/75">
                   A sample audit snapshot for coffee roasters, showing where visibility is being lost, which local and AI search gaps matter most, and what conversion issues should be fixed first.
                 </p>
-                <div className="flex flex-nowrap gap-3 overflow-x-auto text-[10px] uppercase tracking-[0.18em] text-[#f4ebd9]/55" style={{ gap: "10px", lineHeight: "1.35", marginTop: "18px", paddingBottom: "8px", paddingRight: "6px" }}>
-                  <span className="shrink-0 whitespace-nowrap rounded-full border border-white/10 px-3 py-2" style={{ lineHeight: "1.35", paddingLeft: "14px", paddingRight: "14px" }}>AI search visibility</span>
-                  <span className="shrink-0 whitespace-nowrap rounded-full border border-white/10 px-3 py-2" style={{ lineHeight: "1.35", paddingLeft: "14px", paddingRight: "14px" }}>Local SEO</span>
-                  <span className="shrink-0 whitespace-nowrap rounded-full border border-white/10 px-3 py-2" style={{ lineHeight: "1.35", paddingLeft: "14px", paddingRight: "14px" }}>UX + conversion</span>
-                  <span className="shrink-0 whitespace-nowrap rounded-full border border-white/10 px-3 py-2" style={{ lineHeight: "1.35", paddingLeft: "14px", paddingRight: "14px" }}>Technical SEO</span>
+                <div className="flex flex-wrap gap-2 text-[8.5px] uppercase tracking-[0.12em] text-[#f4ebd9]/60 sm:text-[10px]" style={{ gap: "7px", lineHeight: "1.35", marginTop: "12px" }}>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 whitespace-normal">AI search visibility</span>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 whitespace-normal">Local SEO</span>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 whitespace-normal">UX + conversion</span>
+                  <span className="rounded-full border border-white/10 bg-white/5 px-2.5 py-1 whitespace-normal">Technical SEO</span>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-4 lg:items-end">
+              <div className="audit-card-buttons lg:mt-0 lg:w-auto lg:justify-end">
                 <a
                   href="/case%20study%20audit.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{
-                    display: "inline-flex",
-                    minHeight: "48px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "12px",
-                    borderRadius: "999px",
-                    padding: "0 22px",
-                    fontSize: "12px",
-                    fontWeight: 600,
-                    border: "1px solid rgba(255, 255, 255, 0.14)",
-                    background: "rgba(255, 255, 255, 0.08)",
-                    color: "rgba(255, 255, 255, 0.84)",
-                    backdropFilter: "blur(14px)",
-                    WebkitBackdropFilter: "blur(14px)",
-                    transition: "border-color 300ms ease, background 300ms ease, box-shadow 300ms ease, color 300ms ease, transform 300ms ease",
-                    textDecoration: "none",
-                    width: "100%",
-                  }}
+                  className="audit-card-btn"
                 >
                   Open PDF
-                  <ExternalLink className="h-4 w-4" />
+                  <ExternalLink className="h-3.5 w-3.5 shrink-0" />
                 </a>
                 <a
                   href="/case%20study%20audit.pdf"
                   download="sample-free-audit-coffee-roasters.pdf"
-                  style={{
-                    display: "inline-flex",
-                    minHeight: "48px",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    gap: "12px",
-                    borderRadius: "999px",
-                    padding: "0 22px",
-                    fontSize: "12px",
-                    fontWeight: 600,
-                    border: "1px solid rgba(255, 255, 255, 0.14)",
-                    background: "rgba(255, 255, 255, 0.08)",
-                    color: "rgba(255, 255, 255, 0.84)",
-                    backdropFilter: "blur(14px)",
-                    WebkitBackdropFilter: "blur(14px)",
-                    transition: "border-color 300ms ease, background 300ms ease, box-shadow 300ms ease, color 300ms ease, transform 300ms ease",
-                    textDecoration: "none",
-                    width: "100%",
-                  }}
+                  className="audit-card-btn"
                 >
                   Download PDF
-                  <Download className="h-4 w-4" />
+                  <Download className="h-3.5 w-3.5 shrink-0" />
                 </a>
               </div>
             </div>

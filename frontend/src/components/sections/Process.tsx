@@ -1,508 +1,790 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { 
   ArrowUpRight, 
-  Eye, 
-  Map, 
-  Layers, 
-  Palette, 
-  Code, 
+  Search, 
   FileText, 
   Cpu, 
-  Zap 
+  BarChart3, 
+  TrendingUp, 
+  ShieldCheck, 
+  X, 
+  CheckCircle2, 
+  ChevronRight,
+  CreditCard
 } from "lucide-react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { processSteps } from "@/data/projects";
 import SectionBadge from "@/components/ui/SectionBadge";
 
-gsap.registerPlugin(ScrollTrigger);
+export interface ActionStep {
+  number: string;
+  stepId: number;
+  shortTitle: string;
+  fullTitle: string;
+  tagline: string;
+  description: string;
+  highlights: string[];
+  icon: any;
+}
+
+export const actionSteps: ActionStep[] = [
+  {
+    number: "01",
+    stepId: 1,
+    shortTitle: "1. Complete Brand Audit",
+    fullTitle: "Complete Brand Audit",
+    tagline: "Analyzing baseline identity, presence, and friction points",
+    description:
+      "We begin with a complete brand audit to thoroughly analyze your business identity, current digital presence, market positioning, existing workflows, and conversion bottlenecks to establish a clear baseline for growth.",
+    highlights: [
+      "Comprehensive digital footprint and asset evaluation",
+      "Market standing and competitor positioning analysis",
+      "Identification of conversion friction and workflow bottlenecks"
+    ],
+    icon: Search
+  },
+  {
+    number: "02",
+    stepId: 2,
+    shortTitle: "2. Building a Strategy Doc",
+    fullTitle: "Building a Strategy Doc",
+    tagline: "Tailored system blueprint based on deep market analysis",
+    description:
+      "We craft a custom strategy document detailing which digital systems your business needs most at its current stage, specific situation, and market environment based on in depth analysis.",
+    highlights: [
+      "Stage specific system prioritization",
+      "Comprehensive market and situation analysis",
+      "Strategic roadmap tailored for maximum return on investment"
+    ],
+    icon: FileText
+  },
+  {
+    number: "03",
+    stepId: 3,
+    shortTitle: "3. Implementing the Required Systems",
+    fullTitle: "Implementing the Required Systems",
+    tagline: "Deploying requested core systems along with strategic recommendations",
+    description:
+      "We implement the required core systems your business needs, mainly high converting web platforms, customer acquisition engines, automated lead workflows, and robust backend infrastructure. Additionally, we present our strategic analysis recommendations, and if approved by the founder, we implement those alongside the main package.",
+    highlights: [
+      "Deployment of required web, funnel, and backend infrastructure systems",
+      "Proactive analysis backed system recommendations",
+      "Seamless integration of founder approved additions"
+    ],
+    icon: Cpu
+  },
+  {
+    number: "04",
+    stepId: 4,
+    shortTitle: "4. Parallel Metrics & Full KPI Tracking",
+    fullTitle: "Parallel Metrics & Full KPI Tracking",
+    tagline: "Parallel build analytics and 30-day active measurement",
+    description:
+      "After building the first system, while developing subsequent systems in parallel, we continuously analyze real time performance metrics of previous and combined systems. Upon contract completion, all systems are delivered and we actively measure all business KPIs for 30 days.",
+    highlights: [
+      "Parallel system development and performance optimization",
+      "Real time cross system metric analysis",
+      "30 days of active post delivery KPI tracking"
+    ],
+    icon: BarChart3
+  },
+  {
+    number: "05",
+    stepId: 5,
+    shortTitle: "5. Upgrading to Retainer & Scaling",
+    fullTitle: "Upgrading to Retainer & Scaling",
+    tagline: "Post-launch evaluation and continuous business upgrades",
+    description:
+      "Following final payment, we evaluate 1 to 2 weeks of live operational data to recommend a strategic business upgrade step or transition your business seamlessly into an ongoing growth retainer.",
+    highlights: [
+      "1 to 2 week post launch performance review",
+      "Strategic business upgrade recommendations",
+      "Smooth transition into ongoing retainer options"
+    ],
+    icon: TrendingUp
+  }
+];
+
+export const paymentMilestones = [
+  {
+    percentage: "20%",
+    stage: "Advance Payment",
+    timing: "Before Delivery & Project Kickoff",
+    description: "20% advance must be paid before initiation to secure team allocation, configure project infrastructure, and begin the brand audit."
+  },
+  {
+    percentage: "50%",
+    stage: "Post-Work Payment",
+    timing: "After Work Completion",
+    description: "50% paid after system development work is completed and verified by your team prior to final deployment."
+  },
+  {
+    percentage: "20%",
+    stage: "Results Milestone",
+    timing: "After Active Metric Results",
+    description: "Remaining 20% paid after performance results and active business KPI measurement during the post launch evaluation window."
+  }
+];
 
 export default function Process() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const mobileGlowRef = useRef<HTMLDivElement>(null);
+  const [activeStepModal, setActiveStepModal] = useState<ActionStep | null>(null);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from(".process-reveal", {
-        y: 48,
-        duration: 0.9,
-        stagger: 0.09,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 72%",
-        },
-      });
-
-      gsap.from(".roadmap-step-card", {
-        y: 40,
-        duration: 0.8,
-        stagger: 0.06,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".roadmap-snake-container",
-          start: "top 80%",
-        },
-      });
-
-      // ── Mobile-only: scroll-activated glow line + icon highlights ──
-      const mm = gsap.matchMedia();
-      mm.add("(max-width: 768px)", () => {
-        const container = sectionRef.current?.querySelector(".roadmap-snake-container") as HTMLElement | null;
-        const glowEl = mobileGlowRef.current;
-        const iconWraps = Array.from(
-          sectionRef.current?.querySelectorAll(".roadmap-icon-wrap") ?? []
-        ) as HTMLElement[];
-
-        if (!container || !glowEl || iconWraps.length === 0) return;
-
-        // Measure positions after layout
-        const setupGlow = () => {
-          const cRect = container.getBoundingClientRect();
-          const first = iconWraps[0].getBoundingClientRect();
-          const last  = iconWraps[iconWraps.length - 1].getBoundingClientRect();
-          const lineTop    = first.top  + first.height  / 2 - cRect.top;
-          const lineBottom = last.top   + last.height   / 2 - cRect.top;
-          const lineHeight = lineBottom - lineTop;
-
-          gsap.set(glowEl, {
-            top: lineTop,
-            height: lineHeight,
-            scaleY: 0,
-            transformOrigin: "top left",
-          });
-
-          // Scrub the fill as the section scrolls through the viewport
-          gsap.to(glowEl, {
-            scaleY: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: container,
-              start: "top 55%",
-              end:   "bottom 55%",
-              scrub: 1.2,
-            },
-          });
-
-          // Sequential scroll glow — each element within a card activates
-          // independently as it crosses the viewport trigger point.
-          // Flow: icon first → label second → description last.
-          const cards = Array.from(
-            sectionRef.current?.querySelectorAll(".roadmap-step-card") ?? []
-          ) as HTMLElement[];
-
-          cards.forEach((card) => {
-            const icon  = card.querySelector(".roadmap-icon-wrap") as HTMLElement | null;
-            const label = card.querySelector(".roadmap-step-label") as HTMLElement | null;
-            const popup = card.querySelector(".roadmap-step-popup") as HTMLElement | null;
-
-            // 1. Icon — triggers when icon center crosses 65% viewport
-            if (icon) {
-              ScrollTrigger.create({
-                trigger: icon,
-                start: "center 65%",
-                onEnter:     () => card.classList.add("is-glowing-icon"),
-                onLeaveBack: () => card.classList.remove("is-glowing-icon"),
-              });
-            }
-
-            // 2. Label/heading — triggers when label crosses 70% viewport
-            if (label) {
-              ScrollTrigger.create({
-                trigger: label,
-                start: "top 70%",
-                onEnter:     () => card.classList.add("is-glowing-label"),
-                onLeaveBack: () => card.classList.remove("is-glowing-label"),
-              });
-            }
-
-            // 3. Description — triggers when popup crosses 72% viewport
-            if (popup) {
-              ScrollTrigger.create({
-                trigger: popup,
-                start: "top 72%",
-                onEnter:     () => card.classList.add("is-glowing-popup"),
-                onLeaveBack: () => card.classList.remove("is-glowing-popup"),
-              });
-            }
-          });
-        };
-
-        // Run after first paint so getBoundingClientRect is reliable
-        requestAnimationFrame(setupGlow);
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, []);
+  const themeTitleFont = "var(--font-syne), var(--font-display), sans-serif";
 
   return (
-    <section ref={sectionRef} className="process-section">
-      <div className="process-grid-background" />
-      <div className="process-wrap">
-        <svg style={{ position: "absolute", width: 0, height: 0, pointerEvents: "none" }}>
-          <defs>
-            <linearGradient id="comet-lr" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#36b8ff" stopOpacity="0" />
-              <stop offset="80%" stopColor="#36b8ff" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#36b8ff" stopOpacity="1" />
-            </linearGradient>
-
-            <linearGradient id="comet-rl" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
-              <stop offset="20%" stopColor="#36b8ff" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#36b8ff" stopOpacity="0" />
-            </linearGradient>
-
-            <linearGradient id="comet-tb" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#36b8ff" stopOpacity="0" />
-              <stop offset="80%" stopColor="#36b8ff" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#36b8ff" stopOpacity="1" />
-            </linearGradient>
-          </defs>
-        </svg>
-
-        <header className="process-header">
-          <div className="process-reveal">
-            <SectionBadge label="Our Process" number="08" />
+    <section 
+      id="process-section" 
+      style={{
+        position: 'relative',
+        paddingTop: '70px',
+        paddingBottom: '80px',
+        backgroundColor: '#030408',
+        color: '#ffffff',
+        overflow: 'hidden'
+      }}
+    >
+      {/* Subtle ambient lighting */}
+      <div 
+        style={{
+          position: 'absolute',
+          top: '30%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '650px',
+          height: '300px',
+          backgroundColor: 'rgba(0, 136, 255, 0.08)',
+          filter: 'blur(130px)',
+          pointerEvents: 'none',
+          borderRadius: '9999px'
+        }} 
+      />
+      
+      <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 20px', position: 'relative', zIndex: 10 }}>
+        
+        {/* Section Header */}
+        <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 45px auto' }}>
+          <div style={{ display: 'inline-flex', justifyContent: 'center', marginBottom: '14px' }}>
+            <SectionBadge label="Our Action Plan" number="05" />
           </div>
-          <p className="process-reveal">
-            [ One clear route ]
+          
+          <h2 style={{
+            fontFamily: themeTitleFont,
+            fontSize: 'clamp(2.25rem, 4.5vw, 3.25rem)',
+            fontWeight: 700,
+            lineHeight: 1.15,
+            color: '#ffffff',
+            marginBottom: '14px',
+            letterSpacing: '-0.02em'
+          }}>
+            Our complete
             <br />
-            No mystery. No disappearing act.
-          </p>
-        </header>
-
-        <div className="process-heading process-reveal">
-          <h2>
-            From first thought
-            <br />
-            <span>to live product.</span>
+            <span style={{ color: '#36b8ff' }}>
+              action process.
+            </span>
           </h2>
-          <p>
-            A practical eight-phase system built to keep decisions clear,
-            momentum visible, and quality high.
+
+          <p style={{ color: '#94a3b8', fontSize: '1rem', lineHeight: 1.5, maxWidth: '600px', margin: '0 auto' }}>
+            Click on any step in our 5-phase wave roadmap below to view the detailed breakdown of what happens in each phase.
           </p>
         </div>
 
-        <div className="roadmap-snake-container">
-          {/* Mobile scroll-glow progress line — hidden on desktop via CSS */}
-          <div className="roadmap-mobile-glow-line" ref={mobileGlowRef} aria-hidden="true" />
-          <div className="roadmap-snake-grid">
-            {/* Step 1 */}
-            <div className="roadmap-step-card" style={{ gridRow: 1, gridColumn: 1 }}>
-              <div className="roadmap-icon-wrap">
-                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
-                  <defs>
-                    <linearGradient id="roadmap-shine-grad-1" x1="100%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
-                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
-                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
-                  <g className="roadmap-crystal-dot">
-                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-1)" strokeWidth="2.5" strokeLinecap="round" />
-                  </g>
-                </svg>
-                <div className="roadmap-icon-inner">
-                  <Eye size={28} strokeWidth={2} />
+        {/* ── DESKTOP WAVE LAYOUT (5 Steps in 2 Rows connected by fluid SVG curve) ── */}
+        <div className="hidden lg:block" style={{ position: 'relative', margin: '20px 0', minHeight: '520px' }}>
+          
+          {/* SVG Wave Ribbon connecting Step 1 -> Step 2 -> Step 3 -> Loop down -> Step 4 -> Step 5 */}
+          <svg
+            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none', zIndex: 0 }}
+            viewBox="0 0 1000 520"
+            fill="none"
+            preserveAspectRatio="none"
+          >
+            <defs>
+              <linearGradient id="waveLineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#36b8ff" stopOpacity="0.9" />
+                <stop offset="50%" stopColor="#0088ff" stopOpacity="1" />
+                <stop offset="100%" stopColor="#36b8ff" stopOpacity="0.9" />
+              </linearGradient>
+              <filter id="glowEffect" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="3.5" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+
+            {/* Continuous SVG Wave Line */}
+            <path
+              d="M 160 170 
+                 C 270 80, 380 65, 500 65 
+                 C 620 65, 730 80, 840 170 
+                 C 960 280, 920 400, 750 400 
+                 C 580 400, 480 340, 350 380 
+                 C 250 420, 520 480, 650 460"
+              stroke="url(#waveLineGrad)"
+              strokeWidth="3.5"
+              strokeDasharray="6 5"
+              filter="url(#glowEffect)"
+              style={{ opacity: 0.8 }}
+            />
+          </svg>
+
+          {/* ── ROW 1: STEPS 1, 2, 3 ── */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '30px', position: 'relative', zIndex: 10 }}>
+            
+            {/* Step 1: Dip Position */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '65px' }}>
+              <button
+                onClick={() => setActiveStepModal(actionSteps[0])}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  backgroundColor: '#070c18',
+                  border: '1px solid rgba(54, 184, 255, 0.35)',
+                  borderRadius: '18px',
+                  padding: '20px 16px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  width: '100%',
+                  maxWidth: '290px',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)',
+                  transition: 'all 0.25s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#36b8ff';
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 12px 28px rgba(54, 184, 255, 0.22)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(54, 184, 255, 0.35)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.45)';
+                }}
+              >
+                <div style={{
+                  fontFamily: themeTitleFont,
+                  width: '46px',
+                  height: '46px',
+                  borderRadius: '14px',
+                  backgroundColor: 'rgba(54, 184, 255, 0.12)',
+                  border: '1px solid rgba(54, 184, 255, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#36b8ff',
+                  fontWeight: 800,
+                  fontSize: '18px',
+                  marginBottom: '12px'
+                }}>
+                  1
+                </div>
+                <h3 style={{ fontFamily: themeTitleFont, fontSize: '1.1rem', fontWeight: 600, color: '#ffffff', marginBottom: '6px', lineHeight: 1.25 }}>
+                  {actionSteps[0].fullTitle}
+                </h3>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.4, marginBottom: '10px' }}>
+                  {actionSteps[0].tagline}
+                </p>
+                <div style={{ display: 'inline-flex', alignItems: 'center', fontSize: '0.8rem', fontWeight: 600, color: '#36b8ff' }}>
+                  <span>Click for details</span>
+                  <ChevronRight style={{ width: '14px', height: '14px', marginLeft: '2px' }} />
+                </div>
+              </button>
+            </div>
+
+            {/* Step 2: Crest Position */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '0px' }}>
+              <button
+                onClick={() => setActiveStepModal(actionSteps[1])}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  backgroundColor: '#070c18',
+                  border: '1px solid rgba(54, 184, 255, 0.35)',
+                  borderRadius: '18px',
+                  padding: '20px 16px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  width: '100%',
+                  maxWidth: '290px',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)',
+                  transition: 'all 0.25s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#36b8ff';
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 12px 28px rgba(54, 184, 255, 0.22)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(54, 184, 255, 0.35)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.45)';
+                }}
+              >
+                <div style={{
+                  fontFamily: themeTitleFont,
+                  width: '46px',
+                  height: '46px',
+                  borderRadius: '14px',
+                  backgroundColor: 'rgba(54, 184, 255, 0.12)',
+                  border: '1px solid rgba(54, 184, 255, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#36b8ff',
+                  fontWeight: 800,
+                  fontSize: '18px',
+                  marginBottom: '12px'
+                }}>
+                  2
+                </div>
+                <h3 style={{ fontFamily: themeTitleFont, fontSize: '1.1rem', fontWeight: 600, color: '#ffffff', marginBottom: '6px', lineHeight: 1.25 }}>
+                  {actionSteps[1].fullTitle}
+                </h3>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.4, marginBottom: '10px' }}>
+                  {actionSteps[1].tagline}
+                </p>
+                <div style={{ display: 'inline-flex', alignItems: 'center', fontSize: '0.8rem', fontWeight: 600, color: '#36b8ff' }}>
+                  <span>Click for details</span>
+                  <ChevronRight style={{ width: '14px', height: '14px', marginLeft: '2px' }} />
+                </div>
+              </button>
+            </div>
+
+            {/* Step 3: Dip Position (Tail connects down to Row 2) */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '65px' }}>
+              <button
+                onClick={() => setActiveStepModal(actionSteps[2])}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  backgroundColor: '#070c18',
+                  border: '1px solid rgba(54, 184, 255, 0.35)',
+                  borderRadius: '18px',
+                  padding: '20px 16px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  width: '100%',
+                  maxWidth: '290px',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)',
+                  transition: 'all 0.25s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#36b8ff';
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 12px 28px rgba(54, 184, 255, 0.22)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(54, 184, 255, 0.35)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.45)';
+                }}
+              >
+                <div style={{
+                  fontFamily: themeTitleFont,
+                  width: '46px',
+                  height: '46px',
+                  borderRadius: '14px',
+                  backgroundColor: 'rgba(54, 184, 255, 0.12)',
+                  border: '1px solid rgba(54, 184, 255, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#36b8ff',
+                  fontWeight: 800,
+                  fontSize: '18px',
+                  marginBottom: '12px'
+                }}>
+                  3
+                </div>
+                <h3 style={{ fontFamily: themeTitleFont, fontSize: '1.1rem', fontWeight: 600, color: '#ffffff', marginBottom: '6px', lineHeight: 1.25 }}>
+                  {actionSteps[2].fullTitle}
+                </h3>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.4, marginBottom: '10px' }}>
+                  {actionSteps[2].tagline}
+                </p>
+                <div style={{ display: 'inline-flex', alignItems: 'center', fontSize: '0.8rem', fontWeight: 600, color: '#36b8ff' }}>
+                  <span>Click for details</span>
+                  <ChevronRight style={{ width: '14px', height: '14px', marginLeft: '2px' }} />
+                </div>
+              </button>
+            </div>
+          </div>
+
+          {/* ── ROW 2: STEPS 4 & 5 (Tail of 3rd Step connecting to Head of 4th Step) ── */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '40px', maxWidth: '680px', margin: '65px auto 0 auto', position: 'relative', zIndex: 10 }}>
+            
+            {/* Step 4: Head connected from Row 1 */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+              <button
+                onClick={() => setActiveStepModal(actionSteps[3])}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  backgroundColor: '#070c18',
+                  border: '1px solid rgba(54, 184, 255, 0.35)',
+                  borderRadius: '18px',
+                  padding: '20px 16px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  width: '100%',
+                  maxWidth: '290px',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)',
+                  transition: 'all 0.25s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#36b8ff';
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 12px 28px rgba(54, 184, 255, 0.22)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(54, 184, 255, 0.35)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.45)';
+                }}
+              >
+                <div style={{
+                  fontFamily: themeTitleFont,
+                  width: '46px',
+                  height: '46px',
+                  borderRadius: '14px',
+                  backgroundColor: 'rgba(54, 184, 255, 0.12)',
+                  border: '1px solid rgba(54, 184, 255, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#36b8ff',
+                  fontWeight: 800,
+                  fontSize: '18px',
+                  marginBottom: '12px'
+                }}>
+                  4
+                </div>
+                <h3 style={{ fontFamily: themeTitleFont, fontSize: '1.1rem', fontWeight: 600, color: '#ffffff', marginBottom: '6px', lineHeight: 1.25 }}>
+                  {actionSteps[3].fullTitle}
+                </h3>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.4, marginBottom: '10px' }}>
+                  {actionSteps[3].tagline}
+                </p>
+                <div style={{ display: 'inline-flex', alignItems: 'center', fontSize: '0.8rem', fontWeight: 600, color: '#36b8ff' }}>
+                  <span>Click for details</span>
+                  <ChevronRight style={{ width: '14px', height: '14px', marginLeft: '2px' }} />
+                </div>
+              </button>
+            </div>
+
+            {/* Step 5: Final Wave Terminal */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', paddingTop: '35px' }}>
+              <button
+                onClick={() => setActiveStepModal(actionSteps[4])}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  backgroundColor: '#070c18',
+                  border: '1px solid rgba(54, 184, 255, 0.35)',
+                  borderRadius: '18px',
+                  padding: '20px 16px',
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                  width: '100%',
+                  maxWidth: '290px',
+                  boxShadow: '0 8px 24px rgba(0, 0, 0, 0.45)',
+                  transition: 'all 0.25s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#36b8ff';
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                  e.currentTarget.style.boxShadow = '0 12px 28px rgba(54, 184, 255, 0.22)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(54, 184, 255, 0.35)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.45)';
+                }}
+              >
+                <div style={{
+                  fontFamily: themeTitleFont,
+                  width: '46px',
+                  height: '46px',
+                  borderRadius: '14px',
+                  backgroundColor: 'rgba(54, 184, 255, 0.12)',
+                  border: '1px solid rgba(54, 184, 255, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#36b8ff',
+                  fontWeight: 800,
+                  fontSize: '18px',
+                  marginBottom: '12px'
+                }}>
+                  5
+                </div>
+                <h3 style={{ fontFamily: themeTitleFont, fontSize: '1.1rem', fontWeight: 600, color: '#ffffff', marginBottom: '6px', lineHeight: 1.25 }}>
+                  {actionSteps[4].fullTitle}
+                </h3>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.4, marginBottom: '10px' }}>
+                  {actionSteps[4].tagline}
+                </p>
+                <div style={{ display: 'inline-flex', alignItems: 'center', fontSize: '0.8rem', fontWeight: 600, color: '#36b8ff' }}>
+                  <span>Click for details</span>
+                  <ChevronRight style={{ width: '14px', height: '14px', marginLeft: '2px' }} />
+                </div>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        {/* ── MOBILE / TABLET LAYOUT (Balanced Step Cards) ── */}
+        <div className="lg:hidden" style={{ display: 'flex', flexDirection: 'column', gap: '14px', margin: '25px 0 40px 0' }}>
+          {actionSteps.map((step) => (
+            <button
+              key={step.stepId}
+              onClick={() => setActiveStepModal(step)}
+              style={{
+                width: '100%',
+                textAlign: 'left',
+                backgroundColor: '#070c18',
+                border: '1px solid rgba(54, 184, 255, 0.3)',
+                borderRadius: '16px',
+                padding: '14px 16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.3)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flex: 1 }}>
+                <div style={{
+                  fontFamily: themeTitleFont,
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(54, 184, 255, 0.12)',
+                  border: '1px solid rgba(54, 184, 255, 0.4)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#36b8ff',
+                  fontWeight: 800,
+                  fontSize: '17px',
+                  flexShrink: 0
+                }}>
+                  {step.stepId}
+                </div>
+                <div>
+                  <h3 style={{ fontFamily: themeTitleFont, fontSize: '1rem', fontWeight: 600, color: '#ffffff', marginBottom: '2px' }}>
+                    {step.fullTitle}
+                  </h3>
+                  <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.35 }}>
+                    {step.tagline}
+                  </p>
                 </div>
               </div>
-              <div className="roadmap-step-label">
-                <span className="roadmap-step-number">PHASE 01</span>
-                <h3>{processSteps[0].title}</h3>
+              <div style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '9999px',
+                backgroundColor: 'rgba(255,255,255,0.06)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#36b8ff',
+                flexShrink: 0,
+                marginLeft: '10px'
+              }}>
+                <ChevronRight style={{ width: '16px', height: '16px' }} />
               </div>
-              <div className="roadmap-step-popup">
-                <p>{processSteps[0].description}</p>
-              </div>
-            </div>
+            </button>
+          ))}
+        </div>
 
-            {/* Connector 1-2 — tail moves left → right */}
-            <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 2, alignSelf: "start" }}>
-              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "2px", height: "4px" }}>
-                <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <rect y="0.5" width="50%" height="3" fill="url(#comet-lr)" rx="1.5">
-                  <animate attributeName="x" from="-50%" to="100%" dur="8s" repeatCount="indefinite" />
-                </rect>
-              </svg>
+        {/* ── PAYMENT MODEL EXPLANATION SECTION ── */}
+        <div style={{
+          marginTop: '50px',
+          backgroundColor: '#070c18',
+          border: '1px solid rgba(54, 184, 255, 0.3)',
+          borderRadius: '22px',
+          padding: '28px 24px',
+          backdropFilter: 'blur(16px)',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.45)'
+        }}>
+          <div style={{
+            marginBottom: '24px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+            paddingBottom: '18px'
+          }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              color: '#36b8ff',
+              fontSize: '0.75rem',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.06em',
+              marginBottom: '6px'
+            }}>
+              <CreditCard style={{ width: '14px', height: '14px' }} />
+              <span>Transparent Milestone Model</span>
             </div>
+            <h3 style={{ fontFamily: themeTitleFont, fontSize: 'clamp(1.35rem, 2.5vw, 1.75rem)', fontWeight: 700, color: '#ffffff', margin: 0 }}>
+              Our Transparent Payment Structure
+            </h3>
+          </div>
 
-            {/* Step 2 */}
-            <div className="roadmap-step-card" style={{ gridRow: 1, gridColumn: 3 }}>
-              <div className="roadmap-icon-wrap">
-                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
-                  <defs>
-                    <linearGradient id="roadmap-shine-grad-2" x1="100%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
-                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
-                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
-                  <g className="roadmap-crystal-dot">
-                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-2)" strokeWidth="2.5" strokeLinecap="round" />
-                  </g>
-                </svg>
-                <div className="roadmap-icon-inner">
-                  <Map size={28} strokeWidth={2} />
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '20px' }}>
+            {paymentMilestones.map((m, idx) => (
+              <div
+                key={idx}
+                style={{
+                  backgroundColor: '#03060d',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '16px',
+                  padding: '20px 18px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+                    <span style={{ fontFamily: themeTitleFont, fontSize: '1.85rem', fontWeight: 800, color: '#36b8ff' }}>{m.percentage}</span>
+                    <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#94a3b8', backgroundColor: 'rgba(255,255,255,0.06)', padding: '3px 10px', borderRadius: '9999px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                      Stage 0{idx + 1}
+                    </span>
+                  </div>
+                  <h4 style={{ fontFamily: themeTitleFont, fontSize: '1.05rem', fontWeight: 600, color: '#ffffff', marginBottom: '4px' }}>{m.stage}</h4>
+                  <p style={{ fontSize: '0.8rem', color: '#36b8ff', fontWeight: 600, marginBottom: '10px' }}>{m.timing}</p>
+                  <p style={{ fontSize: '0.825rem', color: '#cbd5e1', lineHeight: 1.5 }}>{m.description}</p>
                 </div>
               </div>
-              <div className="roadmap-step-label">
-                <span className="roadmap-step-number">PHASE 02</span>
-                <h3>{processSteps[1].title}</h3>
+            ))}
+          </div>
+        </div>
+
+      </div>
+
+      {/* ── STEP POPUP MODAL ON CLICK ── */}
+      {activeStepModal && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 100,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '16px',
+            backgroundColor: 'rgba(0, 0, 0, 0.85)',
+            backdropFilter: 'blur(8px)'
+          }}
+          onClick={() => setActiveStepModal(null)}
+        >
+          <div
+            style={{
+              backgroundColor: '#0b101d',
+              border: '1px solid rgba(54, 184, 255, 0.4)',
+              borderRadius: '22px',
+              padding: '26px 22px',
+              maxWidth: '540px',
+              width: '100%',
+              textAlign: 'left',
+              boxShadow: '0 20px 50px rgba(0,0,0,0.8)',
+              position: 'relative'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Top Right Close Button */}
+            <button
+              onClick={() => setActiveStepModal(null)}
+              style={{
+                position: 'absolute',
+                top: '16px',
+                right: '16px',
+                width: '36px',
+                height: '36px',
+                borderRadius: '9999px',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                color: '#ffffff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                border: 'none'
+              }}
+            >
+              <X style={{ width: '18px', height: '18px' }} />
+            </button>
+
+            {/* Modal Header */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '18px' }}>
+              <div style={{
+                fontFamily: themeTitleFont,
+                width: '48px',
+                height: '48px',
+                borderRadius: '14px',
+                backgroundColor: 'rgba(54, 184, 255, 0.15)',
+                border: '1px solid rgba(54, 184, 255, 0.4)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#36b8ff',
+                fontWeight: 900,
+                fontSize: '20px',
+                flexShrink: 0
+              }}>
+                {activeStepModal.stepId}
               </div>
-              <div className="roadmap-step-popup">
-                <p>{processSteps[1].description}</p>
+              <div>
+                <span style={{ fontSize: '0.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#36b8ff' }}>
+                  Step 0{activeStepModal.stepId} Details
+                </span>
+                <h3 style={{ fontFamily: themeTitleFont, fontSize: '1.35rem', fontWeight: 700, color: '#ffffff', margin: 0 }}>
+                  {activeStepModal.fullTitle}
+                </h3>
               </div>
             </div>
 
-            {/* Connector 2-3 — tail moves left → right */}
-            <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 4, alignSelf: "start" }}>
-              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "2px", height: "4px" }}>
-                <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <rect y="0.5" width="50%" height="3" fill="url(#comet-lr)" rx="1.5">
-                  <animate attributeName="x" from="-50%" to="100%" dur="8s" repeatCount="indefinite" />
-                </rect>
-              </svg>
+            {/* Tagline */}
+            <div style={{
+              fontSize: '0.85rem',
+              fontWeight: 600,
+              color: '#36b8ff',
+              marginBottom: '16px',
+              backgroundColor: 'rgba(54, 184, 255, 0.1)',
+              border: '1px solid rgba(54, 184, 255, 0.25)',
+              borderRadius: '12px',
+              padding: '10px 14px'
+            }}>
+              {activeStepModal.tagline}
             </div>
 
-            {/* Step 3 */}
-            <div className="roadmap-step-card" style={{ gridRow: 1, gridColumn: 5 }}>
-              <div className="roadmap-icon-wrap">
-                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
-                  <defs>
-                    <linearGradient id="roadmap-shine-grad-3" x1="100%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
-                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
-                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
-                  <g className="roadmap-crystal-dot">
-                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-3)" strokeWidth="2.5" strokeLinecap="round" />
-                  </g>
-                </svg>
-                <div className="roadmap-icon-inner">
-                  <Layers size={28} strokeWidth={2} />
-                </div>
-              </div>
-              <div className="roadmap-step-label">
-                <span className="roadmap-step-number">PHASE 03</span>
-                <h3>{processSteps[2].title}</h3>
-              </div>
-              <div className="roadmap-step-popup">
-                <p>{processSteps[2].description}</p>
-              </div>
-            </div>
+            {/* Description */}
+            <p style={{ color: '#cbd5e1', fontSize: '0.9rem', lineHeight: 1.55, marginBottom: '20px' }}>
+              {activeStepModal.description}
+            </p>
 
-            {/* Connector 3-4 — tail moves left → right */}
-            <div className="roadmap-connector-wrap" style={{ gridRow: 1, gridColumn: 6, alignSelf: "start" }}>
-              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "2px", height: "4px" }}>
-                <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <rect y="0.5" width="50%" height="3" fill="url(#comet-lr)" rx="1.5">
-                  <animate attributeName="x" from="-50%" to="100%" dur="8s" repeatCount="indefinite" />
-                </rect>
-              </svg>
-            </div>
-
-            {/* Step 4 */}
-            <div className="roadmap-step-card" style={{ gridRow: 1, gridColumn: 7 }}>
-              <div className="roadmap-icon-wrap">
-                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
-                  <defs>
-                    <linearGradient id="roadmap-shine-grad-4" x1="100%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
-                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
-                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
-                  <g className="roadmap-crystal-dot">
-                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-4)" strokeWidth="2.5" strokeLinecap="round" />
-                  </g>
-                </svg>
-                <div className="roadmap-icon-inner">
-                  <Palette size={28} strokeWidth={2} />
-                </div>
-              </div>
-              <div className="roadmap-step-label">
-                <span className="roadmap-step-number">PHASE 04</span>
-                <h3>{processSteps[3].title}</h3>
-              </div>
-              <div className="roadmap-step-popup">
-                <p>{processSteps[3].description}</p>
-              </div>
-            </div>
-
-            {/* Vertical Connector 4-5 — tail moves top → bottom */}
-            <div className="roadmap-vertical-connector" style={{ gridRow: 2, gridColumn: 7, alignSelf: "stretch", position: "relative" }}>
-              <svg className="roadmap-vertical-connector-svg" style={{ overflow: "visible", position: "absolute", top: "-4px", height: "calc(100% + 8px)", left: "50%", marginLeft: "-10px", width: "20px" }}>
-                <line x1="10" y1="0" x2="10" y2="100%" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <rect x="8.5" width="3" height="50%" fill="url(#comet-tb)" rx="1.5">
-                  <animate attributeName="y" from="-50%" to="100%" dur="8s" repeatCount="indefinite" />
-                </rect>
-              </svg>
-            </div>
-
-            {/* Step 5 */}
-            <div className="roadmap-step-card" style={{ gridRow: 3, gridColumn: 7 }}>
-              <div className="roadmap-icon-wrap">
-                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
-                  <defs>
-                    <linearGradient id="roadmap-shine-grad-5" x1="100%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
-                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
-                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
-                  <g className="roadmap-crystal-dot">
-                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-5)" strokeWidth="2.5" strokeLinecap="round" />
-                  </g>
-                </svg>
-                <div className="roadmap-icon-inner">
-                  <Code size={28} strokeWidth={2} />
-                </div>
-              </div>
-              <div className="roadmap-step-label">
-                <span className="roadmap-step-number">PHASE 05</span>
-                <h3>{processSteps[4].title}</h3>
-              </div>
-              <div className="roadmap-step-popup">
-                <p>{processSteps[4].description}</p>
-              </div>
-            </div>
-
-            {/* Connector 5-6 — tail moves right → left */}
-            <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 6, alignSelf: "start" }}>
-              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "2px", height: "4px" }}>
-                <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <rect y="0.5" width="50%" height="3" fill="url(#comet-rl)" rx="1.5">
-                  <animate attributeName="x" from="100%" to="-50%" dur="8s" repeatCount="indefinite" />
-                </rect>
-              </svg>
-            </div>
-
-            {/* Step 6 */}
-            <div className="roadmap-step-card" style={{ gridRow: 3, gridColumn: 5 }}>
-              <div className="roadmap-icon-wrap">
-                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
-                  <defs>
-                    <linearGradient id="roadmap-shine-grad-6" x1="100%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
-                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
-                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
-                  <g className="roadmap-crystal-dot">
-                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-6)" strokeWidth="2.5" strokeLinecap="round" />
-                  </g>
-                </svg>
-                <div className="roadmap-icon-inner">
-                  <FileText size={28} strokeWidth={2} />
-                </div>
-              </div>
-              <div className="roadmap-step-label">
-                <span className="roadmap-step-number">PHASE 06</span>
-                <h3>{processSteps[5].title}</h3>
-              </div>
-              <div className="roadmap-step-popup">
-                <p>{processSteps[5].description}</p>
-              </div>
-            </div>
-
-            {/* Connector 6-7 — tail moves right → left */}
-            <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 4, alignSelf: "start" }}>
-              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "2px", height: "4px" }}>
-                <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <rect y="0.5" width="50%" height="3" fill="url(#comet-rl)" rx="1.5">
-                  <animate attributeName="x" from="100%" to="-50%" dur="8s" repeatCount="indefinite" />
-                </rect>
-              </svg>
-            </div>
-
-            {/* Step 7 */}
-            <div className="roadmap-step-card" style={{ gridRow: 3, gridColumn: 3 }}>
-              <div className="roadmap-icon-wrap">
-                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
-                  <defs>
-                    <linearGradient id="roadmap-shine-grad-7" x1="100%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
-                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
-                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
-                  <g className="roadmap-crystal-dot">
-                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-7)" strokeWidth="2.5" strokeLinecap="round" />
-                  </g>
-                </svg>
-                <div className="roadmap-icon-inner">
-                  <Cpu size={28} strokeWidth={2} />
-                </div>
-              </div>
-              <div className="roadmap-step-label">
-                <span className="roadmap-step-number">PHASE 07</span>
-                <h3>{processSteps[6].title}</h3>
-              </div>
-              <div className="roadmap-step-popup">
-                <p>{processSteps[6].description}</p>
-              </div>
-            </div>
-
-            {/* Connector 7-8 — tail moves right → left */}
-            <div className="roadmap-connector-wrap" style={{ gridRow: 3, gridColumn: 2, alignSelf: "start" }}>
-              <svg className="roadmap-connector-svg" style={{ overflow: "visible", position: "absolute", left: "-4px", width: "calc(100% + 8px)", top: "50%", marginTop: "2px", height: "4px" }}>
-                <line x1="0" y1="2" x2="100%" y2="2" stroke="white" strokeWidth="1.5" strokeOpacity="0.12" />
-                <rect y="0.5" width="50%" height="3" fill="url(#comet-rl)" rx="1.5">
-                  <animate attributeName="x" from="100%" to="-50%" dur="8s" repeatCount="indefinite" />
-                </rect>
-              </svg>
-            </div>
-
-            {/* Step 8 */}
-            <div className="roadmap-step-card" style={{ gridRow: 3, gridColumn: 1 }}>
-              <div className="roadmap-icon-wrap">
-                <svg className="roadmap-icon-svg" viewBox="0 0 100 100">
-                  <defs>
-                    <linearGradient id="roadmap-shine-grad-8" x1="100%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#36b8ff" stopOpacity="1" />
-                      <stop offset="30%" stopColor="#0088ff" stopOpacity="0.85" />
-                      <stop offset="100%" stopColor="#002244" stopOpacity="0.08" />
-                    </linearGradient>
-                  </defs>
-                  <circle cx="50" cy="50" r="46" className="roadmap-circle-base" fill="#030405" />
-                  <g className="roadmap-crystal-dot">
-                    <path d="M 4 50 A 46 46 0 0 1 50 4" fill="none" stroke="url(#roadmap-shine-grad-8)" strokeWidth="2.5" strokeLinecap="round" />
-                  </g>
-                </svg>
-                <div className="roadmap-icon-inner">
-                  <Zap size={28} strokeWidth={2} />
-                </div>
-              </div>
-              <div className="roadmap-step-label">
-                <span className="roadmap-step-number">PHASE 08</span>
-                <h3>{processSteps[7].title}</h3>
-              </div>
-              <div className="roadmap-step-popup">
-                <p>{processSteps[7].description}</p>
+            {/* Key Deliverables */}
+            <div>
+              <h4 style={{ fontSize: '0.7rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#94a3b8', marginBottom: '10px' }}>
+                Key Action Focus
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {activeStepModal.highlights.map((h, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', fontSize: '0.85rem', color: '#e2e8f0' }}>
+                    <CheckCircle2 style={{ width: '16px', height: '16px', color: '#36b8ff', marginTop: '2px', flexShrink: 0 }} />
+                    <span>{h}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
-
-        <div className="process-more-cta">
-          <Link href="/process" className="button button-muted group">
-            Know in detail
-            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:rotate-45" />
-          </Link>
-        </div>
-      </div>
+      )}
     </section>
   );
 }

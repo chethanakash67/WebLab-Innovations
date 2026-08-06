@@ -39,3 +39,34 @@ CREATE TABLE IF NOT EXISTS portfolio_reviews (
 
 CREATE INDEX IF NOT EXISTS portfolio_reviews_status_created_idx
   ON portfolio_reviews (status, created_at DESC);
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'catalog_type') THEN
+    CREATE TYPE catalog_type AS ENUM (
+      'audit',
+      'report',
+      'benchmark_comparison',
+      'guide',
+      'case_study'
+    );
+  END IF;
+END $$;
+
+CREATE TABLE IF NOT EXISTS library_catalog (
+  id BIGSERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  summary TEXT NOT NULL DEFAULT '',
+  type catalog_type NOT NULL,
+  file_path TEXT NOT NULL,
+  tags TEXT[] NOT NULL DEFAULT '{}',
+  published BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS library_catalog_type_idx
+  ON library_catalog (type);
+
+CREATE INDEX IF NOT EXISTS library_catalog_published_created_idx
+  ON library_catalog (published, created_at DESC);

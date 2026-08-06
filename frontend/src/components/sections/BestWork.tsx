@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Sparkles } from "lucide-react";
 import SectionBadge from "@/components/ui/SectionBadge";
 import "@/app/bento.css";
 
@@ -17,7 +17,7 @@ const bentoItems = [
     id: "orbit",
     type: "video",
     src: "/Videos/Tabun Chai - orbut menu vdeo compr.mp4",
-    className: "bento-col-3 bento-row-1",
+    className: "bento-col-6 bento-row-1",
     why: "Smooth, frictionless navigation.",
     result: "Reduced bounce rate by 22%.",
     alt: "Orbit Menu Interaction",
@@ -34,29 +34,10 @@ const bentoItems = [
     device: "desktop",
   },
   {
-    id: "mobile-scroll",
-    type: "video",
-    src: "/Videos/Video Project 5 1 compr.mp4",
-    className: "bento-col-3 bento-row-2-span",
-    why: "Finger-friendly hit zones for bottom navigation.",
-    result: "Mobile conversion increased by 40%.",
-    alt: "Mobile Project Scroller",
-    device: "mobile",
-  },
-  {
-    id: "stats",
-    type: "custom",
-    className: "bento-col-2 bento-row-1 bento-item-stats",
-    why: "Instant social proof.",
-    result: "Higher trust and conversion.",
-    alt: "Performance Stats",
-    device: "mobile",
-  },
-  {
     id: "font-screenshot",
     type: "image-hotspot",
     src: "/Videos/Screenshot 2026-06-20 224215.png",
-    className: "bento-col-5 bento-row-1 bento-click-pop-out",
+    className: "bento-col-full bento-row-2 bento-click-pop-out",
     why: "High-contrast, readable font scaling.",
     result: "Increased average time on page.",
     alt: "Typography Hierarchy",
@@ -94,17 +75,59 @@ const bentoItems = [
   },
 ];
 
+const qaItems = [
+  {
+    id: "client",
+    question: "Who was the client?",
+    badge: "Client Profile",
+    story: "The client was a cafe owner named Tabun Tea (Tabun Chai) located near the Bangalore Tirupati Highway. He approached us needing a modern, highly engaging digital presence to capture highway travelers and local food lovers alike.",
+    details: [
+      { label: "Client Name", value: "Tabun Tea (Tabun Chai Cafe)" },
+      { label: "Location", value: "Near Bangalore Tirupati Highway" },
+      { label: "Business Type", value: "Cafe & Tea Lounge" }
+    ]
+  },
+  {
+    id: "action",
+    question: "What did we do for them?",
+    badge: "Execution & Design",
+    story: "We designed and engineered a custom, ultra-sleek website in just 4 days. Every detail from brand architecture and warm coffee aesthetics to customer ambiance and mouth-watering visual menus was crafted with precision to keep cafe visitors engaged.",
+    details: [
+      { label: "Turnaround", value: "Designed & Built in 4 Days" },
+      { label: "Scope", value: "Brand Architecture & Custom UI" },
+      { label: "Aesthetics", value: "Cafe Ambiance Theme" }
+    ]
+  },
+  {
+    id: "result",
+    question: "What is the result?",
+    badge: "Measured Impact",
+    story: "Within just 10 days of launching the new website, Tabun Chai experienced a massive 40% increase in lead conversions. Online menu discovery surged, customer inquiries skyrocketed, and table direction clicks saw a dramatic rise.",
+    details: [
+      { label: "Lead Boost", value: "+40% Conversion Increase" },
+      { label: "Measured Within", value: "10 Days of Launch" },
+      { label: "Impact", value: "Higher Table Visits & Orders" }
+    ]
+  }
+];
+
 export default function BestWork() {
   const sectionRef = useRef<HTMLElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const fontScreenshotRef = useRef<HTMLDivElement>(null);
   const marqueeTooltipRef = useRef<HTMLDivElement>(null);
-  const [activeStatsTab, setActiveStatsTab] = useState<string | null>(null);
   const [isImagePopped, setIsImagePopped] = useState(false);
   const [isImageHovered, setIsImageHovered] = useState(false);
   const [isMarqueeHovered, setIsMarqueeHovered] = useState(false);
   const [loadVideos, setLoadVideos] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [openQuestions, setOpenQuestions] = useState<string[]>(["client"]);
+
+  const toggleQuestion = (id: string) => {
+    setOpenQuestions((prev) =>
+      prev.includes(id) ? prev.filter((qId) => qId !== id) : [...prev, id]
+    );
+  };
 
   useEffect(() => {
     setIsMounted(true);
@@ -154,30 +177,6 @@ export default function BestWork() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isImagePopped]);
-
-  const statsTabsData = {
-    client: { 
-      title: "Who was the client?", 
-      desc: [
-        "Tabun Chai is a rapidly growing, beloved local cafe known for its authentic, spiced karak chai and warm, eclectic atmosphere.",
-        "As their physical foot traffic surged, their outdated digital presence struggled to keep up. They needed a premium digital upgrade that captured the sensory magic of their in-store experience while streamlining the online customer journey for late-night crowds."
-      ]
-    },
-    build: { 
-      title: "What did we build?", 
-      desc: [
-        "We engineered a sleek, highly responsive digital ecosystem centered around a mobile-first philosophy. This included a lightning-fast digital menu, dynamic \"Today's Special\" promotional highlights, and a frictionless ordering interface.",
-        "Every UI component was meticulously crafted with warm, caramel aesthetics and micro-animations to reflect their high-end cafe branding and drive customer engagement."
-      ]
-    },
-    results: { 
-      title: "What results they got?", 
-      desc: [
-        "The impact was immediate and profound. The optimized user flow and highly visible \"Get Directions\" CTAs drove a massive 40% increase in local lead capture and daily in-store visits.",
-        "Furthermore, the engaging, interactive menu design contributed to a 22% reduction in bounce rates, keeping customers on the page longer and significantly boosting online order volume."
-      ]
-    }
-  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -234,14 +233,13 @@ export default function BestWork() {
                     muted
                     loop
                     playsInline
-                    className="bento-media"
-                    style={
+                    className={`bento-media ${
                       item.device === "desktop"
-                        ? { transform: "scale(1.17) translateY(-8%)" }
+                        ? "bento-media-video-desktop"
                         : item.id === "mobile-scroll"
-                        ? { objectPosition: "center top", transform: "scale(1.08)" }
-                        : {}
-                    }
+                        ? "bento-media-video-mobile"
+                        : ""
+                    }`}
                   />
                 )}
                 {item.type === "image" && (
@@ -287,58 +285,107 @@ export default function BestWork() {
                     )}
                   </div>
                 )}
-                {item.type === "custom" && item.id === "stats" && (
-                  <div className="bento-stats-card-extended" onMouseLeave={() => setActiveStatsTab(null)}>
-                    <span className="stats-label">Conversion Rate</span>
-                    <strong className="stats-metric">+40%</strong>
-                    <p className="stats-desc" style={{ marginBottom: "0" }}>increase in lead capture</p>
-                    
-                    <div className="stats-tabs">
-                      <button 
-                        className={`stats-tab-btn ${activeStatsTab === 'client' ? 'active' : ''}`}
-                        onClick={() => setActiveStatsTab('client')}
-                      >
-                        Who was the client? <span>→</span>
-                      </button>
-                      <button 
-                        className={`stats-tab-btn ${activeStatsTab === 'build' ? 'active' : ''}`}
-                        onClick={() => setActiveStatsTab('build')}
-                      >
-                        What did we build? <span>→</span>
-                      </button>
-                      <button 
-                        className={`stats-tab-btn ${activeStatsTab === 'results' ? 'active' : ''}`}
-                        onClick={() => setActiveStatsTab('results')}
-                      >
-                        What results they got? <span>→</span>
-                      </button>
-                    </div>
-                    
-                    <a href="https://tabun-chai.vercel.app/" target="_blank" rel="noopener noreferrer" className="bento-project-link">
-                      View the project ↗
-                    </a>
-                    
-                    <p style={{ fontSize: "8px", color: "rgba(255,255,255,0.45)", margin: "10px 0 0 0", lineHeight: "1.2", fontStyle: "italic", textAlign: "center" }}>
-                      *Projected increase according to industry benchmarks
-                    </p>
-
-                    <div className={`stats-popup-card ${activeStatsTab ? 'open' : ''}`}>
-                      {activeStatsTab && (
-                        <>
-                          <span className="stats-popup-title">{statsTabsData[activeStatsTab as keyof typeof statsTabsData].title}</span>
-                          <div className="stats-popup-desc">
-                            {statsTabsData[activeStatsTab as keyof typeof statsTabsData].desc.map((para, i) => (
-                              <p key={i} style={{ marginBottom: i === 0 ? '12px' : '0' }}>{para}</p>
-                            ))}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                )}
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Coffee Brown Translucent QA Card */}
+        <div className="coffee-qa-card">
+          <div className="coffee-stat-header">
+            <div className="coffee-stat-badge">
+              <Sparkles className="h-3.5 w-3.5 text-[#e6a15c]" />
+              <span>CASE STUDY HIGHLIGHT</span>
+            </div>
+            
+            <div className="coffee-metric-group">
+              <span className="coffee-metric-number">40%</span>
+              <div className="coffee-metric-text-block">
+                <div className="coffee-metric-highlight">
+                  INCREASE IN LEAD CONVERSION
+                </div>
+                <span className="coffee-metric-subtext">
+                  Designed in 4 Days • Result Measured Within 10 Days of Launch
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Questions Section Title */}
+          <div className="coffee-qa-section-title">
+            <span>PROJECT BREAKDOWN : CLICK ANY QUESTION TO EXPAND DETAILS</span>
+          </div>
+
+          <div className="coffee-qa-list">
+            {qaItems.map((qa) => {
+              const isOpen = openQuestions.includes(qa.id);
+              return (
+                <div
+                  key={qa.id}
+                  className={`coffee-qa-item ${isOpen ? "is-open" : ""}`}
+                >
+                  <button
+                    type="button"
+                    className="coffee-qa-button"
+                    onClick={() => toggleQuestion(qa.id)}
+                    aria-expanded={isOpen}
+                  >
+                    <div className="coffee-qa-question-wrap">
+                      <span className="coffee-qa-num">{qa.id === 'client' ? '01' : qa.id === 'action' ? '02' : '03'}</span>
+                      <span className="coffee-qa-tag">{qa.badge}</span>
+                      <h3 className="coffee-qa-title">{qa.question}</h3>
+                    </div>
+                    <div className="coffee-qa-toggle-icon">
+                      <span className="coffee-qa-action-text">{isOpen ? "Hide details" : "Expand details"}</span>
+                      <ChevronDown
+                        className={`h-4 w-4 transition-transform duration-300 ${
+                          isOpen ? "rotate-180 text-[#e6a15c]" : "text-gray-400"
+                        }`}
+                      />
+                    </div>
+                  </button>
+
+                  <div
+                    className={`coffee-qa-answer-container ${
+                      isOpen ? "expanded" : ""
+                    }`}
+                  >
+                    <div className="coffee-qa-answer-inner">
+                      <p className="coffee-qa-story">{qa.story}</p>
+                      <div className="coffee-qa-pills">
+                        {qa.details.map((detail, idx) => (
+                          <span
+                            key={idx}
+                            className={`coffee-pill ${
+                              detail.label === "Lead Boost" ? "coffee-pill-highlight" : ""
+                            }`}
+                          >
+                            <strong>{detail.label}:</strong> {detail.value}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Live Project Link Button */}
+        <div className="coffee-live-btn-wrap">
+          <a
+            href="https://tabun-chai.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="coffee-live-btn"
+          >
+            <span className="coffee-live-btn-label">Check this out:</span>
+            <span className="coffee-live-btn-url">
+              https://tabun-chai.vercel.app/
+              <ArrowUpRight className="h-4 w-4" />
+            </span>
+          </a>
         </div>
 
         <style dangerouslySetInnerHTML={{__html: `
@@ -428,16 +475,16 @@ export default function BestWork() {
           </Link>
         </div>
 
-        <div className="testimonial-block" style={{ maxWidth: '850px', margin: '140px auto 0 auto' }}>
+        <div className="testimonial-block" style={{ maxWidth: '1250px', margin: '120px auto 0 auto' }}>
           <div className="testimonial-card">
             <div className="testimonial-header">
-              <h3 className="testimonial-heading">What did <span style={{ color: '#e6a15c', fontSize: '1.15em' }}>they say?</span></h3>
+              <h3 className="testimonial-heading">What did<br /><span style={{ color: '#e6a15c' }}>they say?</span></h3>
               <div className="testimonial-stars">
                 ★★★★<span className="half-star">★</span> <span className="rating-number">4.6</span>
               </div>
             </div>
             <p className="testimonial-quote">
-              "We only provided a simple Google Maps link. Their team researched our cafe across multiple sites, gathered all the details, and delivered a superb conversion focused landing page for our cafe in exactly a couple of days. The process was entirely untouched by us, even no extra queries asked and the final design is simply brilliant."
+              "We only provided a simple Google Maps link. Their team researched our cafe across multiple sites, gathered all the details, and delivered a superb conversion focused landing page for our cafe in a couple of days. The process was entirely untouched by us and the final design is simply brilliant."
             </p>
             <div className="testimonial-author">
               <div className="author-avatar">

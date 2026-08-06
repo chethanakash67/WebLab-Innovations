@@ -108,13 +108,40 @@ export default function Footer() {
             </h2>
           </div>
           <a
-            href="https://wa.me/918919870959?text=hello,%20I'm%20intterested%20for%20a%20service%20from%20your%20agency,%20please%20explain%20me"
+            href="https://wa.me/917396733009?text=Hi,%20I%20need%20you%20to%20do%20an%20full%20audit%20to%20my%20business.%20let's%20talk"
             target="_blank"
             rel="noopener noreferrer"
             className="footer-cta-button"
-            style={{ textDecoration: "none" }}
+            style={{
+              textDecoration: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              minWidth: "180px",
+              minHeight: "48px",
+              padding: "0 16px",
+              borderRadius: "13px",
+              background: "#fff",
+              color: "#020303",
+              fontSize: "17px",
+              fontWeight: "650",
+              border: "none",
+              boxShadow: "none",
+              transition: "background 300ms ease, box-shadow 300ms ease, transform 300ms ease"
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "#36b8ff";
+              e.currentTarget.style.boxShadow = "0 0 30px rgba(54, 184, 255, 0.25)";
+              e.currentTarget.style.transform = "translateY(-1px)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "#fff";
+              e.currentTarget.style.boxShadow = "none";
+              e.currentTarget.style.transform = "translateY(0)";
+            }}
           >
-            Start a project
+            Book a free audit
             <ArrowUpRight className="h-5 w-5" />
           </a>
         </div>
@@ -123,42 +150,52 @@ export default function Footer() {
           <div className="footer-wordmark" aria-hidden="true">
             AigleOn<span>Labs</span>
           </div>
+
           <div className="footer-studio">
-            <div
-              className="footer-response-flag"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "8px",
-                background: "rgba(255, 255, 255, 0.03)",
-                border: "1px solid rgba(255, 255, 255, 0.08)",
-                borderRadius: "999px",
-                padding: "6px 12px",
-                fontSize: "10px",
-                color: "rgba(255, 255, 255, 0.6)",
-                width: "fit-content",
-                marginBottom: "16px",
-                textTransform: "uppercase",
-                letterSpacing: "0.05em",
-                fontWeight: 500
-              }}
-            >
+            <div className="footer-response-flag-top">
               <span className="signal-dot" style={{ background: "#36b8ff", boxShadow: "0 0 8px #36b8ff" }} />
               Typical response in 24 hours
             </div>
-            <button
-              type="button"
-              className="footer-brand footer-brand-button"
-              aria-label="Open AigleOn Labs studio details"
-              onClick={() => setActivePopup("studio")}
-            >
-              <AgencyMark />
-              <span>
-                <strong>AigleOn Labs</strong>
-                <small>Digital product studio</small>
-              </span>
-            </button>
-            <p>
+
+            <div className="footer-top-row">
+              <div className="footer-brand-section">
+                <button
+                  type="button"
+                  className="footer-brand footer-brand-button"
+                  aria-label="Open AigleOn Labs studio details"
+                  onClick={() => setActivePopup("studio")}
+                >
+                  <AgencyMark />
+                  <span>
+                    <strong>AigleOn Labs</strong>
+                    <small>Digital product studio</small>
+                  </span>
+                </button>
+              </div>
+              <div className="footer-contact-inline">
+                <a
+                  href="mailto:contact@theaigleonlabs.dev?subject=Project%20Inquiry&body=Hello%20AigleOn%20Labs%20Team,%0A%0AI'm%20interested%20in%20discussing%20a%20project%20with%20you."
+                  style={{ position: "relative", zIndex: 50, width: "100%" }}
+                >
+                  <Mail className="h-4 w-4" />
+                  <span>
+                    <small>Email</small>
+                    <strong>contact@theaigleonlabs.dev</strong>
+                  </span>
+                  <ArrowUpRight className="ml-auto h-4 w-4" />
+                </a>
+                <a href="tel:+918919870959" style={{ position: "relative", zIndex: 50 }}>
+                  <Phone className="h-4 w-4" />
+                  <span>
+                    <small>Phone</small>
+                    <strong>8919870959</strong>
+                  </span>
+                  <ArrowUpRight className="ml-auto h-4 w-4" />
+                </a>
+              </div>
+            </div>
+
+            <p className="footer-studio-desc">
               We design and build focused digital products for ambitious teams
               ready to move.
             </p>
@@ -182,133 +219,87 @@ export default function Footer() {
               </Link>
             </div>
 
-            <div className="footer-contact-list">
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                <a
-                  href="mailto:contact@theaigleonlabs.dev?subject=Project%20Inquiry&body=Hello%20AigleOn%20Labs%20Team,%0A%0AI'm%20interested%20in%20discussing%20a%20project%20with%20you."
-                  style={{ position: "relative", zIndex: 50, width: "100%" }}
-                >
-                  <Mail className="h-4 w-4" />
-                  <span>
-                    <small>Email</small>
-                    <strong>contact@theaigleonlabs.dev</strong>
-                  </span>
-                  <ArrowUpRight className="ml-auto h-4 w-4" />
-                </a>
-                <button
-                  onClick={handleCopyEmail}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '6px',
-                    fontSize: '11px',
-                    color: copied ? '#4ade80' : 'rgba(255, 255, 255, 0.4)',
-                    background: 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                    padding: '4px 8px',
-                    width: 'fit-content',
-                    transition: 'color 0.2s',
-                    position: "relative",
-                    zIndex: 50,
-                    marginLeft: '4px'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.color = copied ? '#4ade80' : 'rgba(255, 255, 255, 0.8)'}
-                  onMouseLeave={(e) => e.currentTarget.style.color = copied ? '#4ade80' : 'rgba(255, 255, 255, 0.4)'}
-                  aria-label="Copy email address"
-                >
-                  {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                  {copied ? "Email copied to clipboard!" : "Copy email address"}
-                </button>
-              </div>
-              <a href="tel:+918919870959" style={{ position: "relative", zIndex: 50, height: "68px" }}>
-                <Phone className="h-4 w-4" />
-                <span>
-                  <small>Phone</small>
-                  <strong>8919870959</strong>
-                </span>
-                <ArrowUpRight className="ml-auto h-4 w-4" />
-              </a>
+            <div className="footer-links">
+              <FooterColumn
+                title="Explore"
+                links={footerLinks.navigation}
+                onPopup={setActivePopup}
+              />
+              <FooterColumn
+                title="Capabilities"
+                links={footerLinks.services}
+                onPopup={setActivePopup}
+              />
+              <FooterColumn title="Connect" links={footerLinks.social} external />
             </div>
-          </div>
 
-          <div className="footer-links">
-            <FooterColumn
-              title="Explore"
-              links={footerLinks.navigation}
-              onPopup={setActivePopup}
-            />
-            <FooterColumn
-              title="Capabilities"
-              links={footerLinks.services}
-              onPopup={setActivePopup}
-            />
-            <FooterColumn title="Connect" links={footerLinks.social} external />
-          </div>
+            <div className="footer-flags-row">
+              <span className="footer-flag-item footer-availability">
+                <span className="signal-dot" />
+                Available for projects
+              </span>
+              <span className="footer-flag-item">India / Working worldwide</span>
+            </div>
 
-          {popup ? (
-            <div
-              className={`footer-popup-card ${activePopup === "team" ? "is-team" : ""}`}
-              role="status"
-            >
-              <button
-                type="button"
-                className="footer-popup-close"
-                aria-label="Close footer popup"
-                onClick={() => setActivePopup(null)}
+            {popup ? (
+              <div
+                className={`footer-popup-card ${activePopup === "team" ? "is-team" : ""}`}
+                role="status"
               >
-                <X className="h-3.5 w-3.5" />
-              </button>
-              <span>{popup.eyebrow}</span>
-              <strong>{popup.title}</strong>
-              <p>{popup.body}</p>
-              {activePopup === "team" ? (
-                <div className="footer-team-popup-list">
-                  {founders.map((founder, index) => (
-                    <article key={founder.id}>
-                      <small>{String(index + 1).padStart(2, "0")}</small>
-                      <div>
-                        <h4>{founder.name}</h4>
-                        <span>{founder.role}</span>
-                        <p>
-                          {founder.id === "chethan-akash"
-                            ? "Focuses on polished interfaces, frontend systems, and AI customer workflows."
-                            : "Focuses on product direction, brand clarity, and launch-ready execution."}
-                        </p>
-                      </div>
-                      <div className="footer-team-popup-actions">
-                        <a
-                          href={founder.portfolio}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          Portfolio
-                          <ArrowUpRight className="h-3 w-3" />
-                        </a>
-                        <a
-                          href={founder.linkedin}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          LinkedIn
-                          <ArrowUpRight className="h-3 w-3" />
-                        </a>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              ) : null}
-            </div>
-          ) : null}
+                <button
+                  type="button"
+                  className="footer-popup-close"
+                  aria-label="Close footer popup"
+                  onClick={() => setActivePopup(null)}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </button>
+                <span>{popup.eyebrow}</span>
+                <strong>{popup.title}</strong>
+                <p>{popup.body}</p>
+                {activePopup === "team" ? (
+                  <div className="footer-team-popup-list">
+                    {founders.map((founder, index) => (
+                      <article key={founder.id}>
+                        <small>{String(index + 1).padStart(2, "0")}</small>
+                        <div>
+                          <h4>{founder.name}</h4>
+                          <span>{founder.role}</span>
+                          <p>
+                            {founder.id === "chethan-akash"
+                              ? "Focuses on polished interfaces, frontend systems, and AI customer workflows."
+                              : "Focuses on product direction, brand clarity, and launch-ready execution."}
+                          </p>
+                        </div>
+                        <div className="footer-team-popup-actions">
+                          <a
+                            href={founder.portfolio}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Portfolio
+                            <ArrowUpRight className="h-3 w-3" />
+                          </a>
+                          <a
+                            href={founder.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            LinkedIn
+                            <ArrowUpRight className="h-3 w-3" />
+                          </a>
+                        </div>
+                      </article>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
         </div>
 
         <div className="footer-bottom">
           <span>© {new Date().getFullYear()} AigleOn Labs Studio</span>
-          <span className="footer-availability">
-            <span className="signal-dot" />
-            Available for projects
-          </span>
-          <span>India / Working worldwide</span>
         </div>
 
       </div>

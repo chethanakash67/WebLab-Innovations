@@ -16,7 +16,7 @@ export default function WorkPage() {
     <SmoothScroll>
       <MouseFollowLight />
       <Navbar />
-      <main style={{ paddingTop: "140px", minHeight: "80vh", position: "relative", zIndex: 10 }}>
+      <main style={{ paddingTop: "100px", minHeight: "75vh", position: "relative", zIndex: 10 }}>
         <FeaturedWork />
       </main>
       <Footer />
