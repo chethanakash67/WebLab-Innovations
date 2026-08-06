@@ -19,23 +19,23 @@ const syne = Syne({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://theaigleonlabs.dev"),
-  title: "AigleOn Labs | Your Digital Team",
+  title: "Aigleon Labs | Digital Systems Agency & Venture Lab",
   description:
-    "AigleOn Labs builds high-performance websites, SaaS platforms, dashboards, and AI-powered digital products. We craft award-winning digital experiences.",
+    "Aigleon Labs builds custom digital systems for niche craft pioneers and purpose driven brands. As a venture lab, we also build and launch proprietary tech.",
   keywords: [
-    "web design",
-    "web development",
-    "SaaS development",
-    "AI solutions",
-    "digital agency",
-    "UI/UX design",
-    "branding",
-    "automation",
-    "Next.js",
-    "React",
+    "Aigleon Labs",
+    "digital systems agency",
+    "venture lab",
+    "niche craft pioneers",
+    "custom web engineering",
+    "product design studio",
+    "purpose driven brands",
+    "AI automation systems",
+    "in-house tech products",
+    "digital growth engine",
   ],
-  authors: [{ name: "AigleOn Labs" }],
-  creator: "AigleOn Labs",
+  authors: [{ name: "Aigleon Labs" }],
+  creator: "Aigleon Labs",
   icons: {
     icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     shortcut: ["/favicon.svg"],
@@ -44,24 +44,24 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://theaigleonlabs.dev",
-    siteName: "AigleOn Labs",
-    title: "AigleOn Labs | Premium Web Design & Development Agency",
+    siteName: "Aigleon Labs",
+    title: "Aigleon Labs | Digital Systems & Venture Studio",
     description:
-      "AigleOn Labs builds high-performance websites, SaaS platforms, dashboards, and AI-powered digital products.",
+      "Aigleon Labs engineers custom digital systems for niche craft pioneers and purpose driven brands, while launching in-house tech products as a venture lab.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "AigleOn Labs - Premium Digital Agency",
+        alt: "Aigleon Labs Digital Systems Agency & Venture Lab",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "AigleOn Labs | Premium Web Design & Development Agency",
+    title: "Aigleon Labs | Digital Systems & Venture Studio",
     description:
-      "AigleOn Labs builds high-performance websites, SaaS platforms, dashboards, and AI-powered digital products.",
+      "Aigleon Labs engineers custom digital systems for niche craft pioneers and purpose driven brands, while launching in-house tech products as a venture lab.",
     images: ["/og-image.png"],
   },
   robots: {

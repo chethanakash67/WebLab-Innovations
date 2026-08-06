@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
@@ -114,9 +115,12 @@ export default function BestWork() {
   const sectionRef = useRef<HTMLElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const fontScreenshotRef = useRef<HTMLDivElement>(null);
+  const marqueeTooltipRef = useRef<HTMLDivElement>(null);
   const [isImagePopped, setIsImagePopped] = useState(false);
   const [isImageHovered, setIsImageHovered] = useState(false);
+  const [isMarqueeHovered, setIsMarqueeHovered] = useState(false);
   const [loadVideos, setLoadVideos] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const [openQuestions, setOpenQuestions] = useState<string[]>(["client"]);
 
   const toggleQuestion = (id: string) => {
@@ -126,6 +130,7 @@ export default function BestWork() {
   };
 
   useEffect(() => {
+    setIsMounted(true);
     if (!sectionRef.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -145,6 +150,13 @@ export default function BestWork() {
       const rect = e.currentTarget.getBoundingClientRect();
       badgeRef.current.style.left = `${e.clientX - rect.left}px`;
       badgeRef.current.style.top = `${e.clientY - rect.top}px`;
+    }
+  };
+
+  const handleMarqueeMouseMove = (e: React.MouseEvent) => {
+    if (marqueeTooltipRef.current) {
+      marqueeTooltipRef.current.style.left = `${e.clientX + 15}px`;
+      marqueeTooltipRef.current.style.top = `${e.clientY + 15}px`;
     }
   };
 
@@ -170,6 +182,7 @@ export default function BestWork() {
     const ctx = gsap.context(() => {
       gsap.from(".bento-item", {
         y: 60,
+        
         duration: 1,
         stagger: 0.1,
         ease: "power3.out",
@@ -318,8 +331,10 @@ export default function BestWork() {
                     aria-expanded={isOpen}
                   >
                     <div className="coffee-qa-question-wrap">
-                      <span className="coffee-qa-num">{qa.id === 'client' ? '01' : qa.id === 'action' ? '02' : '03'}</span>
-                      <span className="coffee-qa-tag">{qa.badge}</span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <span className="coffee-qa-num">{qa.id === 'client' ? '01' : qa.id === 'action' ? '02' : '03'}</span>
+                        <span className="coffee-qa-tag">{qa.badge}</span>
+                      </div>
                       <h3 className="coffee-qa-title">{qa.question}</h3>
                     </div>
                     <div className="coffee-qa-toggle-icon">
@@ -386,8 +401,7 @@ export default function BestWork() {
           </Link>
         </div>
 
-        {/* Testimonial Block */}
-        <div className="testimonial-block" style={{ maxWidth: '1250px', margin: '80px auto 0 auto' }}>
+        <div className="testimonial-block" style={{ maxWidth: '1250px', margin: '120px auto 0 auto' }}>
           <div className="testimonial-card">
             <div className="testimonial-header">
               <h3 className="testimonial-heading">What did<br /><span style={{ color: '#e6a15c' }}>they say?</span></h3>

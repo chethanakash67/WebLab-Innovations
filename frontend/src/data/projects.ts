@@ -39,30 +39,8 @@ export const projects: Project[] = [
     }
   },
   {
-    id: "dropiq",
-    number: "02",
-    title: "DropIQ",
-    type: "SaaS Platform",
-    description:
-      "DropIQ is a modern SaaS analytics platform engineered specifically for tracking lead generation and boosting conversion rates. We developed a powerful, clean dashboard that translates complex data metrics into simple, actionable insights. The seamless user experience empowers businesses to track their marketing funnels with precision and scale effectively.",
-    link: "https://dropiq-nine.vercel.app/",
-    images: [
-      "/workpics/dropiq-1.png",
-      "/workpics/dropiq-2.png",
-      "/workpics/dropiq-3.png",
-      "/workpics/dropiq-4.png",
-      "/workpics/dropiq-5.png",
-    ],
-    featured: true,
-    clientTestimonial: {
-      quote: "They took our complex data requirements and turned them into a beautifully simple dashboard. The new interface is incredibly intuitive, and our users have been raving about the smooth experience since launch.",
-      author: "Priya Menon",
-      role: "Product Lead, DropIQ"
-    }
-  },
-  {
     id: "narayana-school-ctr",
-    number: "03",
+    number: "02",
     title: "Narayana School Chittoor",
     type: "Educational Website",
     description:
@@ -78,6 +56,73 @@ export const projects: Project[] = [
       role: "Principal, Narayana School"
     }
   },
+];
+
+export interface TechProduct {
+  id: string;
+  number: string;
+  title: string;
+  type: string;
+  description: string;
+  link?: string;
+  status: string;
+  pausedFlag?: string;
+  images: string[];
+  features: string[];
+  storedTestimonial?: {
+    quote: string;
+    author: string;
+    role: string;
+  };
+}
+
+export const techProducts: TechProduct[] = [
+  {
+    id: "dropiq",
+    number: "01",
+    title: "DropIQ",
+    type: "Uniform E-Commerce Search Engine",
+    description:
+      "DropIQ is a full stack uniform e-commerce search engine for real time price comparison across 9+ retailers and 1885+ products. Built to instantly surface the most affordable prices, it features a unified scraper pipeline across 5+ e-commerce platforms using rotating proxies, reverse APIs, and headless browsers achieving 92% product page coverage. Powered by a fine-tuned LLM recommendation model, users can compare products side by side and receive top 3 matched deals.",
+    link: "https://dropiq-nine.vercel.app/",
+    status: "Live Platform",
+    pausedFlag: "Currently Paused",
+    images: [
+      "/workpics/dropiq-1.png",
+      "/workpics/dropiq-2.png",
+      "/workpics/dropiq-3.png",
+      "/workpics/dropiq-4.png",
+      "/workpics/dropiq-5.png",
+    ],
+    features: [
+      "Real time price comparison across 9+ retailers and 1885+ products",
+      "Unified scraper pipeline with 92% product page coverage",
+      "Fine-tuned LLM top 3 deal recommendations and product comparison"
+    ],
+    storedTestimonial: {
+      quote: "All we had was an idea. Videsh turned it into a working product, he handled the frontend, backend, database, deployment, and the AI integration himself. The search is fast, the UI looks clean, and users are happy. Good guy to have when you need something built properly.",
+      author: "Senoay",
+      role: "Co-Founder, DropIQ Search Engine"
+    }
+  },
+  {
+    id: "humanonn",
+    number: "02",
+    title: "Humanonn",
+    type: "AI Code & UX Vibe Score Evaluator",
+    description:
+      "Humanonn crawls any site and checks it against 84 fixed UX rules to catch vibe coding, sites built fast with AI and no real design thought behind them. Give it the GitHub repo too and it digs into the codebase for AI bloat, like a two line fix that somehow turns into fifty. Every rule is weighted so normal developer mistakes don't tank the score. Only the vibe coded stuff does. A chain of LLMs catches anything the fixed rules miss, and the site score plus the repo score combine into one final vibe score.",
+    link: "https://humanonn.onrender.com/",
+    status: "Live Beta",
+    images: [
+      "/Screenshot 2026-08-06 235352.png",
+    ],
+    features: [
+      "Only live site score, or both live site and GitHub repo",
+      "Tiers and multipliers given to UX rules",
+      "Chain of LLMs as a fallback model"
+    ]
+  }
 ];
 
 export interface Founder {

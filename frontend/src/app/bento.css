@@ -902,21 +902,56 @@
 }
 
 @media (max-width: 768px) {
+  .image-hotspot, .click-me-badge, .hotspot-tooltip {
+    display: none !important;
+  }
   .coffee-qa-card {
-    padding: 24px 20px;
-    margin-top: 75px !important;
+    padding: 24px 16px;
+    margin-top: 50px !important;
   }
   .coffee-metric-group {
+    flex-direction: column;
+    align-items: flex-start;
     gap: 12px;
   }
-  .coffee-qa-button {
-    padding: 16px 18px;
+  .coffee-metric-number {
+    font-size: 3.2rem;
   }
-  .coffee-qa-answer-inner {
-    padding: 0 18px 18px 18px;
+  .coffee-metric-highlight {
+    font-size: 1.1rem;
+  }
+  .coffee-qa-button {
+    padding: 16px 14px;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .coffee-qa-question-wrap {
+    gap: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
   }
   .coffee-qa-title {
-    font-size: 16px;
+    font-size: 15px;
+    margin-top: 4px;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+  .coffee-qa-toggle-icon {
+    padding: 4px 10px;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+  .coffee-qa-answer-inner {
+    padding: 0 14px 18px 14px;
+  }
+  .coffee-qa-story {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .coffee-pill {
+    font-size: 11px;
+    padding: 4px 10px;
   }
 }
 

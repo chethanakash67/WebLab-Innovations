@@ -143,7 +143,92 @@ export default function FeaturedWork() {
             ))}
         </div>
 
-        <section className="audit-section" style={{ marginTop: "56px", paddingTop: "36px", borderTop: "1px solid rgba(255, 255, 255, 0.1)" }}>
+        {/* Explore Our Tech Products Callout (Above Sample Audits) */}
+        <section style={{ marginTop: "64px", marginBottom: "20px" }}>
+          <div
+            style={{
+              position: "relative",
+              backgroundColor: "#0b0d0f",
+              border: "1px solid rgba(54, 184, 255, 0.3)",
+              borderRadius: "20px",
+              padding: "32px clamp(20px, 4vw, 40px)",
+              overflow: "hidden",
+              boxShadow: "0 10px 40px rgba(0, 0, 0, 0.4)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+            }}
+            className="md:flex-row md:items-center md:justify-between"
+          >
+            {/* Background Radial Lighting */}
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                width: "350px",
+                height: "350px",
+                background: "radial-gradient(circle at top right, rgba(54, 184, 255, 0.12) 0%, transparent 70%)",
+                pointerEvents: "none",
+              }}
+            />
+
+            <div style={{ position: "relative", zIndex: 2 }}>
+              <SectionBadge label="Venture Lab" number="03.B" />
+              <h3
+                style={{
+                  fontSize: "clamp(1.5rem, 3vw, 2.2rem)",
+                  fontFamily: "var(--font-display), sans-serif",
+                  fontWeight: 700,
+                  color: "#ffffff",
+                  marginTop: "12px",
+                  marginBottom: "8px",
+                  lineHeight: 1.2,
+                }}
+              >
+                Explore our <span style={{ color: "#36b8ff" }}>tech products</span>
+              </h3>
+              <p
+                style={{
+                  fontSize: "14.5px",
+                  color: "#9ca3aa",
+                  maxWidth: "600px",
+                  lineHeight: 1.5,
+                  margin: 0,
+                }}
+              >
+                Apart from our client services, we build and launch proprietary tech products as an in-house venture lab.
+              </p>
+            </div>
+
+            <Link
+              href="/products"
+              style={{
+                position: "relative",
+                zIndex: 2,
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "12px 24px",
+                backgroundColor: "#36b8ff",
+                color: "#020303",
+                fontWeight: 700,
+                borderRadius: "12px",
+                fontSize: "14px",
+                textDecoration: "none",
+                transition: "all 0.3s ease",
+                whiteSpace: "nowrap",
+                alignSelf: "flex-start",
+              }}
+              className="hover:scale-[1.03] md:self-center"
+            >
+              Explore Tech Products
+              <ArrowUpRight className="h-4 w-4" />
+            </Link>
+          </div>
+        </section>
+
+        <section className="audit-section" style={{ marginTop: "40px", paddingTop: "36px", borderTop: "1px solid rgba(255, 255, 255, 0.1)" }}>
           <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between" style={{ marginBottom: "40px" }}>
             <div>
               <SectionBadge label="Free Audit Samples" number="04" />

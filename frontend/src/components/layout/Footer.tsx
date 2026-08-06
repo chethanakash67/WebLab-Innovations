@@ -9,6 +9,7 @@ import { founders } from "@/data/projects";
 const footerLinks = {
   navigation: [
     { label: "Work", popupKey: undefined, href: "/work" },
+    { label: "Tech Products", popupKey: undefined, href: "/products" },
     { label: "Testimonials", popupKey: undefined, href: "/testimonials" },
     { label: "FAQ", popupKey: undefined, href: "/faq" },
     { label: "Contact", popupKey: undefined, href: "/contact" },
