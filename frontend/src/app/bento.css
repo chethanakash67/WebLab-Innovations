@@ -699,15 +699,15 @@
 }
 
 .coffee-metric-number {
-  font-family: var(--font-display), sans-serif;
+  font-family: var(--font-syne), var(--font-display), sans-serif;
   font-size: clamp(3.5rem, 6vw, 5.2rem);
-  font-weight: 800;
+  font-weight: 400;
   line-height: 1;
   background: linear-gradient(135deg, #f4ebd9 0%, #e6a15c 50%, #c87a32 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 35px rgba(230, 161, 92, 0.3);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.06em;
 }
 
 .coffee-metric-text-block {

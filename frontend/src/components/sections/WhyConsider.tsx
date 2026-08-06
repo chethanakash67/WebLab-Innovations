@@ -311,24 +311,23 @@ export default function WhyConsider() {
                   style={{
                     flex: 1,
                     border: "1px solid rgba(255, 255, 255, 0.1)",
-                    borderRadius: "14px",
-                    backgroundColor: "rgba(255, 255, 255, 0.015)",
+                    borderRadius: "16px",
+                    backgroundColor: "rgba(255, 255, 255, 0.018)",
                     backdropFilter: "blur(12px)",
-                    padding: "16px 20px",
+                    padding: "22px clamp(24px, 4vw, 36px)",
                     transition: "all 0.3s ease",
                   }}
                 >
                   <h3
                     style={{
-                      fontSize: "15px",
+                      fontSize: "clamp(15px, 1.6vw, 18px)",
                       fontFamily: "var(--font-display), sans-serif",
                       fontWeight: 600,
                       color: "#ffffff",
-                      marginBottom: "6px",
+                      marginBottom: "8px",
                       marginTop: 0,
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
+                      lineHeight: 1.3,
+                      wordBreak: "break-word",
                     }}
                   >
                     {item.title}

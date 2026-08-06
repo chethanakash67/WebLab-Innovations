@@ -177,10 +177,10 @@ export default function Process() {
             color: '#ffffff',
             marginBottom: '14px'
           }}>
-            Our complete
+            Our Complete
             <br />
             <span style={{ color: '#36b8ff', fontWeight: 400 }}>
-              action process.
+              Action Process.
             </span>
           </h2>
 

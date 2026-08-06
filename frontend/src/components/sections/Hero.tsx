@@ -5,11 +5,8 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
-import AgencyMark from "@/components/ui/AgencyMark";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { useReactiveGlow } from "@/hooks/useReactiveGlow";
-import heroArtwork from "../../../public/art/robot-hands-hero.png";
-import dropIqPic from "../../../public/workpics/dropiq-1.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,7 +26,7 @@ export default function Hero() {
     });
   };
 
-  useReactiveGlow(heroRef, { restingX: 52, restingY: 46 });
+  useReactiveGlow(heroRef, { restingX: 50, restingY: 50 });
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -46,7 +43,7 @@ export default function Hero() {
       if (artworkRef.current) {
         gsap.to(artworkRef.current, {
           scale: 1,
-          opacity: 1,
+          opacity: 0.45,
           filter: "blur(0px)",
           duration: 1.8,
           ease: "power3.out",
@@ -54,8 +51,8 @@ export default function Hero() {
         });
 
         gsap.to(artworkRef.current, {
-          yPercent: 8,
-          scale: 1.04,
+          yPercent: 6,
+          scale: 1.05,
           ease: "none",
           scrollTrigger: {
             trigger: heroRef.current,
@@ -71,67 +68,154 @@ export default function Hero() {
   }, []);
 
   return (
-    <section ref={heroRef} id="home" className="hero-section">
-      <div ref={artworkRef} className="hero-artwork" aria-hidden="true">
+    <section 
+      ref={heroRef} 
+      id="home" 
+      style={{
+        position: "relative",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+        backgroundColor: "#020303",
+        paddingTop: "120px",
+        paddingBottom: "60px"
+      }}
+    >
+      {/* Vertical Enlarged Robotic Arm Background Image */}
+      <div 
+        ref={artworkRef} 
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 0,
+          opacity: 0.45,
+          pointerEvents: "none",
+          transform: "scale(1.1)",
+          transition: "opacity 0.5s ease"
+        }}
+      >
         <Image
-          src={heroArtwork}
-          alt=""
+          src="/robotic arm.jpg"
+          alt="Robotic arm background"
           fill
           priority
-          placeholder="blur"
-          className="object-cover"
+          style={{
+            objectFit: "cover",
+            objectPosition: "center",
+            filter: "contrast(1.15) brightness(0.7)"
+          }}
           sizes="100vw"
         />
       </div>
 
-      <div className="hero-vignette" />
-      <div className="hero-orbit hero-orbit-one" />
-      <div className="hero-orbit hero-orbit-two" />
+      {/* Dark Vignette Overlay for Text Readability */}
+      <div 
+        style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 1,
+          background: "radial-gradient(ellipse at center, rgba(2,3,3,0.3) 0%, rgba(2,3,3,0.85) 60%, #020303 100%)",
+          pointerEvents: "none"
+        }} 
+      />
 
-      <div className="hero-layout">
-        <div className="hero-copy">
-          <div className="hero-reveal hero-kicker">
-            <span className="signal-dot" />
-            Brand Visibility and Growth Agency
-            <span className="text-primary-light">/ 2026</span>
-          </div>
+      {/* Hero Ambient Glow Rings */}
+      <div className="hero-orbit hero-orbit-one" style={{ zIndex: 1 }} />
+      <div className="hero-orbit hero-orbit-two" style={{ zIndex: 1 }} />
 
-          <h1 className="hero-reveal hero-title">
-            Your digital
-            <br />
-            side, <span>is on us</span>
-          </h1>
-
-          <p className="hero-reveal hero-intro">
-            We build{" "}
-            <span className="hero-highlight">
-              end to end engines
-            </span>{" "}
-            for your digital growth, covering both user-facing experiences and
-            internal workflows for{" "}
-            <span className="hero-highlight">
-              luxury and premium brands
-            </span>
-            .
-          </p>
+      {/* Centered Hero Content Container */}
+      <div 
+        style={{
+          position: "relative",
+          zIndex: 10,
+          maxWidth: "960px",
+          width: "100%",
+          padding: "0 20px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center"
+        }}
+      >
+        {/* Kicker Flag Badge */}
+        <div 
+          className="hero-reveal hero-kicker"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            marginBottom: "20px"
+          }}
+        >
+          <span className="signal-dot" />
+          <span>Brand Visibility and Growth Agency</span>
+          <span className="text-primary-light">/ 2026</span>
         </div>
 
-        <div className="hero-reveal hero-mark-wrap">
-          <div className="hero-mark-halo" />
-          <AgencyMark className="hero-mark" />
-          <span className="hero-mark-label">AigleOn Labs | digital growth systems</span>
+        {/* Main Title */}
+        <h1 
+          className="hero-reveal hero-title"
+          style={{
+            textAlign: "center",
+            margin: "0 auto",
+            maxWidth: "880px"
+          }}
+        >
+          Your digital
+          <br />
+          side, <span>is on us</span>
+        </h1>
+
+        {/* Subtitle / Intro Quote */}
+        <p 
+          className="hero-reveal hero-intro"
+          style={{
+            textAlign: "center",
+            maxWidth: "620px",
+            margin: "24px auto",
+            fontSize: "clamp(1rem, 1.8vw, 1.15rem)",
+            lineHeight: 1.6
+          }}
+        >
+          We build{" "}
+          <span className="hero-highlight">
+            end to end engines
+          </span>{" "}
+          for your digital growth, covering both user-facing experiences and
+          internal workflows for{" "}
+          <span className="hero-highlight">
+            luxury and premium brands
+          </span>
+          .
+        </p>
+
+        {/* Centered Interactive Quote Box */}
+        <div 
+          className="hero-reveal"
+          style={{
+            margin: "12px 0 28px 0",
+            display: "flex",
+            justifyContent: "center",
+            width: "100%"
+          }}
+        >
           <div 
             className="hero-quote-box"
             ref={quoteRef}
             onMouseEnter={() => setQuoteHovered(true)}
             onMouseLeave={() => setQuoteHovered(false)}
             onMouseMove={handleQuoteMouseMove}
+            style={{ margin: "0 auto" }}
           >
             <div className="hero-quote-content">
               &quot;<span>Audit first</span> model for brands, <br /> with a <span>live demo </span> on the call.&quot;
             </div>
 
-            {/* Magnifier Glass Container (Matches reference logic) */}
+            {/* Magnifier Glass Container */}
             <div 
               style={{
                 position: 'absolute',
@@ -146,11 +230,10 @@ export default function Hero() {
                 opacity: quoteHovered ? 1 : 0,
                 border: '1.5px solid rgba(54, 184, 255, 0.4)',
                 boxShadow: '0 0 15px rgba(54, 184, 255, 0.2), inset 0 0 10px rgba(54, 184, 255, 0.1)',
-                backgroundColor: '#020303', // Solid background
+                backgroundColor: '#020303',
                 zIndex: 10
               }}
             >
-              {/* Scaled Text Inside Magnifier */}
               <div 
                 className="hero-quote-content"
                 style={{
@@ -161,7 +244,7 @@ export default function Hero() {
                   transformOrigin: 'top left',
                   transform: 'scale(1.6)',
                   color: '#fff',
-                  padding: '16px 32px' // Explicitly match the outer content padding
+                  padding: '16px 32px'
                 }}
               >
                 &quot;<span>Audit first</span> model for brands, <br /> with a <span>live demo </span> on the call.&quot;
@@ -170,45 +253,28 @@ export default function Hero() {
           </div>
         </div>
 
-        <aside className="hero-proof hero-reveal" aria-label="Agency highlights">
-          <div className="proof-card proof-card-featured">
-            <div className="proof-card-top">
-              <span>Selected launch</span>
-              <span>01/04</span>
-            </div>
-            <div className="proof-screen">
-              <Image
-                src={dropIqPic}
-                alt="DropIQ product interface"
-                fill
-                placeholder="blur"
-                className="object-cover"
-                sizes="240px"
-              />
-            </div>
-            <strong>8+</strong>
-            <span>projects delivered</span>
-          </div>
-
-          <div className="proof-card proof-card-stat">
-            <strong>97%</strong>
-            <span>Client satisfaction</span>
-            <div className="proof-line" />
-            <p>Small senior team. Direct communication for your ease.</p>
-          </div>
-        </aside>
-
-        <div className="hero-actions hero-reveal">
-          <div className="hero-note">
-            <span className="hero-note-index">/</span>
-            <p>
-              Strategy, visual identity,
-              <br />
-              interface, and engineering.
-            </p>
-          </div>
-
-          <div className="hero-cta-row">
+        {/* Centered Actions / CTA Buttons */}
+        <div 
+          className="hero-actions hero-reveal"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "16px",
+            width: "100%",
+            maxWidth: "480px"
+          }}
+        >
+          <div 
+            className="hero-cta-row"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "14px",
+              width: "100%"
+            }}
+          >
             <MagneticButton>
               <a href="#work" className="button button-muted">
                 Explore work
@@ -228,7 +294,16 @@ export default function Hero() {
             </MagneticButton>
           </div>
 
-          <div className="hero-availability">
+          <div 
+            className="hero-availability"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              marginTop: "4px"
+            }}
+          >
             <span className="signal-dot" />
             Booking select projects now
           </div>

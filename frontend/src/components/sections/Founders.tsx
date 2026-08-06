@@ -8,6 +8,24 @@ import { ArrowUpRight } from "lucide-react";
 import { founders } from "@/data/projects";
 import SectionBadge from "@/components/ui/SectionBadge";
 
+function InstagramIcon({ className = "h-3.5 w-3.5 text-[#36b8ff]" }: { className?: string }) {
+  return (
+    <svg 
+      className={className} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
+
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Founders() {
@@ -119,17 +137,47 @@ export default function Founders() {
                   </span>
                 </div>
               </a>
-              <a
-                href={founder.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-              className="team-member-link"
-              aria-label={`${founder.name} LinkedIn profile`}
-            >
-                <span className="team-linkedin-mark">in</span>
-                <span>LinkedIn</span>
-                <ArrowUpRight className="h-4 w-4" />
-              </a>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "nowrap" }}>
+                <a
+                  href={founder.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="team-member-link"
+                  aria-label={`${founder.name} LinkedIn profile`}
+                  style={{
+                    height: "36px",
+                    minHeight: "36px",
+                    padding: "0 10px",
+                    fontSize: "11px",
+                    whiteSpace: "nowrap"
+                  }}
+                >
+                  <span className="team-linkedin-mark">in</span>
+                  <span>LinkedIn</span>
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </a>
+
+                {founder.instagram ? (
+                  <a
+                    href={founder.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="team-member-link"
+                    aria-label={`${founder.name} Instagram profile`}
+                    style={{
+                      height: "36px",
+                      minHeight: "36px",
+                      padding: "0 10px",
+                      fontSize: "11px",
+                      whiteSpace: "nowrap"
+                    }}
+                  >
+                    <InstagramIcon className="h-3.5 w-3.5 text-[#36b8ff]" />
+                    <span>Instagram</span>
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </a>
+                ) : null}
+              </div>
             </article>
           ))}
         </div>

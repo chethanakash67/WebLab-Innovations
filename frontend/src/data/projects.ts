@@ -87,6 +87,7 @@ export interface Founder {
   image: string;
   portfolio: string;
   linkedin: string;
+  instagram?: string;
 }
 
 export const founders: Founder[] = [
@@ -105,6 +106,7 @@ export const founders: Founder[] = [
     image: "/workpics/sai-videsh.png",
     portfolio: "https://saividesh.vercel.app/",
     linkedin: "https://www.linkedin.com/in/sai-videsh-ssv/",
+    instagram: "https://www.instagram.com/saividesh7/",
   },
 ];
 
