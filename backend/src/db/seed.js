@@ -75,16 +75,58 @@ export async function seedLibraryCatalog() {
   console.log("Library catalog seed applied.");
 }
 
+const pastClients = [
+  {
+    clientName: "Tabun Chai",
+    slug: "tabun-chai",
+    industry: "Cafe & Tea Lounge",
+    websiteUrl: "https://tabun-chai.vercel.app/",
+    logoUrl: null,
+    projectSummary: "Designed and engineered a custom, ultra-sleek landing page & visual menu in 4 days.",
+    resultsAchieved: "+40% increase in lead conversions within 10 days of launch.",
+    testimonialQuote: "His dedication towards work is what inspires me, like the order was given and within 2 days, he delivered a cleanly designed Customer page for my cafe, and also gave constant support...",
+    testimonialAuthor: "S. Ramesh & Team",
+    testimonialRole: "Owner, Tabun Chai Cafe",
+    clientStatus: "active",
+  },
+];
+
+export async function seedPastClients() {
+  for (const client of pastClients) {
+    await pool.query(
+      `INSERT INTO past_clients
+        (client_name, slug, industry, website_url, logo_url, project_summary, results_achieved, testimonial_quote, testimonial_author, testimonial_role, client_status)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+       ON CONFLICT (slug) DO NOTHING`,
+      [
+        client.clientName,
+        client.slug,
+        client.industry,
+        client.websiteUrl,
+        client.logoUrl,
+        client.projectSummary,
+        client.resultsAchieved,
+        client.testimonialQuote,
+        client.testimonialAuthor,
+        client.testimonialRole,
+        client.clientStatus,
+      ],
+    );
+  }
+
+  console.log("Past clients seed applied.");
+}
+
 const currentFile = fileURLToPath(import.meta.url);
 
 if (process.argv[1] === currentFile) {
-  seedLibraryCatalog()
+  Promise.all([seedLibraryCatalog(), seedPastClients()])
     .then(async () => {
       await pool.end();
-      console.log("Library catalog is ready.");
+      console.log("Database seeds applied successfully.");
     })
     .catch(async (error) => {
-      console.error("Library catalog seed failed:", error);
+      console.error("Database seed failed:", error);
       await pool.end();
       process.exit(1);
     });

@@ -81,3 +81,25 @@ CREATE TABLE IF NOT EXISTS research_subscriptions (
 CREATE INDEX IF NOT EXISTS research_subscriptions_created_idx
   ON research_subscriptions (created_at DESC);
 
+CREATE TABLE IF NOT EXISTS past_clients (
+  id BIGSERIAL PRIMARY KEY,
+  client_name TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  industry TEXT NOT NULL DEFAULT '',
+  website_url TEXT,
+  logo_url TEXT,
+  project_summary TEXT,
+  results_achieved TEXT,
+  testimonial_quote TEXT,
+  testimonial_author TEXT,
+  testimonial_role TEXT,
+  client_status TEXT NOT NULL DEFAULT 'active',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS past_clients_slug_idx
+  ON past_clients (slug);
+
+CREATE INDEX IF NOT EXISTS past_clients_created_idx
+  ON past_clients (created_at DESC);
+

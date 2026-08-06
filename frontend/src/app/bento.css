@@ -923,69 +923,125 @@
 .bento-section { overflow: visible !important; }
 
 /* ═══════════════════════════════════════════════════════════════
-   COFFEE LIVE PROJECT BUTTON
+   COFFEE LIVE PROJECT LINKS
    ═══════════════════════════════════════════════════════════════ */
 .coffee-live-btn-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
   text-align: center;
   margin-top: 45px;
-  margin-bottom: 25px;
+  margin-bottom: 60px;
 }
 
-.coffee-live-btn {
+.coffee-live-text-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-sans), sans-serif;
+  font-size: 15px;
+  color: #ffffff;
+}
+
+.coffee-live-text-label {
+  font-weight: 500;
+  color: #ffffff;
+  opacity: 0.9;
+}
+
+.coffee-live-text-url {
+  font-weight: 600;
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: rgba(230, 161, 92, 0.6);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.coffee-live-text-url:hover {
+  color: #e6a15c;
+  text-decoration-color: #e6a15c;
+}
+
+.coffee-live-text-url svg {
+  color: #e6a15c;
+  transition: transform 0.2s ease;
+}
+
+.coffee-live-text-url:hover svg {
+  transform: translate(2px, -2px);
+}
+
+/* Sample Case Study Button */
+.coffee-casestudy-btn {
   display: inline-flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background: transparent;
-  border: 1px solid rgba(230, 161, 92, 0.45);
-  border-radius: 0px; /* Sharp edged corners */
-  color: #e6a15c; /* Light brown / golden coffee text */
+  background: rgba(230, 161, 92, 0.12);
+  border: 1px solid #e6a15c;
+  border-radius: 4px;
+  color: #ffffff;
   font-family: var(--font-display), sans-serif;
-  padding: 14px 32px;
+  padding: 14px 36px;
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(230, 161, 92, 0.15);
   text-align: center;
+  min-width: 290px;
 }
 
-.coffee-live-btn-label {
+.coffee-casestudy-label {
   font-size: 11px;
   text-transform: uppercase;
   letter-spacing: 0.15em;
   font-weight: 700;
-  opacity: 0.85;
+  color: #e6a15c;
+  transition: color 0.3s ease;
 }
 
-.coffee-live-btn-url {
+.coffee-casestudy-title {
   font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  color: #ffffff;
+  transition: color 0.3s ease;
 }
 
-.coffee-live-btn:hover,
-.coffee-live-btn:focus,
-.coffee-live-btn:active {
-  background: #3a2012 !important; /* Rich coffee brown background on hover and click */
-  border-color: #e6a15c !important;
-  color: #f4ebd9 !important; /* Light cream coffee text */
-  box-shadow: 0 0 30px rgba(230, 161, 92, 0.45);
+.coffee-casestudy-btn:hover,
+.coffee-casestudy-btn:focus,
+.coffee-casestudy-btn:active {
+  background: #e6a15c !important;
+  box-shadow: 0 0 30px rgba(230, 161, 92, 0.5);
   transform: translateY(-2px);
 }
 
-.coffee-live-btn svg {
-  color: #e6a15c;
+.coffee-casestudy-btn:hover .coffee-casestudy-label,
+.coffee-casestudy-btn:hover .coffee-casestudy-title,
+.coffee-casestudy-btn:focus .coffee-casestudy-label,
+.coffee-casestudy-btn:focus .coffee-casestudy-title {
+  color: #0b0d0f !important;
+}
+
+.coffee-casestudy-btn svg {
+  color: #ffffff;
   transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.coffee-live-btn:hover svg,
-.coffee-live-btn:focus svg,
-.coffee-live-btn:active svg {
-  color: #f4ebd9 !important;
+.coffee-casestudy-btn:hover svg,
+.coffee-casestudy-btn:focus svg {
+  color: #0b0d0f !important;
   transform: translate(2px, -2px);
 }
 

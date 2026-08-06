@@ -7,6 +7,7 @@ import Marquee from "@/components/sections/Marquee";
 import Footer from "@/components/layout/Footer";
 
 // Dynamic imports for sections below the fold
+const WhoIsItFor = dynamic(() => import("@/components/sections/WhoIsItFor"));
 const WhyConsider = dynamic(
   () => import("@/components/sections/WhyConsider"),
   { ssr: false }
@@ -34,6 +35,9 @@ export default function Home() {
         {/* 1. Hook */}
         <Hero />
         <Marquee />
+
+        {/* Target Audience / Ideal Fit */}
+        <WhoIsItFor />
 
         {/* 2. Why Consider Us — roadmap pillars */}
         <WhyConsider />

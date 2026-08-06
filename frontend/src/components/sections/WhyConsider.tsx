@@ -210,7 +210,7 @@ export default function WhyConsider() {
             }}
           >
             Why should you{" "}
-            <span style={{ color: "#36b8ff" }}>consider this?</span>
+            <span style={{ color: "#36b8ff" }}>Consider Us?</span>
           </h2>
         </div>
 

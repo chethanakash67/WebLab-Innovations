@@ -57,7 +57,7 @@ export default function Marquee() {
         {/* Right: Scrolling Marquee Card */}
         <div className="relative flex-1 min-w-0 max-w-[1000px] flex items-center bg-white/[0.02] rounded-2xl backdrop-blur-md py-2 md:py-10 lg:py-12 px-2 md:px-4">
           
-          {/* Mask container to handle fading edges seamlessly. Extra padding ensures the tooltips aren't clipped by the mask boundary! */}
+          {/* Mask container to handle fading edges seamlessly. */}
           <div 
             className="w-full py-6 -my-6 px-6 -mx-6 md:py-16 md:-my-16 md:px-16 md:-mx-16"
             style={{ WebkitMaskImage: 'linear-gradient(to right, transparent 5%, black 15%, black 85%, transparent 95%)', maskImage: 'linear-gradient(to right, transparent 5%, black 15%, black 85%, transparent 95%)' }}

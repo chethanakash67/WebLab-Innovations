@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import { gsap } from "gsap";
@@ -115,12 +114,9 @@ export default function BestWork() {
   const sectionRef = useRef<HTMLElement>(null);
   const badgeRef = useRef<HTMLDivElement>(null);
   const fontScreenshotRef = useRef<HTMLDivElement>(null);
-  const marqueeTooltipRef = useRef<HTMLDivElement>(null);
   const [isImagePopped, setIsImagePopped] = useState(false);
   const [isImageHovered, setIsImageHovered] = useState(false);
-  const [isMarqueeHovered, setIsMarqueeHovered] = useState(false);
   const [loadVideos, setLoadVideos] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
   const [openQuestions, setOpenQuestions] = useState<string[]>(["client"]);
 
   const toggleQuestion = (id: string) => {
@@ -130,7 +126,6 @@ export default function BestWork() {
   };
 
   useEffect(() => {
-    setIsMounted(true);
     if (!sectionRef.current) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -150,13 +145,6 @@ export default function BestWork() {
       const rect = e.currentTarget.getBoundingClientRect();
       badgeRef.current.style.left = `${e.clientX - rect.left}px`;
       badgeRef.current.style.top = `${e.clientY - rect.top}px`;
-    }
-  };
-
-  const handleMarqueeMouseMove = (e: React.MouseEvent) => {
-    if (marqueeTooltipRef.current) {
-      marqueeTooltipRef.current.style.left = `${e.clientX + 15}px`;
-      marqueeTooltipRef.current.style.top = `${e.clientY + 15}px`;
     }
   };
 
@@ -182,7 +170,6 @@ export default function BestWork() {
     const ctx = gsap.context(() => {
       gsap.from(".bento-item", {
         y: 60,
-        
         duration: 1,
         stagger: 0.1,
         ease: "power3.out",
@@ -372,110 +359,35 @@ export default function BestWork() {
           </div>
         </div>
 
-        {/* Live Project Link Button */}
+        {/* Project Links Section (Live Project & Projected Case Study) */}
         <div className="coffee-live-btn-wrap">
-          <a
-            href="https://tabun-chai.vercel.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="coffee-live-btn"
-          >
-            <span className="coffee-live-btn-label">Check this out:</span>
-            <span className="coffee-live-btn-url">
+          <div className="coffee-live-text-wrap">
+            <span className="coffee-live-text-label">Check this out:</span>
+            <a
+              href="https://tabun-chai.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="coffee-live-text-url"
+            >
               https://tabun-chai.vercel.app/
               <ArrowUpRight className="h-4 w-4" />
-            </span>
-          </a>
-        </div>
+            </a>
+          </div>
 
-        <style dangerouslySetInnerHTML={{__html: `
-          @keyframes customMarquee {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-          .case-study-marquee-container {
-            display: flex;
-            width: max-content;
-            animation: customMarquee 45s linear infinite;
-            will-change: transform;
-          }
-          .case-study-link:hover .case-study-marquee-container {
-            animation-play-state: paused;
-          }
-          .case-study-text {
-            font-family: inherit;
-            font-weight: 300;
-            font-size: 2.2rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            transform: scaleY(1.3);
-            display: flex;
-            align-items: center;
-            color: rgba(230, 161, 92, 0.8);
-            white-space: nowrap;
-          }
-          @media (max-width: 768px) {
-            .case-study-text {
-              font-size: 1.2rem;
-            }
-          }
-        `}} />
-
-        <div style={{ marginTop: '140px', marginBottom: '-40px', position: 'relative', zIndex: 10, width: '100%' }}>
-          {/* Hover Tooltip (Desktop Only, follows mouse) */}
-          {isMounted && createPortal(
-            <div 
-              ref={marqueeTooltipRef}
-              className={`fixed pointer-events-none z-[99999] hidden md:block transition-opacity duration-300 ${isMarqueeHovered ? 'opacity-100' : 'opacity-0'}`}
-              style={{ 
-                transform: isMarqueeHovered ? 'scale(1)' : 'scale(0.95)',
-                transitionProperty: 'opacity, transform',
-                backdropFilter: 'blur(8px)',
-                left: '-1000px',
-                top: '-1000px'
-              }}
-            >
-              <div className="bg-[#11151a]/95 border border-[#e6a15c]/30 rounded-2xl shadow-2xl max-w-[320px]" style={{ padding: '20px' }}>
-                <p className="text-sm text-gray-200 whitespace-normal leading-relaxed m-0" style={{ letterSpacing: 'normal', transform: 'none' }}>
-                  A breakdown of the specific design improvements and speed optimizations that drove a 40% increase in conversions.
-                </p>
-              </div>
-            </div>,
-            document.body
-          )}
-
-          <Link 
-            href="/tabun-chai" 
-            className="case-study-link group" 
-            style={{ display: 'block', textDecoration: 'none', padding: '40px 0', position: 'relative', borderTop: '1px solid rgba(230, 161, 92, 0.15)', borderBottom: '1px solid rgba(230, 161, 92, 0.15)' }}
-            onMouseEnter={() => setIsMarqueeHovered(true)}
-            onMouseLeave={() => setIsMarqueeHovered(false)}
-            onMouseMove={handleMarqueeMouseMove}
+          <Link
+            href="/tabun-chai"
+            className="coffee-casestudy-btn"
           >
-            {/* Top border flag */}
-            <div className="absolute top-0 left-[15%] md:left-[25%] -translate-y-1/2 bg-[#11151a] text-[#e6a15c] rounded-full text-[10px] font-bold uppercase tracking-[0.25em] z-20 border border-[#e6a15c]/40 shadow-[0_0_20px_rgba(230,161,92,0.15)] flex items-center justify-center transition-all duration-300 group-hover:bg-[#e6a15c] group-hover:text-[#11151a] group-hover:border-[#e6a15c] group-hover:scale-105" style={{ padding: '8px 20px' }}>
-              Click Me!
-            </div>
-            
-            {/* Bottom border flag */}
-            <div className="absolute bottom-0 right-[15%] md:right-[25%] translate-y-1/2 bg-[#11151a] text-[#e6a15c] rounded-full text-[10px] font-bold uppercase tracking-[0.25em] z-20 border border-[#e6a15c]/40 shadow-[0_0_20px_rgba(230,161,92,0.15)] flex items-center justify-center transition-all duration-300 group-hover:bg-[#e6a15c] group-hover:text-[#11151a] group-hover:border-[#e6a15c] group-hover:scale-105" style={{ padding: '8px 20px' }}>
-              Click Me!
-            </div>
-
-            <div style={{ overflow: 'hidden', display: 'flex' }}>
-              <div className="case-study-marquee-container">
-                {[...Array(4)].map((_, i) => (
-                  <span key={i} className="case-study-text">
-                    How we designed this brand's website for conversion, principle by principle, with projected impact backed by industry data. A sample case study
-                    <span style={{ margin: '0 60px', fontSize: '1.5rem', opacity: 0.5, color: '#e6a15c', transform: 'scaleY(0.77)' }}>✦</span>
-                  </span>
-                ))}
-              </div>
-            </div>
+            <span className="coffee-casestudy-label">Projected Case Study</span>
+            <span className="coffee-casestudy-title">
+              Read Sample Case Study Breakdown
+              <ArrowUpRight className="h-4 w-4" />
+            </span>
           </Link>
         </div>
 
-        <div className="testimonial-block" style={{ maxWidth: '1250px', margin: '120px auto 0 auto' }}>
+        {/* Testimonial Block */}
+        <div className="testimonial-block" style={{ maxWidth: '1250px', margin: '80px auto 0 auto' }}>
           <div className="testimonial-card">
             <div className="testimonial-header">
               <h3 className="testimonial-heading">What did<br /><span style={{ color: '#e6a15c' }}>they say?</span></h3>

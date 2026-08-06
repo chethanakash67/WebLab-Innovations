@@ -7,15 +7,30 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
 import { useReactiveGlow } from "@/hooks/useReactiveGlow";
+import { LibraryCatalogItem } from "@/lib/library";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
   const [quoteHovered, setQuoteHovered] = useState(false);
   const [quoteMousePos, setQuoteMousePos] = useState({ x: 0, y: 0 });
+  const [recentAuditItem, setRecentAuditItem] = useState<LibraryCatalogItem | null>(null);
+
   const quoteRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const artworkRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Fetch latest audit / report from the library database
+    fetch("/api/library")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.success && Array.isArray(data.items) && data.items.length > 0) {
+          setRecentAuditItem(data.items[0]);
+        }
+      })
+      .catch((err) => console.error("Error fetching recent library audit:", err));
+  }, []);
 
   const handleQuoteMouseMove = (e: React.MouseEvent) => {
     if (!quoteRef.current) return;
@@ -42,8 +57,10 @@ export default function Hero() {
 
       if (artworkRef.current) {
         gsap.to(artworkRef.current, {
-          scale: 1,
-          opacity: 0.45,
+          scale: 0.9,
+          x: -15,
+          y: -15,
+          opacity: 0.6,
           filter: "blur(0px)",
           duration: 1.8,
           ease: "power3.out",
@@ -51,8 +68,8 @@ export default function Hero() {
         });
 
         gsap.to(artworkRef.current, {
-          yPercent: 6,
-          scale: 1.05,
+          yPercent: 4,
+          scale: 0.95,
           ease: "none",
           scrollTrigger: {
             trigger: heroRef.current,
@@ -90,10 +107,14 @@ export default function Hero() {
         style={{
           position: "absolute",
           inset: 0,
+          top: "-15px",
+          bottom: "15px",
+          left: "-15px",
+          right: "15px",
           zIndex: 0,
-          opacity: 0.45,
+          opacity: 0.6,
           pointerEvents: "none",
-          transform: "scale(1.1)",
+          transform: "scale(0.95) translate(-15px, -15px)",
           transition: "opacity 0.5s ease"
         }}
       >
@@ -104,8 +125,8 @@ export default function Hero() {
           priority
           style={{
             objectFit: "cover",
-            objectPosition: "center",
-            filter: "contrast(1.15) brightness(0.7)"
+            objectPosition: "45% 45%",
+            filter: "contrast(1.1) brightness(0.82)"
           }}
           sizes="100vw"
         />
@@ -117,7 +138,7 @@ export default function Hero() {
           position: "absolute",
           inset: 0,
           zIndex: 1,
-          background: "radial-gradient(ellipse at center, rgba(2,3,3,0.3) 0%, rgba(2,3,3,0.85) 60%, #020303 100%)",
+          background: "radial-gradient(ellipse at center, rgba(2,3,3,0.2) 0%, rgba(2,3,3,0.78) 65%, #020303 100%)",
           pointerEvents: "none"
         }} 
       />
@@ -318,18 +339,70 @@ export default function Hero() {
             </MagneticButton>
           </div>
 
+          {/* Recent Work (Auto-updated from Reports / Audits Database) */}
           <div 
-            className="hero-availability"
             style={{
-              display: "inline-flex",
+              marginTop: "24px",
+              position: "relative",
+              zIndex: 50,
+              opacity: 1,
+              display: "flex",
+              flexDirection: "column",
               alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-              marginTop: "4px"
+              textAlign: "center",
+              maxWidth: "600px",
+              width: "100%",
+              padding: "16px 24px",
+              backgroundColor: "rgba(11, 13, 15, 0.88)",
+              border: "1px solid rgba(54, 184, 255, 0.35)",
+              borderRadius: "14px",
+              backdropFilter: "blur(12px)",
+              WebkitBackdropFilter: "blur(12px)",
+              boxShadow: "0 8px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(54, 184, 255, 0.08)",
             }}
           >
-            <span className="signal-dot" />
-            Booking select projects now
+            {recentAuditItem ? (
+              <>
+                {/* Line 1: recent work : name */}
+                <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+                  <span className="signal-dot" style={{ backgroundColor: "#36b8ff", boxShadow: "0 0 10px #36b8ff" }} />
+                  <span style={{ fontSize: "12px", fontWeight: 700, color: "#36b8ff", textTransform: "uppercase", letterSpacing: "0.1em" }}>
+                    Recent Work : {recentAuditItem.title}
+                  </span>
+                </div>
+
+                {/* Line 2: one liner summary */}
+                <p style={{ fontSize: "13px", color: "#e2e8f0", margin: "4px 0 10px 0", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                  {recentAuditItem.summary}
+                </p>
+
+                {/* Line 3: link */}
+                <a
+                  href={recentAuditItem.filePath || "/library"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "6px",
+                    fontSize: "12.5px",
+                    fontWeight: 600,
+                    color: "#ffffff",
+                    textDecoration: "underline",
+                    textUnderlineOffset: "4px",
+                    textDecorationColor: "rgba(54, 184, 255, 0.7)",
+                    transition: "color 0.2s ease"
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = "#36b8ff")}
+                  onMouseLeave={(e) => (e.currentTarget.style.color = "#ffffff")}
+                >
+                  View Audit / Report
+                  <ArrowUpRight className="h-4 w-4 text-[#36b8ff]" />
+                </a>
+              </>
+            ) : (
+              <span style={{ fontSize: "12px", color: "#9ca3aa" }}>Loading recent work from database...</span>
+            )}
           </div>
         </div>
       </div>
