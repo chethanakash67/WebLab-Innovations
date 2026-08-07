@@ -1,37 +1,98 @@
 "use client";
 
-import { technologies } from "@/data/projects";
+import React from "react";
+
+const customIcons: Record<string, React.ReactNode> = {
+  "Screaming Frog": (
+    /* eslint-disable-next-line @next/next/no-img-element */
+    <img src="https://www.google.com/s2/favicons?domain=screamingfrog.co.uk&sz=128" alt="Screaming Frog" className="w-9 h-9 object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-500 rounded-md" />
+  ),
+  "SEOptimer": (
+    /* eslint-disable-next-line @next/next/no-img-element */
+    <img src="https://www.google.com/s2/favicons?domain=seoptimer.com&sz=128" alt="SEOptimer" className="w-9 h-9 object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-500 rounded-md" />
+  ),
+  "Google Rich Results Test": (
+    /* eslint-disable-next-line @next/next/no-img-element */
+    <img src="https://www.google.com/s2/favicons?domain=search.google.com&sz=128" alt="Google Rich Results Test" className="w-9 h-9 object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-500 rounded-md" />
+  ),
+  "BuiltWith": (
+    /* eslint-disable-next-line @next/next/no-img-element */
+    <img src="https://www.google.com/s2/favicons?domain=builtwith.com&sz=128" alt="BuiltWith" className="w-9 h-9 object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-500 rounded-md" />
+  ),
+};
+
+const marqueeTools = [
+  { name: "Figma", slug: "figma" },
+  { name: "Webflow", slug: "webflow" },
+  { name: "Shopify", slug: "shopify" },
+  { name: "Screaming Frog", node: customIcons["Screaming Frog"] },
+  { name: "SEOptimer", node: customIcons["SEOptimer"] },
+  { name: "Google PageSpeed Insights", slug: "pagespeedinsights" },
+  { name: "Google Search Console", slug: "googlesearchconsole" },
+  { name: "Google Rich Results Test", node: customIcons["Google Rich Results Test"] },
+  { name: "Semrush", slug: "semrush" },
+  { name: "BuiltWith", node: customIcons["BuiltWith"] },
+  { name: "Zoho Invoice", slug: "zoho" },
+  { name: "Vercel", slug: "vercel" },
+  { name: "Make (Integromat)", slug: "make" },
+  { name: "n8n", slug: "n8n" },
+];
 
 export default function Marquee() {
   // Triple the items for seamless loop
-  const tripled = [...technologies, ...technologies, ...technologies];
+  const tripled = [...marqueeTools, ...marqueeTools, ...marqueeTools];
 
   return (
-    <section className="marquee-section relative overflow-hidden border-y border-white/[0.08] py-8">
-      {/* Fade edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-40 z-10 bg-gradient-to-r from-background via-background/80 to-transparent" />
-      <div className="absolute right-0 top-0 bottom-0 w-40 z-10 bg-gradient-to-l from-background via-background/80 to-transparent" />
+    <section className="marquee-section relative pt-16 lg:pt-32 pb-8 lg:pb-12 flex items-center">
+      <div className="max-w-[1500px] mx-auto px-6 lg:px-12 w-full flex flex-row md:flex-row items-stretch justify-center gap-3 md:gap-6">
+        
+        {/* Left: Static Text Card */}
+        <div className="shrink-0 flex items-center px-5 md:px-12 lg:px-16 py-3 md:py-10 lg:py-12 bg-white/[0.02] rounded-2xl backdrop-blur-md z-20">
+          <h2 className="marquee-heading text-sm font-sans font-light md:text-3xl md:font-display md:font-bold lg:text-5xl whitespace-nowrap tracking-tight leading-[1.1]">
+            <span className="text-[#36b8ff] block">Tools we</span>
+            <span className="text-white block">work with</span>
+          </h2>
+        </div>
 
-      {/* Small label */}
-      <div className="marquee-label max-w-7xl mx-auto px-8 mb-6">
-        <p className="text-[10px] text-muted-dark tracking-[0.3em] uppercase">
-          Join over 10K+ business using WebLab.
-        </p>
-      </div>
-
-      <div
-        className="marquee-track flex gap-5 animate-marquee hover:[animation-play-state:paused]"
-        style={{ width: "max-content" }}
-      >
-        {tripled.map((tech, i) => (
-          <div
-            key={`${tech}-${i}`}
-            className="marquee-pill flex h-20 w-64 flex-shrink-0 cursor-default items-center justify-center gap-2.5 rounded-full border border-white/15 bg-black/30 px-7 text-sm font-semibold tracking-wide text-white/70 backdrop-blur-sm transition-all duration-500 hover:border-primary/50 hover:bg-primary/5 hover:text-white"
+        {/* Right: Scrolling Marquee Card */}
+        <div className="relative flex-1 min-w-0 max-w-[1000px] flex items-center bg-white/[0.02] rounded-2xl backdrop-blur-md py-2 md:py-10 lg:py-12 px-2 md:px-4">
+          
+          {/* Mask container to handle fading edges seamlessly. */}
+          <div 
+            className="w-full py-6 -my-6 px-6 -mx-6 md:py-16 md:-my-16 md:px-16 md:-mx-16"
+            style={{ WebkitMaskImage: 'linear-gradient(to right, transparent 5%, black 15%, black 85%, transparent 95%)', maskImage: 'linear-gradient(to right, transparent 5%, black 15%, black 85%, transparent 95%)' }}
           >
-            <span className="w-1.5 h-1.5 rounded-full bg-primary-light/50" />
-            {tech}
+            <div
+              className="marquee-track flex gap-16 items-center animate-marquee hover:[animation-play-state:paused]"
+              style={{ width: "max-content" }}
+            >
+            {tripled.map((tool, i) => (
+              <div
+                key={`${tool.name}-${i}`}
+                className="group relative marquee-logo flex items-center justify-center text-white/40 transition-all duration-300 hover:text-white hover:z-[999]"
+              >
+                {/* Custom Tooltip */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 scale-90 group-hover:opacity-100 group-hover:scale-100 transition-all duration-500 ease-out pointer-events-none z-[9999]">
+                  <div className="bg-[#11151a] border border-white/20 text-white text-[12px] font-semibold px-3 py-1.5 rounded-md whitespace-nowrap shadow-2xl">
+                    {tool.name}
+                  </div>
+                </div>
+
+                {tool.slug ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img 
+                    src={`https://cdn.simpleicons.org/${tool.slug}/white`} 
+                    alt={tool.name} 
+                    className="w-9 h-9 object-contain opacity-60 group-hover:opacity-100 transition-opacity duration-500"
+                  />
+                ) : (
+                  tool.node
+                )}
+              </div>
+            ))}
+            </div>
           </div>
-        ))}
+        </div>
       </div>
     </section>
   );

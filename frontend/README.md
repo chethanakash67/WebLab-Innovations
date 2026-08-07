@@ -1,6 +1,6 @@
-# WebLab Frontend
+# AigleOn Labs Frontend
 
-Vercel deploy target for the WebLab agency site.
+Vercel deploy target for the AigleOn Labs agency site.
 
 ## Local Setup
 

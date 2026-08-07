@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Check, LoaderCircle, Quote, Star } from "lucide-react";
+import { ArrowUpRight, Check, ChevronRight, LoaderCircle, Quote, Star } from "lucide-react";
 import { testimonials } from "@/data/projects";
 import SectionBadge from "@/components/ui/SectionBadge";
 
@@ -74,7 +74,7 @@ export default function Testimonials() {
     quote: item.quote,
     author: item.author,
     role: item.role,
-    rating: 5,
+    rating: (item as any).rating || 5,
   }));
   const testimonialItems = [...staticTestimonials, ...approvedReviews];
   const testimonialCount = testimonialItems.length;
@@ -176,7 +176,7 @@ export default function Testimonials() {
       });
 
       setReviewStatus("submitted");
-      setReviewMessage("Thank you. We will check your review and publish it after approval.");
+      setReviewMessage("Thank you! You’ll get a confirmation mail, check the spam folder also. We will review your submission and publish it upon approval.");
       setReviewFormData({
         name: "",
         email: "",
@@ -262,9 +262,9 @@ export default function Testimonials() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={testimonial.id}
-                initial={{ opacity: 0, y: 28 }}
+                initial={{  y: 28 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -24 }}
+                exit={{  y: -24 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 className="testimonial-quote"
               >
@@ -305,14 +305,14 @@ export default function Testimonials() {
             <span>Add review</span>
             <h3>Share your experience.</h3>
             <p>
-              Your review goes to WebLab first. After approval, it appears here.
+              Your review goes to AigleOn Labs first. After approval, it appears here.
             </p>
           </div>
 
           <form className="testimonial-review-form" onSubmit={handleReviewSubmit}>
             <div className="testimonial-review-grid">
               <label className="testimonial-review-field">
-                <span>Your name</span>
+                <span>Suprithi</span>
                 <input
                   type="text"
                   placeholder="Example: Priya"
@@ -325,7 +325,7 @@ export default function Testimonials() {
               </label>
 
               <label className="testimonial-review-field">
-                <span>Your email</span>
+                <span>nsuprithi@gmail.com</span>
                 <input
                   type="email"
                   placeholder="you@example.com"
@@ -370,7 +370,7 @@ export default function Testimonials() {
             <label className="testimonial-review-field">
               <span>Your review</span>
               <textarea
-                placeholder="Example: WebLab made our website clear, fast, and easy for customers to use."
+                placeholder="Example: AigleOn Labs made our website clear, fast, and easy for customers to use."
                 rows={4}
                 required
                 minLength={10}

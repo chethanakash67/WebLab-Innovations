@@ -2,6 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { pool } from "./pool.js";
+import { seedLibraryCatalog, seedPastClients } from "./seed.js";
 
 const currentFile = fileURLToPath(import.meta.url);
 const currentDir = path.dirname(currentFile);
@@ -10,6 +11,8 @@ const schemaPath = path.resolve(currentDir, "../../db/schema.sql");
 export async function initDatabase() {
   const schema = await fs.readFile(schemaPath, "utf8");
   await pool.query(schema);
+  await seedLibraryCatalog();
+  await seedPastClients();
 }
 
 if (process.argv[1] === currentFile) {

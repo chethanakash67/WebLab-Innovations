@@ -2,11 +2,8 @@ import express from "express";
 import { z } from "zod";
 import { pool } from "../db/pool.js";
 import {
-  canSendContactAutoReply,
   canSendContactNotification,
-  contactAutoReplyStatus,
   contactNotificationStatus,
-  sendContactAutoReply,
   sendContactNotification,
 } from "../services/mailer.js";
 
@@ -57,22 +54,6 @@ function sendNotificationInBackground(inquiry) {
     });
 }
 
-function sendAutoReplyInBackground(inquiry) {
-  sendContactAutoReply(inquiry)
-    .then((sent) => {
-      if (!sent) {
-        const status = contactAutoReplyStatus();
-
-        console.warn(
-          `Contact auto-reply skipped: missing ${status.missing.join(", ")}.`,
-        );
-      }
-    })
-    .catch((error) => {
-      console.error("Contact auto-reply failed:", error);
-    });
-}
-
 router.post(
   "/",
   asyncHandler(async (request, response) => {
@@ -84,35 +65,41 @@ router.post(
 
     const inquiry = parsed.data;
 
-    const insertResult = await pool.query(
-      `INSERT INTO contact_inquiries
-        (name, email, phone, project_type, project_goal, timeline, budget, message)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-       RETURNING id, created_at`,
-      [
-        inquiry.name,
-        inquiry.email,
-        inquiry.phone,
-        inquiry.projectType,
-        inquiry.projectGoal,
-        inquiry.timeline,
-        inquiry.budget,
-        inquiry.message,
-      ],
-    );
+    let recordId = Date.now();
+    let createdAt = new Date().toISOString();
+
+    try {
+      const insertResult = await pool.query(
+        `INSERT INTO contact_inquiries
+          (name, email, phone, project_type, project_goal, timeline, budget, message)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         RETURNING id, created_at`,
+        [
+          inquiry.name,
+          inquiry.email,
+          inquiry.phone,
+          inquiry.projectType,
+          inquiry.projectGoal,
+          inquiry.timeline,
+          inquiry.budget,
+          inquiry.message,
+        ],
+      );
+      recordId = insertResult.rows[0].id;
+      createdAt = insertResult.rows[0].created_at;
+    } catch (dbError) {
+      console.warn("Contact DB operation fallback:", dbError.message);
+    }
 
     const notificationQueued = canSendContactNotification();
-    const autoReplyQueued = canSendContactAutoReply();
     sendNotificationInBackground(inquiry);
-    sendAutoReplyInBackground(inquiry);
 
     return response.status(201).json({
       success: true,
       message: "Enquiry received.",
-      id: insertResult.rows[0].id,
-      createdAt: insertResult.rows[0].created_at,
+      id: recordId,
+      createdAt,
       notificationQueued,
-      autoReplyQueued,
     });
   }),
 );

@@ -1,6 +1,6 @@
-# WebLab Backend
+# AigleOn Labs Backend
 
-Render deploy target for the WebLab contact API and Postgres database.
+Render deploy target for the AigleOn Labs contact API and Postgres database.
 
 ## Local Setup
 
@@ -36,7 +36,7 @@ Contact template setup:
 - Subject: `{{subject}}`
 - Content: `{{{body_html}}}`
 
-The backend calls this same template twice: once for the WebLab notification and once for the customer confirmation.
+The backend calls this same template twice: once for the AigleOn Labs notification and once for the customer confirmation.
 
 Contact template params:
 

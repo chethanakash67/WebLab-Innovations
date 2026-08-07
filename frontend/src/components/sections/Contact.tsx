@@ -6,11 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ArrowUpRight,
   Check,
-  Clock3,
   LoaderCircle,
-  Mail,
-  Phone,
-  Sparkles,
 } from "lucide-react";
 import AgencyMark from "@/components/ui/AgencyMark";
 import SectionBadge from "@/components/ui/SectionBadge";
@@ -91,7 +87,7 @@ export default function Contact() {
     const ctx = gsap.context(() => {
       gsap.from(".contact-reveal", {
         y: 52,
-        opacity: 0,
+        
         duration: 0.95,
         stagger: 0.1,
         ease: "power3.out",
@@ -103,7 +99,7 @@ export default function Contact() {
 
       gsap.from(".contact-panel", {
         y: 80,
-        opacity: 0,
+        
         duration: 1.15,
         ease: "power3.out",
         scrollTrigger: {
@@ -143,7 +139,7 @@ export default function Contact() {
         budget: selectedBudget,
       });
       setFormStatus("submitted");
-      setStatusMessage("Request sent. We will reply within 24 hours.");
+      setStatusMessage("Request sent. You’ll get a confirmation mail, check the spam folder also.");
     } catch (error) {
       setFormStatus("error");
       setStatusMessage(
@@ -179,61 +175,7 @@ export default function Contact() {
         </div>
 
         <div className="contact-layout">
-          <aside className="contact-sidebar">
-            <div className="contact-reveal contact-intro">
-              <span className="signal-dot" />
-              <p>
-                Answer what you know. If you are not sure, choose
-                &quot;Not sure&quot;. We will help you with the next step.
-              </p>
-            </div>
 
-            <a
-              href="mailto:hello@weblab.agency"
-              className="contact-reveal contact-info-card"
-            >
-              <span className="contact-info-icon">
-                <Mail className="h-4 w-4" />
-              </span>
-              <span>
-                <small>Email us directly</small>
-                <strong>chethanakash67@gmail.com</strong>
-              </span>
-              <ArrowUpRight className="ml-auto h-4 w-4" />
-            </a>
-
-            <a
-              href="tel:+918919870959"
-              className="contact-reveal contact-info-card"
-            >
-              <span className="contact-info-icon">
-                <Phone className="h-4 w-4" />
-              </span>
-              <span>
-                <small>Call or WhatsApp</small>
-                <strong>8919870959</strong>
-              </span>
-              <ArrowUpRight className="ml-auto h-4 w-4" />
-            </a>
-
-            <div className="contact-reveal contact-info-card">
-              <span className="contact-info-icon">
-                <Clock3 className="h-4 w-4" />
-              </span>
-              <span>
-                <small>Typical response</small>
-                <strong>Within 24 hours</strong>
-              </span>
-            </div>
-
-            <div className="contact-reveal contact-mini-note">
-              <Sparkles className="h-4 w-4 text-primary-light" />
-              <p>
-                Currently booking a limited number of projects for the next
-                quarter.
-              </p>
-            </div>
-          </aside>
 
           <div className="contact-panel">
             <div className="contact-panel-top">

@@ -24,7 +24,7 @@ export default function WhyChooseUs() {
     const ctx = gsap.context(() => {
       gsap.from(".why-title", {
         y: 80,
-        opacity: 0,
+        
         duration: 1.2,
         ease: "power3.out",
         scrollTrigger: {
@@ -53,7 +53,7 @@ export default function WhyChooseUs() {
 
       gsap.from(".why-orb-scene", {
         scale: 0.82,
-        opacity: 0,
+        
         duration: 1.5,
         ease: "power3.out",
         scrollTrigger: {
@@ -62,6 +62,9 @@ export default function WhyChooseUs() {
           toggleActions: "play none none none",
         },
       });
+
+
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -86,7 +89,7 @@ export default function WhyChooseUs() {
 
       <div className="why-section-inner relative z-10 max-w-7xl mx-auto">
         <div className="why-meta text-center mb-12">
-          <SectionBadge label="Why Us" number="06" />
+          <SectionBadge label="Why Us" number="07" />
         </div>
 
         {/* Large heading */}
@@ -103,58 +106,50 @@ export default function WhyChooseUs() {
         </p>
 
         {/* Pill layout area */}
-        <div className="why-visual-area">
-          <div className="why-orb-scene" aria-hidden="true">
-            <div className="why-orbit why-orbit-outer" />
-            <div className="why-orbit why-orbit-inner" />
-            <div className="why-sphere">
-              <div className="why-sphere-grid" />
-              <div className="why-sphere-label">WHY WEBLAB</div>
+        <div className="zoom-wrapper">
+          <div className="why-visual-area">
+            <div className="why-orb-scene" aria-hidden="true">
+              <div className="why-orbit why-orbit-outer" />
+              <div className="why-orbit why-orbit-inner" />
+              <div className="why-sphere">
+                <div className="why-sphere-grid" />
+                <div className="why-sphere-label">WHY AIGLEON LABS</div>
+              </div>
+              <div className="why-person">
+                <span className="why-person-head" />
+                <span className="why-person-body" />
+                <span className="why-person-arm" />
+                <span className="why-person-leg why-person-leg-left" />
+                <span className="why-person-leg why-person-leg-right" />
+              </div>
+              <div className="why-person-reflection" />
+              <div className="why-ground-line" />
             </div>
-            <div className="why-person">
-              <span className="why-person-head" />
-              <span className="why-person-body" />
-              <span className="why-person-arm" />
-              <span className="why-person-leg why-person-leg-left" />
-              <span className="why-person-leg why-person-leg-right" />
-            </div>
-            <div className="why-person-reflection" />
-            <div className="why-ground-line" />
-          </div>
 
-          {/* Floating pills — oval shaped like the reference */}
-          {pills.map((pill, index) => (
-            <motion.div
-              key={pill.label}
-              className="float-pill absolute"
-              style={{
-                left: `${pill.x}%`,
-                top: `${pill.y}%`,
-                transform: "translate(-50%, -50%)",
-              }}
-              animate={{
-                y: [0, -12, 0],
-                rotate: [0, index % 2 === 0 ? 2 : -2, 0],
-              }}
-              transition={{
-                duration: 4 + index * 0.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: index * 0.3,
-              }}
-              whileHover={{ scale: 1.15 }}
-            >
-              <div className="px-8 py-4 rounded-[50px] border border-white/10 bg-card/40 backdrop-blur-sm text-white text-sm font-medium tracking-[0.15em] uppercase whitespace-nowrap cursor-default hover:border-primary/40 hover:bg-primary/10 hover:shadow-[0_0_20px_rgba(66,119,175,0.15)] transition-all duration-500"
+            {/* Floating pills — oval shaped like the reference */}
+            {pills.map((pill, index) => (
+              <div
+                key={pill.label}
+                className={`float-pill absolute pill-anim-${index % 2}`}
                 style={{
-                  borderRadius: "50%/100%",
-                  paddingLeft: "2rem",
-                  paddingRight: "2rem",
+                  left: `${pill.x}%`,
+                  top: `${pill.y}%`,
+                  animationDuration: `${4 + index * 0.5}s`,
+                  animationDelay: `${index * 0.3}s`
                 }}
               >
-                {pill.label}
+                <div className="px-8 py-4 rounded-[50px] border border-white/10 bg-card/40 backdrop-blur-md text-white text-sm font-medium tracking-[0.15em] uppercase whitespace-nowrap cursor-default hover:border-primary/40 hover:bg-primary/10 hover:shadow-[0_0_20px_rgba(66,119,175,0.15)] transition-all duration-500"
+                  style={{
+                    borderRadius: "50%/100%",
+                    paddingLeft: "2rem",
+                    paddingRight: "2rem",
+                  }}
+                >
+                  {pill.label}
+                </div>
               </div>
-            </motion.div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

@@ -13,9 +13,12 @@ import {
   MapPin,
   MessageCircle,
   Minus,
+  Palette,
   PhoneCall,
   Plus,
   RefreshCw,
+  Search,
+  Share2,
   Sparkles,
   Star,
   X,
@@ -24,6 +27,7 @@ import type { LucideIcon } from "lucide-react";
 
 import SectionBadge from "@/components/ui/SectionBadge";
 import { useReactiveGlow } from "@/hooks/useReactiveGlow";
+import Link from "next/link";
 
 /* ─── Data Types ─── */
 
@@ -70,29 +74,6 @@ const customerSystems: CustomerSystemData[] = [
   },
   {
     number: "02",
-    title: "WhatsApp Bot",
-    eyebrow: "Chat Automation",
-    question: "Can a WhatsApp chatbot handle my customer orders automatically?",
-    description:
-      "Answers routine questions, takes orders, and sends automated follow-ups around the clock.",
-    target:
-      "Cafes, bakeries, and retail stores with heavy WhatsApp volume and repeated customer queries.",
-    outcome:
-      "Fewer missed chats and faster customer response without manual load.",
-    steps: [
-      "Map Chats",
-      "Design Flow",
-      "Build Bot",
-      "2 Revisions",
-      "Workflow",
-    ],
-    metric: "24/7",
-    metricLabel: "chat coverage",
-    signals: ["Instant replies", "Order intake", "Follow-ups"],
-    Icon: MessageCircle,
-  },
-  {
-    number: "03",
     title: "Maps Ranking",
     eyebrow: "Local SEO",
     question: "How do I get my business to show up on top of Google Maps?",
@@ -109,30 +90,7 @@ const customerSystems: CustomerSystemData[] = [
     Icon: MapPin,
   },
   {
-    number: "04",
-    title: "AI Voice Agent",
-    eyebrow: "Call Handling",
-    question: "Will an AI voice agent really answer my business calls 24/7?",
-    description:
-      "Answers calls, books appointments, handles FAQs, and follows up with missed callers automatically.",
-    target:
-      "Busy restaurants and dental or medical clinics that lose peak-hour and after-hours calls.",
-    outcome:
-      "Every call gets handled while your team stays focused on in-person service.",
-    steps: [
-      "Analyze Volume",
-      "Curate Voice",
-      "Build Agent",
-      "2 Revisions",
-      "Connect",
-    ],
-    metric: "0",
-    metricLabel: "missed-call target",
-    signals: ["Bookings", "FAQs", "Missed-call recovery"],
-    Icon: PhoneCall,
-  },
-  {
-    number: "05",
+    number: "03",
     title: "Review Engine",
     eyebrow: "Reputation Growth",
     question:
@@ -149,7 +107,7 @@ const customerSystems: CustomerSystemData[] = [
     Icon: Star,
   },
   {
-    number: "06",
+    number: "04",
     title: "Loyalty Loops",
     eyebrow: "Retention",
     question:
@@ -171,6 +129,70 @@ const customerSystems: CustomerSystemData[] = [
     metricLabel: "day win-back",
     signals: ["Segments", "Offers", "Return visits"],
     Icon: RefreshCw,
+  },
+  {
+    number: "05",
+    title: "SEO Engine",
+    eyebrow: "Search Rankings",
+    question: "How does organic search visibility grow my business?",
+    description:
+      "Optimizes your online content, code structure, and metadata so your business ranks high on search engine result pages.",
+    target:
+      "Local and digital brands that want recurring, organic customer visits without paying for advertising.",
+    outcome: "More inbound traffic from high-intent Google searchers.",
+    steps: ["Audit Site", "Keyword Research", "On-page SEO", "Build Backlinks"],
+    metric: "2.4x",
+    metricLabel: "organic search traffic",
+    signals: ["Keyword ranking", "Organic clicks", "Semantic tagging"],
+    Icon: Search,
+  },
+  {
+    number: "06",
+    title: "AI & ChatGPT",
+    eyebrow: "Answer Engines",
+    question: "How do I make ChatGPT and AI engines recommend my brand?",
+    description:
+      "Optimizes your digital presence, citations, and mentions so LLMs and generative search models recommend you.",
+    target:
+      "Innovative brands targeting tech-savvy audiences using ChatGPT, Gemini, and Claude for recommendations.",
+    outcome: "Inclusion in conversational AI search results and recommendations.",
+    steps: ["Audit Citations", "Entity Mapping", "Content Feeds", "GEO Tuning"],
+    metric: "Top 3",
+    metricLabel: "AI recommendations",
+    signals: ["LLM mentions", "Entity strength", "GEO citation score"],
+    Icon: Sparkles,
+  },
+  {
+    number: "07",
+    title: "Brand Design",
+    eyebrow: "Identity",
+    question: "Why does a cohesive brand identity matter for customer trust?",
+    description:
+      "Crafts premium visual assets, logos, fonts, and guidelines that make your brand feel instantly high-end and trustworthy.",
+    target:
+      "Growing businesses looking to stand out from generic competitors and establish authority.",
+    outcome: "Unforgettable brand presence that customers trust at first glance.",
+    steps: ["Core Palette", "Typography", "Logo Designs", "Brand Guide"],
+    metric: "100%",
+    metricLabel: "tailored identity",
+    signals: ["Color palette", "Premium logo", "Asset library"],
+    Icon: Palette,
+  },
+  {
+    number: "08",
+    title: "Social Autopilot",
+    eyebrow: "Social Growth",
+    question: "Can AI automate my social media DMs and posting?",
+    description:
+      "Sets up automated responders for Instagram and Facebook DMs, plus schedules AI-generated posts and reels.",
+    target:
+      "Local businesses looking to build a social presence and capture leads directly from social platforms.",
+    outcome: "Active social media feeds and instant automated response to DMs.",
+    steps: ["Connect DMs", "Response Flow", "Auto Scheduler", "Monitoring"],
+    metric: "100%",
+    metricLabel: "DM response rate",
+    signals: ["Auto reply", "Post scheduling", "Lead capture DMs"],
+    Icon: Share2,
   },
 ];
 
@@ -216,12 +238,16 @@ const customerFaqs: CustomerFaq[] = [
 /* ─── Orbital Node Angles ─── */
 
 const orbitPositions = [
-  { angle: 0, orbit: 1 },
-  { angle: 60, orbit: 2 },
-  { angle: 120, orbit: 1 },
+  // First orbit (now outer) - 4 items (on four sides)
+  { angle: 0, orbit: 2 },
+  { angle: 90, orbit: 2 },
   { angle: 180, orbit: 2 },
-  { angle: 240, orbit: 1 },
-  { angle: 300, orbit: 2 },
+  { angle: 270, orbit: 2 },
+  // Second orbit (now inner) - 4 items (on diagonal sides)
+  { angle: 45, orbit: 1 },
+  { angle: 135, orbit: 1 },
+  { angle: 225, orbit: 1 },
+  { angle: 315, orbit: 1 },
 ];
 
 const seededRandom = (seed: number) => {
@@ -229,14 +255,16 @@ const seededRandom = (seed: number) => {
   return value - Math.floor(value);
 };
 
+const toFixed4 = (num: number) => Number(num.toFixed(4));
+
 const orbitParticles = Array.from({ length: 40 }, (_, id) => ({
   id,
-  x: seededRandom(id + 1) * 100,
-  y: seededRandom(id + 41) * 100,
-  size: seededRandom(id + 81) * 2.5 + 1,
-  delay: seededRandom(id + 121) * 8,
-  duration: seededRandom(id + 161) * 6 + 8,
-  opacity: seededRandom(id + 201) * 0.4 + 0.1,
+  x: toFixed4(seededRandom(id + 1) * 100),
+  y: toFixed4(seededRandom(id + 41) * 100),
+  size: toFixed4(seededRandom(id + 81) * 2.5 + 1),
+  delay: toFixed4(seededRandom(id + 121) * 8),
+  duration: toFixed4(seededRandom(id + 161) * 6 + 8),
+  opacity: toFixed4(seededRandom(id + 201) * 0.4 + 0.1),
 }));
 
 
@@ -301,7 +329,7 @@ function TypewriterText({ text }: { text: string }) {
 
 export default function CustomerSystem() {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [activeFaqIndex, setActiveFaqIndex] = useState(0);
+  const [activeFaqIndex, setActiveFaqIndex] = useState<number | null>(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const activeSystem = customerSystems[activeIndex];
 
@@ -353,210 +381,208 @@ export default function CustomerSystem() {
       }}
     >
       <div className="customer-system-wrap">
-        <header className="customer-system-header">
-          <SectionBadge label="AI Customer Systems" number="04" />
-          <div className="customer-system-heading-grid">
-            <h2>
-              Complete Customer
-              <br />
-              <span>System</span>
-            </h2>
-            <p>
-              Everything needed to attract, engage, and retain customers through
-              automated local-growth systems.
-            </p>
-          </div>
-        </header>
+        {/* Complete Customer System Section (Hidden as requested; all logic, data, and design remain in code) */}
+        {false && (
+          <>
+            <header className="customer-system-header">
+              <SectionBadge label="AI Customer Systems" number="04" />
+              <div className="customer-system-heading-grid">
+                <h2>
+                  Complete Customer
+                  <br />
+                  <span>System</span>
+                </h2>
+                <p>
+                  Everything needed to attract, engage, and retain customers through
+                  automated local-growth systems.
+                </p>
+              </div>
+            </header>
 
-        {/* ═══════════════════════════════════════════
-            ORBITAL COMMAND CENTER
-        ═══════════════════════════════════════════ */}
-        <div className="cs-orbit-hub">
-          <ParticleField />
-          <div className="cs-orbit-grid-pulse" aria-hidden="true" />
-          <div className="cs-orbit-ring cs-orbit-ring--1" aria-hidden="true" />
-          <div className="cs-orbit-ring cs-orbit-ring--2" aria-hidden="true" />
+            {/* ═══════════════════════════════════════════
+                ORBITAL COMMAND CENTER
+            ═══════════════════════════════════════════ */}
+            <div className="cs-orbit-hub">
+              <ParticleField />
+              <div className="cs-orbit-grid-pulse" aria-hidden="true" />
+              <div className="cs-orbit-ring cs-orbit-ring--1" aria-hidden="true" />
+              <div className="cs-orbit-ring cs-orbit-ring--2" aria-hidden="true" />
 
-          {/* Central orb */}
-          <div className="cs-orbit-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeSystem.number}
-                className="cs-orbit-center-orb"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.8, opacity: 0 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
+              {/* Central orb */}
+              <div className="cs-orbit-center">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeSystem.number}
+                    className="cs-orbit-center-orb"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    exit={{ scale: 0.8, opacity: 0 }}
+                    transition={{ duration: 0.4, ease: "easeOut" }}
+                  >
+                    {activeIcon}
+                    <span className="cs-orbit-center-label">
+                      {activeSystem.title}
+                    </span>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              {/* Orbital nodes */}
+              {customerSystems.map((system, index) => {
+                const pos = orbitPositions[index];
+                const isActive = index === activeIndex;
+                const Icon = system.Icon;
+                const rad = (pos.angle * Math.PI) / 180;
+                const orbitRadius = pos.orbit === 1 ? 38 : 46;
+
+                return (
+                  <button
+                    key={system.number}
+                    type="button"
+                    className={`cs-orbit-node ${isActive ? "cs-orbit-node--active" : ""}`}
+                    onClick={() => handleNodeClick(index)}
+                    aria-label={`${system.title} — ${system.eyebrow}`}
+                    style={{
+                      "--node-x": `${50 + orbitRadius * Math.cos(rad)}%`,
+                      "--node-y": `${50 + orbitRadius * Math.sin(rad)}%`,
+                    } as React.CSSProperties}
+                  >
+                    <span className="cs-orbit-node-icon">
+                      <Icon size={18} strokeWidth={1.7} />
+                    </span>
+                    <span className="cs-orbit-node-title">{system.title}</span>
+                    <span className="cs-orbit-node-tooltip">Click me!</span>
+                    {isActive && (
+                      <span className="cs-orbit-node-ring" aria-hidden="true" />
+                    )}
+                  </button>
+                );
+              })}
+
+              {/* Energy beam */}
+              <svg
+                className="cs-orbit-beam"
+                aria-hidden="true"
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
               >
-                {activeIcon}
-                <span className="cs-orbit-center-label">
-                  {activeSystem.title}
-                </span>
-              </motion.div>
-            </AnimatePresence>
-          </div>
+                <defs>
+                  <linearGradient
+                    id="beam-grad"
+                    x1="0%"
+                    y1="0%"
+                    x2="100%"
+                    y2="0%"
+                  >
+                    <stop offset="0%" stopColor="#36b8ff" stopOpacity="0" />
+                    <stop offset="50%" stopColor="#36b8ff" stopOpacity="0.7" />
+                    <stop offset="100%" stopColor="#36b8ff" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                {(() => {
+                  const pos = orbitPositions[activeIndex];
+                  const rad = (pos.angle * Math.PI) / 180;
+                  const orbitRadius = pos.orbit === 1 ? 38 : 46;
+                  const nx = 50 + orbitRadius * Math.cos(rad);
+                  const ny = 50 + orbitRadius * Math.sin(rad);
+                  return (
+                    <motion.line
+                      key={activeIndex}
+                      x1="50"
+                      y1="50"
+                      x2={nx}
+                      y2={ny}
+                      stroke="url(#beam-grad)"
+                      strokeWidth="0.4"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{ pathLength: 1, opacity: 1 }}
+                      transition={{ duration: 0.6, ease: "easeOut" }}
+                    />
+                  );
+                })()}
+              </svg>
 
-          {/* Orbital nodes */}
-          {customerSystems.map((system, index) => {
-            const pos = orbitPositions[index];
-            const isActive = index === activeIndex;
-            const Icon = system.Icon;
-            const rad = (pos.angle * Math.PI) / 180;
-            const orbitRadius = pos.orbit === 1 ? 38 : 46;
+              <AnimatePresence mode="wait">
+                {isPopupOpen && (
+                  <motion.aside
+                    key={`orbit-popup-${activeSystem.number}`}
+                    className="cs-orbit-popup"
+                    initial={{ y: 24, scale: 0.94, filter: "blur(10px)" }}
+                    animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+                    exit={{ y: 16, scale: 0.96, filter: "blur(8px)" }}
+                    transition={{ duration: 0.48, ease: [0.25, 0.1, 0.25, 1] }}
+                    aria-live="polite"
+                  >
+                    <span className="cs-orbit-popup-scan" aria-hidden="true" />
+                    <button
+                      type="button"
+                      className="cs-orbit-popup-close"
+                      aria-label="Close system details"
+                      onClick={closePopup}
+                    >
+                      <X size={18} strokeWidth={1.8} aria-hidden="true" />
+                    </button>
 
-            return (
-              <button
-                key={system.number}
-                type="button"
-                className={`cs-orbit-node ${isActive ? "cs-orbit-node--active" : ""}`}
-                onClick={() => handleNodeClick(index)}
-                aria-label={`${system.title} — ${system.eyebrow}`}
-                style={{
-                  "--node-x": `${50 + orbitRadius * Math.cos(rad)}%`,
-                  "--node-y": `${50 + orbitRadius * Math.sin(rad)}%`,
-                } as React.CSSProperties}
-              >
-                <span className="cs-orbit-node-icon">
-                  <Icon size={18} strokeWidth={1.7} />
-                </span>
-                <span className="cs-orbit-node-title">{system.title}</span>
-                {isActive && (
-                  <span className="cs-orbit-node-ring" aria-hidden="true" />
+                    <div className="cs-orbit-popup-top">
+                      <span className="cs-orbit-popup-icon">{activeIcon}</span>
+                      <div>
+                        <span className="cs-orbit-popup-meta">
+                          [{activeSystem.number}] {activeSystem.eyebrow}
+                        </span>
+                        <h3>{activeSystem.title}</h3>
+                      </div>
+                      <div className="cs-orbit-popup-metric">
+                        <strong>{activeSystem.metric}</strong>
+                        <span>{activeSystem.metricLabel}</span>
+                      </div>
+                    </div>
+
+                    <div className="cs-orbit-popup-question">
+                      <ChevronRight size={14} strokeWidth={2.5} aria-hidden="true" />
+                      <p>{activeSystem.question}</p>
+                    </div>
+
+                    <div className="cs-orbit-popup-grid">
+                      <div>
+                        <span>Description</span>
+                        <p>{activeSystem.description}</p>
+                      </div>
+                      <div>
+                        <span>Best For</span>
+                        <p>{activeSystem.target}</p>
+                      </div>
+                    </div>
+
+                    <div className="cs-orbit-popup-outcome">
+                      <span>
+                        <Bot size={16} strokeWidth={1.7} aria-hidden="true" />
+                      </span>
+                      <p>{activeSystem.outcome}</p>
+                    </div>
+
+                    <div className="cs-orbit-popup-tags">
+                      {activeSystem.signals.map((signal) => (
+                        <span key={signal}>
+                          <CheckCircle2 size={12} strokeWidth={2} aria-hidden="true" />
+                          {signal}
+                        </span>
+                      ))}
+                    </div>
+                  </motion.aside>
                 )}
-              </button>
-            );
-          })}
-
-          {/* Energy beam */}
-          <svg
-            className="cs-orbit-beam"
-            aria-hidden="true"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-          >
-            <defs>
-              <linearGradient
-                id="beam-grad"
-                x1="0%"
-                y1="0%"
-                x2="100%"
-                y2="0%"
-              >
-                <stop offset="0%" stopColor="#36b8ff" stopOpacity="0" />
-                <stop offset="50%" stopColor="#36b8ff" stopOpacity="0.7" />
-                <stop offset="100%" stopColor="#36b8ff" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-            {(() => {
-              const pos = orbitPositions[activeIndex];
-              const rad = (pos.angle * Math.PI) / 180;
-              const orbitRadius = pos.orbit === 1 ? 38 : 46;
-              const nx = 50 + orbitRadius * Math.cos(rad);
-              const ny = 50 + orbitRadius * Math.sin(rad);
-              return (
-                <motion.line
-                  key={activeIndex}
-                  x1="50"
-                  y1="50"
-                  x2={nx}
-                  y2={ny}
-                  stroke="url(#beam-grad)"
-                  strokeWidth="0.4"
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={{ pathLength: 1, opacity: 1 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
-                />
-              );
-            })()}
-          </svg>
-
-          <AnimatePresence mode="wait">
-            {isPopupOpen && (
-              <motion.aside
-                key={`orbit-popup-${activeSystem.number}`}
-                className="cs-orbit-popup"
-                initial={{ opacity: 0, y: 24, scale: 0.94, filter: "blur(10px)" }}
-                animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: 16, scale: 0.96, filter: "blur(8px)" }}
-                transition={{ duration: 0.48, ease: [0.25, 0.1, 0.25, 1] }}
-                aria-live="polite"
-              >
-                <span className="cs-orbit-popup-scan" aria-hidden="true" />
-                <button
-                  type="button"
-                  className="cs-orbit-popup-close"
-                  aria-label="Close system details"
-                  onClick={closePopup}
-                >
-                  <X size={18} strokeWidth={1.8} aria-hidden="true" />
-                </button>
-
-                <div className="cs-orbit-popup-top">
-                  <span className="cs-orbit-popup-icon">{activeIcon}</span>
-                  <div>
-                    <span className="cs-orbit-popup-meta">
-                      [{activeSystem.number}] {activeSystem.eyebrow}
-                    </span>
-                    <h3>{activeSystem.title}</h3>
-                  </div>
-                  <div className="cs-orbit-popup-metric">
-                    <strong>{activeSystem.metric}</strong>
-                    <span>{activeSystem.metricLabel}</span>
-                  </div>
-                </div>
-
-                <div className="cs-orbit-popup-question">
-                  <ChevronRight size={14} strokeWidth={2.5} aria-hidden="true" />
-                  <p>{activeSystem.question}</p>
-                </div>
-
-                <div className="cs-orbit-popup-grid">
-                  <div>
-                    <span>Description</span>
-                    <p>{activeSystem.description}</p>
-                  </div>
-                  <div>
-                    <span>Best For</span>
-                    <p>{activeSystem.target}</p>
-                  </div>
-                </div>
-
-                <div className="cs-orbit-popup-outcome">
-                  <span>
-                    <Bot size={16} strokeWidth={1.7} aria-hidden="true" />
-                  </span>
-                  <p>{activeSystem.outcome}</p>
-                </div>
-
-                <div className="cs-orbit-popup-tags">
-                  {activeSystem.signals.map((signal) => (
-                    <span key={signal}>
-                      <CheckCircle2 size={12} strokeWidth={2} aria-hidden="true" />
-                      {signal}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="cs-orbit-popup-flow">
-                  {activeSystem.steps.map((step, index) => (
-                    <span key={`${activeSystem.number}-${step}`}>
-                      <small>{String(index + 1).padStart(2, "0")}</small>
-                      {step}
-                    </span>
-                  ))}
-                </div>
-              </motion.aside>
-            )}
-          </AnimatePresence>
-        </div>
+              </AnimatePresence>
+            </div>
+          </>
+        )}
 
         {/* ═══════════════════════════════════════════
-            BRIEFING DECK (FAQ) — Expandable Cards
+            BRIEFING DECK (FAQ) — Common Questions (Visible)
         ═══════════════════════════════════════════ */}
-        <div className="cs-brief-section">
+        <div className="cs-brief-section" style={{ marginTop: 0 }}>
           <div className="cs-brief-header">
             <div>
-              <span className="cs-brief-header-eyebrow">
+              <SectionBadge label="Common Questions" number="04" />
+              <span className="cs-brief-header-eyebrow" style={{ display: 'block', marginTop: '14px' }}>
                 [ Knowledge Terminal ]
               </span>
               <h3 className="cs-brief-header-title">Common Questions</h3>
@@ -568,7 +594,7 @@ export default function CustomerSystem() {
           </div>
 
           <div className="cs-brief-deck">
-            {customerFaqs.map((faq, index) => {
+            {customerFaqs.slice(0, 2).map((faq, index) => {
               const isActive = index === activeFaqIndex;
               return (
                 <article
@@ -588,7 +614,7 @@ export default function CustomerSystem() {
                     type="button"
                     className="cs-brief-trigger"
                     aria-expanded={isActive}
-                    onClick={() => setActiveFaqIndex(index)}
+                    onClick={() => setActiveFaqIndex(isActive ? null : index)}
                   >
                     <span className="cs-brief-index">
                       <span className="cs-brief-index-ring">
@@ -650,25 +676,24 @@ export default function CustomerSystem() {
                           opacity: { duration: 0.35, delay: 0.1 },
                         }}
                       >
-                        <div className="cs-brief-reveal-inner">
+                        <div 
+                          className="cs-brief-reveal-inner"
+                          style={{
+                            margin: "0 16px 20px 16px",
+                            padding: "16px 16px 20px 16px",
+                            borderRadius: "14px",
+                            wordBreak: "break-word",
+                            overflowWrap: "break-word"
+                          }}
+                        >
                           {/* Holographic grid overlay */}
                           <div
                             className="cs-brief-holo-grid"
                             aria-hidden="true"
                           />
 
-                          {/* Summary highlight */}
-                          <div className="cs-brief-summary">
-                            <Sparkles
-                              size={13}
-                              strokeWidth={2}
-                              aria-hidden="true"
-                            />
-                            {faq.short}
-                          </div>
-
-                          {/* Full answer with typewriter */}
-                          <div className="cs-brief-answer">
+                          {/* Full 2-line answer with typewriter */}
+                          <div className="cs-brief-answer" style={{ color: "rgba(255, 255, 255, 0.85)", fontSize: "0.9rem", lineHeight: 1.65 }}>
                             <TypewriterText
                               key={`faq-${index}`}
                               text={faq.answer}
@@ -676,7 +701,7 @@ export default function CustomerSystem() {
                           </div>
 
                           {/* Bottom topic pill */}
-                          <div className="cs-brief-answer-footer">
+                          <div className="cs-brief-answer-footer" style={{ marginTop: "14px", paddingTop: "12px" }}>
                             <span className="cs-brief-answer-topic">
                               {faq.topic}
                             </span>
@@ -692,6 +717,30 @@ export default function CustomerSystem() {
                 </article>
               );
             })}
+          </div>
+
+          <div 
+            style={{ 
+              marginTop: "32px", 
+              paddingLeft: "16px", 
+              borderLeft: "3px solid rgba(255, 255, 255, 0.15)",
+              fontSize: "14px",
+              lineHeight: "1.6",
+              color: "rgba(255, 255, 255, 0.7)"
+            }}
+          >
+            Looking for more commonly asked questions?{" "}
+            <Link 
+              href="/faq" 
+              style={{ 
+                color: "#36b8ff", 
+                textDecoration: "underline", 
+                textUnderlineOffset: "4px"
+              }} 
+              className="hover:text-[#25a7eb] transition-colors"
+            >
+              Click here
+            </Link>
           </div>
         </div>
       </div>

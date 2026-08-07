@@ -7,46 +7,67 @@ import Marquee from "@/components/sections/Marquee";
 import Footer from "@/components/layout/Footer";
 
 // Dynamic imports for sections below the fold
+const WhoIsItFor = dynamic(() => import("@/components/sections/WhoIsItFor"));
+const WhyConsider = dynamic(
+  () => import("@/components/sections/WhyConsider"),
+  { ssr: false }
+);
 const Services = dynamic(() => import("@/components/sections/Services"));
-const FeaturedWork = dynamic(() => import("@/components/sections/FeaturedWork"));
+const BestWork = dynamic(() => import("@/components/sections/BestWork"));
 const CustomerSystem = dynamic(() => import("@/components/sections/CustomerSystem"));
 const Achievements = dynamic(() => import("@/components/sections/Achievements"));
 const WhyChooseUs = dynamic(() => import("@/components/sections/WhyChooseUs"));
-const Founders = dynamic(() => import("@/components/sections/Founders"));
-const Playground = dynamic(() => import("@/components/sections/Playground"));
-const Testimonials = dynamic(() => import("@/components/sections/Testimonials"));
 const Process = dynamic(() => import("@/components/sections/Process"));
-const Contact = dynamic(() => import("@/components/sections/Contact"));
+const OurStory = dynamic(() => import("@/components/sections/OurStory"));
+const Founders = dynamic(() => import("@/components/sections/Founders"));
 
-const SmoothScroll = dynamic(
-  () => import("@/components/providers/SmoothScroll"),
-  { ssr: false }
-);
+import SmoothScroll from "@/components/providers/SmoothScroll";
 const MouseFollowLight = dynamic(
   () => import("@/components/ui/MouseFollowLight"),
   { ssr: false }
 );
-
 export default function Home() {
   return (
     <SmoothScroll>
       <MouseFollowLight />
       <Navbar />
       <main>
+        {/* 1. Hook */}
         <Hero />
         <Marquee />
+
+        {/* Target Audience / Ideal Fit */}
+        <WhoIsItFor />
+
+        {/* 2. Why Consider Us — roadmap pillars */}
+        <WhyConsider />
+
+        {/* 3. Services — what we offer */}
         <Services />
-        <FeaturedWork />
+
+        {/* 4. BestWork — Bento box showcase */}
+        <BestWork />
+
+        {/* 5. CustomerSystem — deeper dive into our system */}
         <CustomerSystem />
+
+        {/* 5. Achievements — credibility proof */}
         <Achievements />
+
+        {/* 6. Our Story — humanises the brand right after stats */}
+        <OurStory />
+
+        {/* 7. Why Choose Us — trust building */}
         <WhyChooseUs />
-        <Founders />
-        <Playground />
-        <Testimonials />
+
+        {/* 8. Process — how we work */}
         <Process />
-        <Contact />
+
+        {/* 9. Closing — team */}
+        <Founders />
       </main>
       <Footer />
     </SmoothScroll>
   );
 }
+

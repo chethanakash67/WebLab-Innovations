@@ -8,6 +8,24 @@ import { ArrowUpRight } from "lucide-react";
 import { founders } from "@/data/projects";
 import SectionBadge from "@/components/ui/SectionBadge";
 
+function InstagramIcon({ className = "h-3.5 w-3.5 text-[#36b8ff]" }: { className?: string }) {
+  return (
+    <svg 
+      className={className} 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+    </svg>
+  );
+}
+
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Founders() {
@@ -17,7 +35,7 @@ export default function Founders() {
     const ctx = gsap.context(() => {
       gsap.from(".team-title-line", {
         x: -80,
-        opacity: 0,
+        
         duration: 1,
         stagger: 0.12,
         ease: "power3.out",
@@ -26,7 +44,7 @@ export default function Founders() {
 
       gsap.from(".team-member-row", {
         y: 48,
-        opacity: 0,
+        
         duration: 0.8,
         stagger: 0.15,
         ease: "power3.out",
@@ -42,12 +60,46 @@ export default function Founders() {
       <div className="team-watermark">TEAM</div>
       <div className="mx-auto grid max-w-[1500px] gap-16 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
         <div className="team-heading">
-          <SectionBadge label="Team Members" number="07" />
+          <SectionBadge label="Founders" number="09" />
           <div className="overflow-hidden">
-            <h2 className="team-title-line">Creative</h2>
+            <h2
+              className="team-title-line font-display text-white"
+              style={{
+                fontWeight: 400,
+                fontSize: "clamp(2rem, 3.8vw, 4.5rem)",
+                lineHeight: 0.88,
+                letterSpacing: "-0.07em",
+                marginBottom: "4px"
+              }}
+            >
+              A
+            </h2>
           </div>
           <div className="overflow-hidden">
-            <h2 className="team-title-line text-primary-light">Team</h2>
+            <h2
+              className="team-title-line font-display text-primary-light"
+              style={{
+                fontWeight: 400,
+                fontSize: "clamp(3.2rem, 7.8vw, 9.2rem)",
+                lineHeight: 0.82,
+                letterSpacing: "-0.08em"
+              }}
+            >
+              Team of Two
+            </h2>
+          </div>
+          <div className="overflow-hidden">
+            <h2
+              className="team-title-line font-display text-white"
+              style={{
+                fontWeight: 400,
+                fontSize: "clamp(3.2rem, 7.8vw, 9.2rem)",
+                lineHeight: 0.82,
+                letterSpacing: "-0.08em"
+              }}
+            >
+              Started This.
+            </h2>
           </div>
           <p>
             Two disciplines, one standard: make the work clear, memorable, and
@@ -85,17 +137,47 @@ export default function Founders() {
                   </span>
                 </div>
               </a>
-              <a
-                href={founder.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-              className="team-member-link"
-              aria-label={`${founder.name} LinkedIn profile`}
-            >
-                <span className="team-linkedin-mark">in</span>
-                <span>LinkedIn</span>
-                <ArrowUpRight className="h-4 w-4" />
-              </a>
+              <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "nowrap" }}>
+                <a
+                  href={founder.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="team-member-link"
+                  aria-label={`${founder.name} LinkedIn profile`}
+                  style={{
+                    height: "36px",
+                    minHeight: "36px",
+                    padding: "0 10px",
+                    fontSize: "11px",
+                    whiteSpace: "nowrap"
+                  }}
+                >
+                  <span className="team-linkedin-mark">in</span>
+                  <span>LinkedIn</span>
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </a>
+
+                {founder.instagram ? (
+                  <a
+                    href={founder.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="team-member-link"
+                    aria-label={`${founder.name} Instagram profile`}
+                    style={{
+                      height: "36px",
+                      minHeight: "36px",
+                      padding: "0 10px",
+                      fontSize: "11px",
+                      whiteSpace: "nowrap"
+                    }}
+                  >
+                    <InstagramIcon className="h-3.5 w-3.5 text-[#36b8ff]" />
+                    <span>Instagram</span>
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </a>
+                ) : null}
+              </div>
             </article>
           ))}
         </div>
