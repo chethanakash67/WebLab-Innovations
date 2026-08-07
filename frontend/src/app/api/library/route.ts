@@ -5,6 +5,27 @@ export const dynamic = "force-dynamic";
 
 const STATIC_CATALOG_ITEMS: LibraryCatalogItem[] = [
   {
+    id: 4,
+    slug: "aigleon-labs-funnel-leak-report",
+    title: "Aigleon Labs Funnel Leak & Bottleneck Diagnostic Report",
+    summary:
+      "A comprehensive diagnostic report identifying critical conversion drop-off points, funnel leakages, and growth bottlenecks in digital acquisition pipelines.",
+    type: "report",
+    filePath: "/aigleon_labs_funnel_leak_report.pdf",
+    tags: [
+      "funnel leak",
+      "growth bottleneck",
+      "audit",
+      "report",
+      "conversion",
+      "acquisition",
+      "aigleon labs",
+      "digital readiness",
+      "systems",
+    ],
+    createdAt: "2026-08-06T12:00:00.000Z",
+  },
+  {
     id: 1,
     slug: "why-systemless-businesses-stall-before-they-scale",
     title: "Why systemless businesses stall before they scale?",

@@ -197,7 +197,8 @@ export default function BestWork() {
   }, []);
 
   return (
-    <section ref={sectionRef} id="best-work" className="section-padding bento-section">
+    <section ref={sectionRef} id="best-work" data-section="work" className="section-padding bento-section">
+      <div id="work" style={{ position: "relative", top: "-100px", visibility: "hidden" }} />
       <div className="mx-auto max-w-[1500px]">
         <div className="process-heading" style={{ marginBottom: "60px" }}>
           <div>

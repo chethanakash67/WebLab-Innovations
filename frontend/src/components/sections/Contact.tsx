@@ -139,7 +139,7 @@ export default function Contact() {
         budget: selectedBudget,
       });
       setFormStatus("submitted");
-      setStatusMessage("Request sent. We will reply within 24 hours.");
+      setStatusMessage("Request sent. You’ll get a confirmation mail, check the spam folder also.");
     } catch (error) {
       setFormStatus("error");
       setStatusMessage(

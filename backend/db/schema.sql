@@ -12,6 +12,20 @@ CREATE TABLE IF NOT EXISTS contact_inquiries (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS audit_inquiries (
+  id BIGSERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT,
+  problems TEXT[] NOT NULL DEFAULT '{}',
+  other_problem TEXT,
+  status TEXT NOT NULL DEFAULT 'new',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS audit_inquiries_created_idx
+  ON audit_inquiries (created_at DESC);
+
 ALTER TABLE contact_inquiries
   ADD COLUMN IF NOT EXISTS project_goal TEXT;
 

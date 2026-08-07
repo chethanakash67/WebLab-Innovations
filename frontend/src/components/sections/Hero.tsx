@@ -233,7 +233,23 @@ export default function Hero() {
               boxShadow: "0 2px 10px rgba(255, 230, 0, 0.15)"
             }}
           >
-            luxury and premium brands
+            niche craft pioneers
+          </span>
+          like{" "}
+          <span 
+            className="hero-highlight"
+            style={{
+              backgroundColor: "rgba(255, 230, 0, 0.8)",
+              backdropFilter: "blur(6px)",
+              WebkitBackdropFilter: "blur(6px)",
+              color: "#000000",
+              padding: "2px 8px",
+              borderRadius: "4px",
+              fontWeight: 650,
+              boxShadow: "0 2px 10px rgba(255, 230, 0, 0.15)"
+            }}
+          >
+            Speciality and Premium brands
           </span>
           .
         </p>
@@ -321,7 +337,19 @@ export default function Hero() {
             }}
           >
             <MagneticButton>
-              <a href="#work" className="button button-muted">
+              <a
+                href="#best-work"
+                className="button button-muted"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const target = document.getElementById("best-work") || document.getElementById("work");
+                  if (target) {
+                    target.scrollIntoView({ behavior: "smooth" });
+                  } else {
+                    window.location.href = "/work";
+                  }
+                }}
+              >
                 Explore work
                 <ArrowDown className="h-4 w-4" />
               </a>

@@ -116,7 +116,7 @@ export default function Footer() {
 
       if (res.ok && data.success) {
         setSubStatus("success");
-        setSubMsg(data.message || "Subscribed successfully!");
+        setSubMsg("Subscribed successfully! You’ll get a confirmation mail, check the spam folder also.");
         setSubEmail("");
       } else {
         setSubStatus("error");

@@ -176,7 +176,7 @@ export default function Testimonials() {
       });
 
       setReviewStatus("submitted");
-      setReviewMessage("Thank you. We will check your review and publish it after approval.");
+      setReviewMessage("Thank you! You’ll get a confirmation mail, check the spam folder also. We will review your submission and publish it upon approval.");
       setReviewFormData({
         name: "",
         email: "",
