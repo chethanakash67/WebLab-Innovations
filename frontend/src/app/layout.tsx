@@ -3,6 +3,7 @@ import { Inter, Syne } from "next/font/google";
 import Script from "next/script";
 import BackToTop from "@/components/ui/BackToTop";
 import LeadCapturePopup from "@/components/ui/LeadCapturePopup";
+import ServerWarmup from "@/components/ui/ServerWarmup";
 import "./globals.css";
 
 const inter = Inter({
@@ -88,6 +89,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-background text-foreground antialiased">
         <BackToTop />
         <LeadCapturePopup />
+        <ServerWarmup />
         <Script
           id="scroll-restoration"
           strategy="beforeInteractive"
