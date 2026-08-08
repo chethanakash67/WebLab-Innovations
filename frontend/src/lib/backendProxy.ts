@@ -26,7 +26,7 @@ export async function proxyBackendRequest(path: string, init: RequestInit = {}) 
   const controller = new AbortController();
   const timeout = setTimeout(
     () => controller.abort(),
-    envNumber("BACKEND_REQUEST_TIMEOUT_MS", 20000),
+    envNumber("BACKEND_REQUEST_TIMEOUT_MS", 50000),
   );
 
   try {
