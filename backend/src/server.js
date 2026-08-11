@@ -8,6 +8,8 @@ import auditRouter from "./routes/audit.js";
 import reviewsRouter from "./routes/reviews.js";
 import libraryRouter from "./routes/library.js";
 import subscribeRouter from "./routes/subscribe.js";
+import prebuiltAssetsRouter from "./routes/prebuiltAssets.js";
+import productClaimsRouter from "./routes/productClaims.js";
 import { emailNotificationStatus } from "./services/mailer.js";
 
 const app = express();
@@ -112,6 +114,8 @@ app.use("/api/audit", auditRouter);
 app.use("/api/reviews", reviewsRouter);
 app.use("/api/library", libraryRouter);
 app.use("/api/subscribe", subscribeRouter);
+app.use("/api/prebuilt-assets", prebuiltAssetsRouter);
+app.use("/api/product-claims", productClaimsRouter);
 
 app.use((_request, response) => {
   response.status(404).json({ success: false, message: "Route not found." });

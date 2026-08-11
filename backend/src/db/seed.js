@@ -136,10 +136,69 @@ export async function seedPastClients() {
   console.log("Past clients seed applied.");
 }
 
+const prebuiltAssets = [
+  {
+    slug: "blue-white-sleek-web-design",
+    title: "Blue and white sleek web design and development",
+    category: "Websites",
+    tagline: "Ultra-sleek, mobile-first functional web design that psychologically invokes trust and calm.",
+    description: "Originally developed as custom client work, this high-end web architecture can be fully custom-replicated for your business with your brand story, custom typography, color themes, and smooth micro-interactions.",
+    price: "₹3,999/-",
+    originalPrice: "₹8,000/-",
+    badge: "Web Product",
+    features: [
+      "Mobile-First & Ultra-Fast Responsive Performance",
+      "Sleek Functional Design & Smooth Micro-Interactions",
+      "Psychological Color Palette Touching Calmness & Trust",
+      "High-Converting Clear CTAs & Proof Establishment",
+      "Custom Replicated Layout, Fonts & Design Assets for Your Brand",
+      "WhatsApp Direct Lead & Inquiry Capture Ready"
+    ],
+    demoUrl: "https://narayanaschoolctr.vercel.app/",
+  },
+];
+
+export async function seedPrebuiltAssets() {
+  // Clear any past placeholder assets so only real products remain
+  await pool.query(`DELETE FROM prebuilt_assets WHERE slug != 'blue-white-sleek-web-design'`);
+
+  for (const item of prebuiltAssets) {
+    await pool.query(
+      `INSERT INTO prebuilt_assets
+        (title, slug, category, tagline, description, price, original_price, badge, features, demo_url)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+       ON CONFLICT (slug) DO UPDATE SET
+         title = EXCLUDED.title,
+         category = EXCLUDED.category,
+         tagline = EXCLUDED.tagline,
+         description = EXCLUDED.description,
+         price = EXCLUDED.price,
+         original_price = EXCLUDED.original_price,
+         badge = EXCLUDED.badge,
+         features = EXCLUDED.features,
+         demo_url = EXCLUDED.demo_url`,
+      [
+        item.title,
+        item.slug,
+        item.category,
+        item.tagline,
+        item.description,
+        item.price,
+        item.originalPrice,
+        item.badge,
+        item.features,
+        item.demoUrl,
+      ],
+    );
+  }
+
+  console.log("Prebuilt assets seed applied (Tabun Chai website asset).");
+}
+
 const currentFile = fileURLToPath(import.meta.url);
 
 if (process.argv[1] === currentFile) {
-  Promise.all([seedLibraryCatalog(), seedPastClients()])
+  Promise.all([seedLibraryCatalog(), seedPastClients(), seedPrebuiltAssets()])
     .then(async () => {
       await pool.end();
       console.log("Database seeds applied successfully.");
@@ -150,3 +209,4 @@ if (process.argv[1] === currentFile) {
       process.exit(1);
     });
 }
+

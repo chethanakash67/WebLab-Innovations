@@ -77,7 +77,7 @@ export default function LeadCapturePopup() {
     if (!isDismissed && !isAlreadySubmitted) {
       const timer = setTimeout(() => {
         setIsOpen(true);
-      }, 10000); // 10 seconds delay
+      }, 15000); // 15 seconds delay
 
       return () => clearTimeout(timer);
     }

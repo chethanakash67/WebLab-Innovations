@@ -10,8 +10,9 @@ import AgencyMark from "@/components/ui/AgencyMark";
 const navLinks = [
   { label: "Studio", href: "#home", number: "01", isPage: false },
   { label: "Services", href: "#services", number: "02", isPage: false },
-  { label: "Work", href: "/work", number: "03", isPage: true },
-  { label: "Team", href: "#team", number: "04", isPage: false },
+  { label: "Assets", href: "/prebuilt-assets", number: "03", isPage: true },
+  { label: "Work", href: "/work", number: "04", isPage: true },
+  { label: "Team", href: "#team", number: "05", isPage: false },
 ];
 
 export default function Navbar() {
