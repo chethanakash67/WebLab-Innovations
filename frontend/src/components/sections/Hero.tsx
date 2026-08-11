@@ -432,6 +432,57 @@ export default function Hero() {
               <span style={{ fontSize: "12px", color: "#9ca3aa" }}>Loading recent work from database...</span>
             )}
           </div>
+
+          {/* Fancy Big Text Link: View Our Best Work (No button outline, zero glow) */}
+          <div style={{ marginTop: "22px", textAlign: "center" }}>
+            <a
+              href="#best-work"
+              onClick={(e) => {
+                e.preventDefault();
+                const target = document.getElementById("best-work") || document.getElementById("work");
+                if (target) {
+                  target.scrollIntoView({ behavior: "smooth" });
+                } else {
+                  window.location.href = "/work";
+                }
+              }}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "10px",
+                fontSize: "clamp(1.2rem, 2.4vw, 1.5rem)",
+                fontWeight: 700,
+                fontFamily: "var(--font-display), Syne, sans-serif",
+                color: "#ffffff",
+                textDecoration: "none",
+                letterSpacing: "-0.01em",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+              }}
+              className="group"
+            >
+              <span
+                style={{
+                  background: "linear-gradient(90deg, #ffffff 0%, rgba(255, 255, 255, 0.8) 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  borderBottom: "1.5px solid rgba(54, 184, 255, 0.6)",
+                  paddingBottom: "3px",
+                }}
+              >
+                View Our Best Work
+              </span>
+              <ArrowUpRight
+                style={{
+                  width: "22px",
+                  height: "22px",
+                  color: "#36b8ff",
+                  transition: "transform 0.3s ease",
+                }}
+                className="group-hover:translate-x-1 group-hover:-translate-y-1"
+              />
+            </a>
+          </div>
         </div>
       </div>
 

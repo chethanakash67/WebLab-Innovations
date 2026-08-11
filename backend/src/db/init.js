@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { pool } from "./pool.js";
-import { seedLibraryCatalog, seedPastClients } from "./seed.js";
+import { seedLibraryCatalog, seedPastClients, seedPrebuiltAssets } from "./seed.js";
 
 const currentFile = fileURLToPath(import.meta.url);
 const currentDir = path.dirname(currentFile);
@@ -13,6 +13,7 @@ export async function initDatabase() {
   await pool.query(schema);
   await seedLibraryCatalog();
   await seedPastClients();
+  await seedPrebuiltAssets();
 }
 
 if (process.argv[1] === currentFile) {

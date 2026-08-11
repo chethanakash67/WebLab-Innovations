@@ -168,6 +168,27 @@ export default function Services() {
             <span className="service-ghost service-ghost-bottom">Complete</span>
           </div>
 
+          <div
+            style={{
+              maxWidth: "780px",
+              margin: "0 auto 48px auto",
+              textAlign: "center",
+              padding: "0 16px",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "1.1rem",
+                lineHeight: "1.7",
+                color: "rgba(255, 255, 255, 0.78)",
+                fontFamily: "var(--font-sans), system-ui, sans-serif",
+                fontWeight: 400,
+              }}
+            >
+              Every system we create is custom built specifically for your business. We take the time to study your brand, understand your goals, and analyze how you operate before building anything.
+            </p>
+          </div>
+
           <div className="offers-grid">
             {systems.map((system) => (
               <div

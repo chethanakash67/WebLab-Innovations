@@ -117,3 +117,42 @@ CREATE INDEX IF NOT EXISTS past_clients_slug_idx
 CREATE INDEX IF NOT EXISTS past_clients_created_idx
   ON past_clients (created_at DESC);
 
+CREATE TABLE IF NOT EXISTS prebuilt_assets (
+  id BIGSERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  category TEXT NOT NULL,
+  tagline TEXT NOT NULL DEFAULT '',
+  description TEXT NOT NULL DEFAULT '',
+  price TEXT NOT NULL,
+  original_price TEXT,
+  badge TEXT,
+  features TEXT[] NOT NULL DEFAULT '{}',
+  demo_url TEXT,
+  published BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS prebuilt_assets_category_idx
+  ON prebuilt_assets (category);
+
+CREATE INDEX IF NOT EXISTS prebuilt_assets_published_created_idx
+  ON prebuilt_assets (published, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS product_claims (
+  id BIGSERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  phone TEXT NOT NULL,
+  product_name TEXT NOT NULL,
+  product_slug TEXT,
+  price TEXT,
+  status TEXT NOT NULL DEFAULT 'new',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS product_claims_created_idx
+  ON product_claims (created_at DESC);
+
+
+
