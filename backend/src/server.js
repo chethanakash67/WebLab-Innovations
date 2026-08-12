@@ -10,7 +10,10 @@ import libraryRouter from "./routes/library.js";
 import subscribeRouter from "./routes/subscribe.js";
 import prebuiltAssetsRouter from "./routes/prebuiltAssets.js";
 import productClaimsRouter from "./routes/productClaims.js";
+import labChatRouter from "./routes/labChat.js";
 import { emailNotificationStatus } from "./services/mailer.js";
+import { seedLabContent } from "./services/labContentSeed.js";
+import { loadChunkCacheFromDb } from "./services/labRag.js";
 
 const app = express();
 const port = Number(process.env.PORT || 10000);
@@ -106,7 +109,7 @@ app.use(
 app.use(express.json({ limit: "80kb" }));
 
 app.get("/health", (_request, response) => {
-  response.json({ success: true, service: "aigleonlabs-backend" });
+  response.json({ success: true, service: "weblab-backend" });
 });
 
 app.use("/api/contact", contactRouter);
@@ -116,6 +119,7 @@ app.use("/api/library", libraryRouter);
 app.use("/api/subscribe", subscribeRouter);
 app.use("/api/prebuilt-assets", prebuiltAssetsRouter);
 app.use("/api/product-claims", productClaimsRouter);
+app.use("/api/lab-chat", labChatRouter);
 
 app.use((_request, response) => {
   response.status(404).json({ success: false, message: "Route not found." });
@@ -133,25 +137,16 @@ app.use((error, _request, response, _next) => {
 
 validateProductionEnv();
 logEmailNotificationStatus();
+initDatabase()
+  .then(async () => {
+    await seedLabContent().catch((error) => console.error("Lab content seed failed:", error));
+    await loadChunkCacheFromDb().catch((error) => console.error("Lab chunk cache load failed:", error));
 
-const startServer = () => {
-  app.listen(port, () => {
-    console.log(`AigleOn Labs backend listening on port ${port}.`);
+    app.listen(port, () => {
+      console.log(`WebLab backend listening on port ${port}.`);
+    });
+  })
+  .catch((error) => {
+    console.error("Unable to start backend:", error);
+    process.exit(1);
   });
-};
-
-if (process.env.NODE_ENV === "production") {
-  initDatabase()
-    .then(startServer)
-    .catch((error) => {
-      console.error("Unable to start backend:", error);
-      process.exit(1);
-    });
-} else {
-  initDatabase()
-    .then(startServer)
-    .catch((error) => {
-      console.warn("Database initialization failed (running in development mode):", error.message);
-      startServer();
-    });
-}

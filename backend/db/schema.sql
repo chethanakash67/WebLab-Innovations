@@ -154,5 +154,53 @@ CREATE TABLE IF NOT EXISTS product_claims (
 CREATE INDEX IF NOT EXISTS product_claims_created_idx
   ON product_claims (created_at DESC);
 
+CREATE TABLE IF NOT EXISTS lab_documents (
+  id BIGSERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  source_type TEXT NOT NULL CHECK (source_type IN ('site_content', 'upload')),
+  source_key TEXT NOT NULL,
+  content_hash TEXT NOT NULL,
+  uploaded_by TEXT,
+  status TEXT NOT NULL DEFAULT 'ready' CHECK (status IN ('ready', 'failed')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
 
+CREATE UNIQUE INDEX IF NOT EXISTS lab_documents_source_key_idx
+  ON lab_documents (source_type, source_key);
+
+CREATE TABLE IF NOT EXISTS lab_document_chunks (
+  id BIGSERIAL PRIMARY KEY,
+  document_id BIGINT NOT NULL REFERENCES lab_documents(id) ON DELETE CASCADE,
+  chunk_index INTEGER NOT NULL,
+  content TEXT NOT NULL,
+  embedding DOUBLE PRECISION[] NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS lab_document_chunks_document_idx
+  ON lab_document_chunks (document_id);
+
+CREATE TABLE IF NOT EXISTS lab_admin_otps (
+  id BIGSERIAL PRIMARY KEY,
+  email TEXT NOT NULL,
+  code_hash TEXT NOT NULL,
+  expires_at TIMESTAMPTZ NOT NULL,
+  consumed_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS lab_admin_otps_email_created_idx
+  ON lab_admin_otps (email, created_at DESC);
+
+CREATE TABLE IF NOT EXISTS lab_chat_logs (
+  id BIGSERIAL PRIMARY KEY,
+  session_id TEXT,
+  question TEXT NOT NULL,
+  answer TEXT NOT NULL,
+  matched BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS lab_chat_logs_created_idx
+  ON lab_chat_logs (created_at DESC);
 

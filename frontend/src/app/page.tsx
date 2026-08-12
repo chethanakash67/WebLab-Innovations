@@ -12,6 +12,8 @@ const WhyConsider = dynamic(
   () => import("@/components/sections/WhyConsider"),
   { ssr: false }
 );
+const RobotStudio = dynamic(() => import("@/components/sections/RobotStudio"));
+const Problem = dynamic(() => import("@/components/sections/Problem"));
 const Services = dynamic(() => import("@/components/sections/Services"));
 const PreBuiltAssetsSection = dynamic(() => import("@/components/sections/PreBuiltAssetsSection"));
 const AuditCtaBanner = dynamic(() => import("@/components/sections/AuditCtaBanner"));
@@ -43,6 +45,12 @@ export default function Home() {
 
         {/* 2. Why Consider Us — roadmap pillars */}
         <WhyConsider />
+
+        {/* 1b. Assistant — full-body robot that tracks the cursor */}
+        <RobotStudio />
+
+        {/* 2. Problem — why they need us */}
+        <Problem />
 
         {/* 3. Services — what we offer */}
         <Services />
@@ -78,4 +86,3 @@ export default function Home() {
     </SmoothScroll>
   );
 }
-

@@ -730,3 +730,57 @@ export async function sendReviewNotification({ review, approveUrl }) {
 
 // Backward compatibility alias for review moderation
 export const sendReviewModerationEmail = sendReviewNotification;
+
+// -------------------------------------------------------------
+// 5. LAB ADMIN OTP EMAIL (/api/lab-chat/admin)
+// -------------------------------------------------------------
+
+export async function sendLabAdminOtpEmail({ email, code }) {
+  const config = getResendConfig();
+
+  if (!config) {
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[Lab Admin OTP] Resend not configured. Code for ${email}: ${code}`);
+      return true;
+    }
+    return false;
+  }
+
+  const fromAddress = process.env.RESEND_FROM_EMAIL || "info@theaigleonlabs.dev";
+  const subject = "Your AigleOn Labs admin code";
+  const text = [
+    `Your one-time code to manage the Lab assistant's knowledge base: ${code}`,
+    "",
+    "This code expires shortly. If you did not request it, ignore this email.",
+  ].join("\n");
+
+  const html = `
+    <div style="margin:0;padding:0;font-family:Arial,sans-serif;color:#ffffff;">
+      <div style="max-width:480px;margin:0 auto;padding:24px 16px;">
+        <div style="background:#0b0d0f;border:1px solid rgba(54,184,255,0.4);border-radius:0px;padding:32px;text-align:center;">
+          <p style="margin:0 0 6px;color:#36b8ff;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">
+            AigleOn Labs | Admin Access
+          </p>
+          <h2 style="margin:0 0 20px;color:#ffffff;font-size:22px;">Your one-time code</h2>
+          <div style="font-family:monospace;font-size:32px;font-weight:700;letter-spacing:0.2em;color:#36b8ff;margin-bottom:20px;">
+            ${escapeHtml(code)}
+          </div>
+          <p style="margin:0;color:#9ca3aa;font-size:13px;line-height:1.6;">
+            Use this code to manage the Lab assistant's knowledge base. This code expires shortly.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  try {
+    return await sendResendEmail({ to: email, from: fromAddress, subject, html, text });
+  } catch (error) {
+    console.error("Lab admin OTP email failed:", error.message || error);
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[Lab Admin OTP] Delivery failed. Code for ${email}: ${code}`);
+      return true;
+    }
+    return false;
+  }
+}

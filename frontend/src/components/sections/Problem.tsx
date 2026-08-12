@@ -63,13 +63,13 @@ export default function Problem() {
   }, [hasIntersected]);
 
   return (
-    <section ref={sectionRef} id="problems" className="relative overflow-hidden" style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.06)", background: "#030405", paddingTop: "clamp(60px, 8vw, 100px)", paddingBottom: "clamp(40px, 5vw, 60px)" }}>
+    <section ref={sectionRef} id="problems" className="relative overflow-hidden section-rhythm" style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.06)", background: "#030405" }}>
       {/* Background Watermark */}
       <div className="absolute select-none opacity-[0.015] font-display font-bold text-[24vw] leading-none pointer-events-none text-white right-[2%] top-[-5%]">
         PAIN
       </div>
 
-      <div className="mx-auto max-w-[1500px] relative z-10" style={{ paddingLeft: "clamp(20px, 5vw, 64px)", paddingRight: "clamp(20px, 5vw, 64px)" }}>
+      <div className="mx-auto max-w-[1500px] relative z-10 page-inset">
         <header>
           <div className="problem-reveal" style={{ opacity: 0 }}>
             <SectionBadge label="The Core Problems" number="01" />
