@@ -1,0 +1,74 @@
+/* Floating launcher sits to the left of the existing .back-to-top button
+   (which occupies bottom:32px right:32px, 48px wide) so the two never overlap. */
+.lab-launcher-button {
+  position: fixed;
+  z-index: 91;
+  bottom: 32px;
+  right: 92px;
+  display: grid;
+  width: 48px;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 1px solid rgba(54, 184, 255, 0.35);
+  border-radius: 50%;
+  background: rgba(8, 122, 216, 0.92);
+  color: #fff;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 0 16px rgba(54, 184, 255, 0.25);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+}
+
+.lab-launcher-button:hover {
+  background: rgba(54, 184, 255, 0.95);
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45), 0 0 24px rgba(54, 184, 255, 0.4);
+}
+
+.lab-launcher-button:active {
+  transform: translateY(-1px) scale(0.95);
+}
+
+.lab-launcher-button.is-open {
+  background: rgba(4, 6, 8, 0.85);
+  border-color: rgba(54, 184, 255, 0.6);
+}
+
+.lab-launcher-panel {
+  position: fixed;
+  z-index: 91;
+  bottom: 92px;
+  right: 32px;
+  width: min(380px, calc(100vw - 32px));
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  border-radius: 20px;
+  overflow: hidden;
+  animation: lab-launcher-in 180ms ease-out;
+}
+
+/* The chat fills the panel; the panel controls the floating size. */
+.lab-launcher-panel .lab-chat {
+  height: min(520px, calc(100vh - 140px));
+  background: rgba(11, 13, 15, 0.98);
+  backdrop-filter: blur(16px);
+}
+
+@keyframes lab-launcher-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 520px) {
+  .lab-launcher-panel {
+    right: 16px;
+    left: 16px;
+    width: auto;
+    bottom: 88px;
+  }
+}

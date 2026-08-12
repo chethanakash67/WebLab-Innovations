@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { pool } from "../db/pool.js";
-import { ingestDocument, isLabRagConfigured } from "./labRag.js";
+import { ingestDocument } from "./labRag.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const KNOWLEDGE_DIR = path.resolve(__dirname, "../../content/lab-knowledge");
@@ -17,11 +17,8 @@ function titleFromFilename(filename) {
 }
 
 export async function seedLabContent() {
-  if (!isLabRagConfigured()) {
-    console.warn("Lab content seeding skipped: GEMINI_API_KEY is not configured.");
-    return { seeded: 0, skipped: 0 };
-  }
-
+  // No key check here: embeddings fall back to the local vectorizer, so the knowledge
+  // base can always be indexed even before any provider key is set.
   let filenames;
 
   try {

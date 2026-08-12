@@ -168,6 +168,11 @@ CREATE TABLE IF NOT EXISTS lab_documents (
 CREATE UNIQUE INDEX IF NOT EXISTS lab_documents_source_key_idx
   ON lab_documents (source_type, source_key);
 
+-- Records which embedding provider/model produced this document's vectors, so a
+-- provider change can be detected and the chunks re-embedded into one vector space.
+ALTER TABLE lab_documents
+  ADD COLUMN IF NOT EXISTS embedding_model TEXT NOT NULL DEFAULT 'unknown';
+
 CREATE TABLE IF NOT EXISTS lab_document_chunks (
   id BIGSERIAL PRIMARY KEY,
   document_id BIGINT NOT NULL REFERENCES lab_documents(id) ON DELETE CASCADE,

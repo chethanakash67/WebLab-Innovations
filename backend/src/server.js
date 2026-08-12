@@ -13,7 +13,7 @@ import productClaimsRouter from "./routes/productClaims.js";
 import labChatRouter from "./routes/labChat.js";
 import { emailNotificationStatus } from "./services/mailer.js";
 import { seedLabContent } from "./services/labContentSeed.js";
-import { loadChunkCacheFromDb } from "./services/labRag.js";
+import { loadChunkCacheFromDb, reembedIfProviderChanged } from "./services/labRag.js";
 
 const app = express();
 const port = Number(process.env.PORT || 10000);
@@ -140,6 +140,7 @@ logEmailNotificationStatus();
 initDatabase()
   .then(async () => {
     await seedLabContent().catch((error) => console.error("Lab content seed failed:", error));
+    await reembedIfProviderChanged().catch((error) => console.error("Lab re-embedding failed:", error));
     await loadChunkCacheFromDb().catch((error) => console.error("Lab chunk cache load failed:", error));
 
     app.listen(port, () => {

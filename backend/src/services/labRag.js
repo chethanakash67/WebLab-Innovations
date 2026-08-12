@@ -3,6 +3,7 @@ import { pool } from "../db/pool.js";
 const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 const GROQ_CHAT_URL = "https://api.groq.com/openai/v1/chat/completions";
 const COHERE_CHAT_URL = "https://api.cohere.com/v2/chat";
+const COHERE_EMBED_URL = "https://api.cohere.com/v2/embed";
 
 const DEFAULT_GROQ_MODELS = [
   "llama-3.3-70b-versatile",
@@ -28,8 +29,14 @@ const DEFAULT_COHERE_MODELS = [
   "command-r-plus",
 ];
 
+const GEMINI_EMBEDDING_DIM = 1536;
+
 const RETRIEVAL_TOP_K = 6;
-const RETRIEVAL_MIN_SCORE = 0.5;
+// The absolute floor is provider-dependent: the local hashing vectorizer produces much
+// lower cosine scores for a genuine match than a trained embedding model does, so a
+// shared threshold would either reject everything locally or admit noise on the APIs.
+const RETRIEVAL_MIN_SCORE_API = 0.5;
+const RETRIEVAL_MIN_SCORE_LOCAL = 0.12;
 const RETRIEVAL_SCORE_RATIO = 0.6;
 const CHUNK_SIZE = 1000;
 const CHUNK_OVERLAP = 150;
@@ -43,7 +50,7 @@ function envList(name, fallback) {
 }
 
 function embeddingModel() {
-  return process.env.GEMINI_EMBEDDING_MODEL || "text-embedding-004";
+  return process.env.GEMINI_EMBEDDING_MODEL || "gemini-embedding-001";
 }
 
 function groqModels() {
@@ -58,13 +65,6 @@ function cohereModels() {
   return envList("COHERE_CHAT_MODELS", DEFAULT_COHERE_MODELS);
 }
 
-// Embeddings always run on Gemini (retrieval needs one consistent vector space),
-// so this key gates retrieval regardless of which chat provider answers below.
-export function isLabRagConfigured() {
-  const apiKey = process.env.GEMINI_API_KEY;
-  return Boolean(apiKey && !apiKey.includes("your_gemini_api_key_here"));
-}
-
 function isKeyPresent(name) {
   const value = process.env[name];
   return Boolean(value && !value.includes("your_") && !value.includes("_here"));
@@ -72,6 +72,27 @@ function isKeyPresent(name) {
 
 export function isAnswerProviderConfigured() {
   return isKeyPresent("GROQ_API_KEY") || isKeyPresent("GEMINI_API_KEY") || isKeyPresent("COHERE_API_KEY");
+}
+
+// Retrieval works with or without an API key — the local vectorizer below is always
+// available as a last resort — so the assistant is "configured" as soon as some
+// provider can generate answers.
+export function isLabRagConfigured() {
+  return isAnswerProviderConfigured();
+}
+
+function cohereEmbeddingModel() {
+  return process.env.COHERE_EMBEDDING_MODEL || "embed-v4.0";
+}
+
+// The embedding provider is chosen by key presence and never switched mid-flight:
+// cosine similarity is only meaningful within a single vector space, so silently
+// falling back to another provider at query time would corrupt retrieval. If the
+// choice changes, indexed chunks are re-embedded (see reembedIfProviderChanged).
+export function embeddingProviderId() {
+  if (isKeyPresent("GEMINI_API_KEY")) return `gemini:${embeddingModel()}@${GEMINI_EMBEDDING_DIM}`;
+  if (isKeyPresent("COHERE_API_KEY")) return `cohere:${cohereEmbeddingModel()}`;
+  return `local:hash-${LOCAL_EMBEDDING_DIM}`;
 }
 
 function geminiApiKey() {
@@ -97,24 +118,114 @@ async function geminiFetch(path, body) {
   return response.json();
 }
 
-export async function embedText(text) {
-  const data = await geminiFetch(`/${embeddingModel()}:embedContent`, {
-    content: { parts: [{ text }] },
+async function cohereEmbed(texts, inputType) {
+  const response = await fetch(COHERE_EMBED_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.COHERE_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: cohereEmbeddingModel(),
+      texts,
+      input_type: inputType,
+      embedding_types: ["float"],
+    }),
   });
-  return data.embedding.values;
+
+  if (!response.ok) {
+    throw new Error(`Cohere embed failed: ${response.status} ${await response.text().catch(() => "")}`);
+  }
+
+  const data = await response.json();
+  return data.embeddings?.float || data.embeddings;
+}
+
+// Deterministic offline vectorizer: signed hashing over word unigrams/bigrams plus
+// character 4-grams, log-weighted and L2-normalised. Quality is well below a real
+// embedding model, but it needs no API key and keeps the bot usable on its own.
+const LOCAL_EMBEDDING_DIM = 1536;
+
+function hashString(value, seed) {
+  let hash = seed;
+  for (let i = 0; i < value.length; i += 1) {
+    hash = Math.imul(hash ^ value.charCodeAt(i), 0x01000193) >>> 0;
+  }
+  return hash >>> 0;
+}
+
+function localFeatures(text) {
+  const normalized = text.toLowerCase().replace(/[^a-z0-9\s]/g, " ");
+  const words = normalized.split(/\s+/).filter(Boolean);
+  const features = [];
+
+  for (let i = 0; i < words.length; i += 1) {
+    features.push(words[i]);
+    if (i + 1 < words.length) features.push(`${words[i]}_${words[i + 1]}`);
+  }
+
+  const condensed = words.join(" ");
+  for (let i = 0; i + 4 <= condensed.length; i += 1) {
+    features.push(`#${condensed.slice(i, i + 4)}`);
+  }
+
+  return features;
+}
+
+export function localEmbed(text) {
+  const counts = new Map();
+  for (const feature of localFeatures(text)) {
+    counts.set(feature, (counts.get(feature) || 0) + 1);
+  }
+
+  const vector = new Array(LOCAL_EMBEDDING_DIM).fill(0);
+
+  for (const [feature, count] of counts) {
+    const index = hashString(feature, 0x811c9dc5) % LOCAL_EMBEDDING_DIM;
+    const sign = hashString(feature, 0x9e3779b9) % 2 === 0 ? 1 : -1;
+    vector[index] += sign * (1 + Math.log(count));
+  }
+
+  let norm = 0;
+  for (const value of vector) norm += value * value;
+  norm = Math.sqrt(norm);
+  if (norm === 0) return vector;
+
+  return vector.map((value) => value / norm);
+}
+
+async function embedWithActiveProvider(texts, inputType) {
+  if (texts.length === 0) return [];
+
+  const providerId = embeddingProviderId();
+
+  if (providerId.startsWith("gemini:")) {
+    const data = await geminiFetch(`/${embeddingModel()}:batchEmbedContents`, {
+      requests: texts.map((text) => ({
+        model: `models/${embeddingModel()}`,
+        content: { parts: [{ text }] },
+        // gemini-embedding-001 defaults to 3072 dims; pinning keeps stored vectors
+        // compact and stable if the model's default ever changes.
+        outputDimensionality: GEMINI_EMBEDDING_DIM,
+      })),
+    });
+    return data.embeddings.map((embedding) => embedding.values);
+  }
+
+  if (providerId.startsWith("cohere:")) {
+    return cohereEmbed(texts, inputType);
+  }
+
+  return texts.map((text) => localEmbed(text));
+}
+
+export async function embedText(text) {
+  const [embedding] = await embedWithActiveProvider([text], "search_query");
+  return embedding;
 }
 
 export async function embedBatch(texts) {
-  if (texts.length === 0) return [];
-
-  const data = await geminiFetch(`/${embeddingModel()}:batchEmbedContents`, {
-    requests: texts.map((text) => ({
-      model: `models/${embeddingModel()}`,
-      content: { parts: [{ text }] },
-    })),
-  });
-
-  return data.embeddings.map((embedding) => embedding.values);
+  return embedWithActiveProvider(texts, "search_document");
 }
 
 function splitIntoParagraphs(text) {
@@ -230,6 +341,42 @@ export function chunkCacheSize() {
   return chunkCache.length;
 }
 
+// Vectors from different providers aren't comparable, so any document indexed under a
+// different provider is re-embedded from its stored chunk text before it's served.
+export async function reembedIfProviderChanged() {
+  const providerId = embeddingProviderId();
+
+  const stale = await pool.query(
+    `SELECT id FROM lab_documents WHERE status = 'ready' AND embedding_model IS DISTINCT FROM $1`,
+    [providerId],
+  );
+
+  if (stale.rows.length === 0) return 0;
+
+  for (const row of stale.rows) {
+    const chunks = await pool.query(
+      `SELECT id, content FROM lab_document_chunks WHERE document_id = $1 ORDER BY chunk_index`,
+      [row.id],
+    );
+
+    if (chunks.rows.length === 0) continue;
+
+    const embeddings = await embedBatch(chunks.rows.map((chunk) => chunk.content));
+
+    for (let i = 0; i < chunks.rows.length; i += 1) {
+      await pool.query(`UPDATE lab_document_chunks SET embedding = $1 WHERE id = $2`, [
+        embeddings[i],
+        chunks.rows[i].id,
+      ]);
+    }
+
+    await pool.query(`UPDATE lab_documents SET embedding_model = $1 WHERE id = $2`, [providerId, row.id]);
+  }
+
+  console.log(`Lab embeddings: re-embedded ${stale.rows.length} document(s) for provider ${providerId}.`);
+  return stale.rows.length;
+}
+
 export async function ingestDocument({ title, sourceType, sourceKey, contentHash, content, uploadedBy = null }) {
   const chunks = chunkText(content);
 
@@ -255,17 +402,18 @@ export async function ingestDocument({ title, sourceType, sourceKey, contentHash
       documentId = existing.rows[0].id;
       await client.query(
         `UPDATE lab_documents
-         SET title = $1, content_hash = $2, uploaded_by = $3, status = 'ready', created_at = NOW()
-         WHERE id = $4`,
-        [title, contentHash, uploadedBy, documentId],
+         SET title = $1, content_hash = $2, uploaded_by = $3, status = 'ready',
+             embedding_model = $4, created_at = NOW()
+         WHERE id = $5`,
+        [title, contentHash, uploadedBy, embeddingProviderId(), documentId],
       );
       await client.query(`DELETE FROM lab_document_chunks WHERE document_id = $1`, [documentId]);
     } else {
       const inserted = await client.query(
-        `INSERT INTO lab_documents (title, source_type, source_key, content_hash, uploaded_by, status)
-         VALUES ($1, $2, $3, $4, $5, 'ready')
+        `INSERT INTO lab_documents (title, source_type, source_key, content_hash, uploaded_by, status, embedding_model)
+         VALUES ($1, $2, $3, $4, $5, 'ready', $6)
          RETURNING id`,
-        [title, sourceType, sourceKey, contentHash, uploadedBy],
+        [title, sourceType, sourceKey, contentHash, uploadedBy, embeddingProviderId()],
       );
       documentId = inserted.rows[0].id;
     }
@@ -324,8 +472,11 @@ export async function retrieve(question, topK = RETRIEVAL_TOP_K) {
     .map((chunk) => ({ chunk, score: cosineSimilarity(queryEmbedding, chunk.embedding) }))
     .sort((a, b) => b.score - a.score);
 
+  const minScore = embeddingProviderId().startsWith("local:")
+    ? RETRIEVAL_MIN_SCORE_LOCAL
+    : RETRIEVAL_MIN_SCORE_API;
   const topScore = scored[0]?.score || 0;
-  const threshold = Math.max(RETRIEVAL_MIN_SCORE, topScore * RETRIEVAL_SCORE_RATIO);
+  const threshold = Math.max(minScore, topScore * RETRIEVAL_SCORE_RATIO);
 
   return scored.filter((entry) => entry.score >= threshold).slice(0, topK);
 }

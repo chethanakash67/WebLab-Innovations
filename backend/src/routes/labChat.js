@@ -8,7 +8,6 @@ import {
   answerQuestion,
   deleteDocument,
   ingestDocument,
-  isLabRagConfigured,
   listDocuments,
   loadChunkCacheFromDb,
 } from "../services/labRag.js";
@@ -186,10 +185,6 @@ router.post(
   requireLabAdmin,
   upload.single("file"),
   asyncHandler(async (request, response) => {
-    if (!isLabRagConfigured()) {
-      return response.status(503).json({ success: false, message: "GEMINI_API_KEY is not configured on the backend." });
-    }
-
     if (!request.file) {
       return response.status(400).json({ success: false, message: "No file uploaded." });
     }
@@ -258,10 +253,6 @@ router.post(
   "/admin/reindex-site-content",
   requireLabAdmin,
   asyncHandler(async (_request, response) => {
-    if (!isLabRagConfigured()) {
-      return response.status(503).json({ success: false, message: "GEMINI_API_KEY is not configured on the backend." });
-    }
-
     const result = await seedLabContent();
     await loadChunkCacheFromDb();
 
