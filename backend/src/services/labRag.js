@@ -481,16 +481,29 @@ export async function retrieve(question, topK = RETRIEVAL_TOP_K) {
   return scored.filter((entry) => entry.score >= threshold).slice(0, topK);
 }
 
+// NO_ANSWER is a sentinel, not a message to the visitor: retrieval almost always returns
+// *something*, so "the context doesn't cover this" has to come from the model itself.
+// The caller swaps it for a human reply and uses it to flag a knowledge gap.
+const NO_ANSWER_SENTINEL = "NO_ANSWER";
+
 const SYSTEM_PROMPT = `You are the AigleOn Labs "Lab" assistant, embedded on the AigleOn Labs website.
 Answer ONLY using the provided context passages about AigleOn Labs' services, pricing, process, story, and products.
-If the question is unrelated to AigleOn Labs, the Lab, or its offerings, politely explain that you can only help with questions about AigleOn Labs and redirect the visitor to ask something in scope.
-Never invent facts that are not in the context. Keep answers concise and conversational (2-5 sentences unless more detail is clearly requested).`;
+Never invent facts that are not in the context. Keep answers concise and conversational (2-5 sentences unless more detail is clearly requested).
+
+If the context passages do not actually contain the information needed to answer the question — including when the visitor asks about something AigleOn Labs may not offer — reply with exactly this and nothing else:
+${NO_ANSWER_SENTINEL}
+
+Do not apologise, explain, or add any other words when you reply with ${NO_ANSWER_SENTINEL}.`;
+
+function isNoAnswer(text) {
+  return new RegExp(`^\\s*${NO_ANSWER_SENTINEL}\\b`, "i").test(text || "");
+}
 
 function buildUserPrompt(question, context) {
   return `Context:\n${context}\n\nQuestion: ${question}`;
 }
 
-async function callGroq(model, userPrompt) {
+async function callGroq(model, systemPrompt, userPrompt, maxTokens) {
   const response = await fetch(GROQ_CHAT_URL, {
     method: "POST",
     headers: {
@@ -500,11 +513,11 @@ async function callGroq(model, userPrompt) {
     body: JSON.stringify({
       model,
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
+        { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ],
       temperature: 0.3,
-      max_tokens: 512,
+      max_tokens: maxTokens,
     }),
   });
 
@@ -516,17 +529,17 @@ async function callGroq(model, userPrompt) {
   return data.choices?.[0]?.message?.content || "";
 }
 
-async function callGemini(model, userPrompt) {
+async function callGemini(model, systemPrompt, userPrompt, maxTokens) {
   const data = await geminiFetch(`/${model}:generateContent`, {
-    systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+    systemInstruction: { parts: [{ text: systemPrompt }] },
     contents: [{ role: "user", parts: [{ text: userPrompt }] }],
-    generationConfig: { temperature: 0.3, maxOutputTokens: 512 },
+    generationConfig: { temperature: 0.3, maxOutputTokens: maxTokens },
   });
 
   return data.candidates?.[0]?.content?.parts?.map((part) => part.text).join("") || "";
 }
 
-async function callCohere(model, userPrompt) {
+async function callCohere(model, systemPrompt, userPrompt, maxTokens) {
   const response = await fetch(COHERE_CHAT_URL, {
     method: "POST",
     headers: {
@@ -536,11 +549,11 @@ async function callCohere(model, userPrompt) {
     body: JSON.stringify({
       model,
       messages: [
-        { role: "system", content: SYSTEM_PROMPT },
+        { role: "system", content: systemPrompt },
         { role: "user", content: userPrompt },
       ],
       temperature: 0.3,
-      max_tokens: 512,
+      max_tokens: maxTokens,
     }),
   });
 
@@ -555,16 +568,17 @@ async function callCohere(model, userPrompt) {
 // Tries Groq's 5 models, then Gemini's 5, then Cohere's 5 (15 total) — moves to the
 // next model/provider on any failure so a single down provider or rate limit doesn't
 // take the assistant offline. Providers without a configured API key are skipped entirely.
-export async function generateAnswer(question, matches) {
-  const context = matches
-    .map((match, index) => `[${index + 1}] (${match.chunk.documentTitle})\n${match.chunk.content}`)
-    .join("\n\n");
-  const userPrompt = buildUserPrompt(question, context);
-
+async function runWithFallback({ systemPrompt, userPrompt, maxTokens, label }) {
   const attempts = [
-    ...(isKeyPresent("GROQ_API_KEY") ? groqModels().map((model) => () => callGroq(model, userPrompt)) : []),
-    ...(isKeyPresent("GEMINI_API_KEY") ? geminiChatModels().map((model) => () => callGemini(model, userPrompt)) : []),
-    ...(isKeyPresent("COHERE_API_KEY") ? cohereModels().map((model) => () => callCohere(model, userPrompt)) : []),
+    ...(isKeyPresent("GROQ_API_KEY")
+      ? groqModels().map((model) => () => callGroq(model, systemPrompt, userPrompt, maxTokens))
+      : []),
+    ...(isKeyPresent("GEMINI_API_KEY")
+      ? geminiChatModels().map((model) => () => callGemini(model, systemPrompt, userPrompt, maxTokens))
+      : []),
+    ...(isKeyPresent("COHERE_API_KEY")
+      ? cohereModels().map((model) => () => callCohere(model, systemPrompt, userPrompt, maxTokens))
+      : []),
   ];
 
   if (attempts.length === 0) {
@@ -575,19 +589,81 @@ export async function generateAnswer(question, matches) {
 
   for (const attempt of attempts) {
     try {
-      const answer = await attempt();
-      if (answer && answer.trim()) return answer;
+      const result = await attempt();
+      if (result && result.trim()) return result;
     } catch (error) {
       lastError = error;
-      console.warn("Lab chat answer provider failed, trying next:", error.message);
+      console.warn(`Lab ${label} provider failed, trying next:`, error.message);
     }
   }
 
-  throw lastError || new Error("All answer providers returned an empty response.");
+  throw lastError || new Error(`All ${label} providers returned an empty response.`);
 }
 
-const SCOPED_REFUSAL =
+export async function generateAnswer(question, matches) {
+  const context = matches
+    .map((match, index) => `[${index + 1}] (${match.chunk.documentTitle})\n${match.chunk.content}`)
+    .join("\n\n");
+
+  return runWithFallback({
+    systemPrompt: SYSTEM_PROMPT,
+    userPrompt: buildUserPrompt(question, context),
+    maxTokens: 512,
+    label: "chat answer",
+  });
+}
+
+const RELEVANCE_PROMPT = `You decide whether a website visitor's question is directed at AigleOn Labs, a digital agency that builds websites, SEO/AEO visibility systems, and AI automations for brands.
+
+Answer YES if the question is about the agency or hiring it in any way — its services, pricing, packages, process, timelines, team, founders, portfolio, past clients, products, support, contracts, availability, or whether it can build/do something for the visitor.
+
+Answer NO for anything else: general knowledge, trivia, current events, coding help, jokes, or questions about unrelated companies.
+
+Reply with exactly one word: YES or NO.`;
+
+// The no-match path covers two very different cases: a genuinely off-topic question, and
+// an on-topic question the knowledge base simply doesn't cover. Retrieval scores can't
+// tell them apart (both score low), so the question is classified before deciding whether
+// it's worth escalating to the founders.
+export async function isAgencyRelated(question) {
+  try {
+    const verdict = await runWithFallback({
+      systemPrompt: RELEVANCE_PROMPT,
+      userPrompt: `Question: ${question}`,
+      maxTokens: 5,
+      label: "relevance check",
+    });
+
+    return /\byes\b/i.test(verdict);
+  } catch (error) {
+    // Providers are down — the assistant is broken anyway. Stay quiet rather than
+    // escalating every question that arrives during an outage.
+    console.warn("Lab relevance check failed, not escalating:", error.message);
+    return false;
+  }
+}
+
+const OFF_TOPIC_REFUSAL =
   "I can only help with questions about AigleOn Labs — our services, pricing, process, or the Lab's AI systems. Try asking me something about what we build or offer.";
+
+// Deliberately does not promise a reply: the chat collects no contact details, so the
+// founders receive the question but have no way to respond to this visitor directly.
+const KNOWLEDGE_GAP_REPLY =
+  "That's a fair question about AigleOn Labs, but it isn't covered in what I know yet. I've flagged it to the founders so they can add it. For a direct answer, reach out through the contact page or WhatsApp.";
+
+// Both "nothing retrieved" and "retrieved but the passages don't cover it" land here.
+// The relevance check decides whether it's a gap in what we know about the agency
+// (worth telling the founders) or simply an off-topic question (worth ignoring).
+async function unansweredResult(question) {
+  const agencyRelated = await isAgencyRelated(question);
+
+  return {
+    answer: agencyRelated ? KNOWLEDGE_GAP_REPLY : OFF_TOPIC_REFUSAL,
+    matched: false,
+    sources: [],
+    agencyRelated,
+  };
+}
 
 export async function answerQuestion(question) {
   if (!isLabRagConfigured()) {
@@ -595,26 +671,35 @@ export async function answerQuestion(question) {
       answer: "The Labs assistant isn't fully configured yet — please check back soon.",
       matched: false,
       sources: [],
+      agencyRelated: false,
     };
   }
 
   const matches = await retrieve(question);
 
   if (matches.length === 0) {
-    return { answer: SCOPED_REFUSAL, matched: false, sources: [] };
+    return unansweredResult(question);
   }
 
   const sources = [...new Set(matches.map((match) => match.chunk.documentTitle))].map((title) => ({ title }));
 
   try {
     const answer = await generateAnswer(question, matches);
-    return { answer, matched: true, sources };
+
+    // Retrieval pulled something in, but the model reports the passages don't actually
+    // answer the question — that's a knowledge gap, not an answer.
+    if (isNoAnswer(answer)) {
+      return unansweredResult(question);
+    }
+
+    return { answer, matched: true, sources, agencyRelated: true };
   } catch (error) {
     console.error("Lab chat generation failed across all providers:", error.message);
     return {
       answer: "I found relevant information but couldn't generate a response just now — please try again in a moment.",
       matched: true,
       sources,
+      agencyRelated: true,
     };
   }
 }

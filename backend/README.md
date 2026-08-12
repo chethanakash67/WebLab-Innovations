@@ -23,52 +23,28 @@ Create a Render PostgreSQL database and a Web Service from this `backend` folder
 - Set `DATABASE_SSL=true` if your database connection requires SSL
 - `FRONTEND_URL` accepts a comma-separated list of frontend origins, for example `https://theaigleonlabs.dev,https://your-preview.vercel.app`
 - Set `BACKEND_PUBLIC_URL` to the deployed backend URL so review approval links point to the right service
-- Email delivery uses EmailJS over HTTPS. Set `EMAILJS_SERVICE_ID`, `EMAILJS_PUBLIC_KEY`, `EMAILJS_PRIVATE_KEY`, `EMAILJS_CONTACT_TEMPLATE_ID`, `EMAILJS_REVIEW_TEMPLATE_ID`, `CONTACT_TO`, and optionally `REVIEW_TO`.
+- Email delivery uses the Resend API over HTTPS. Set `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `CONTACT_TO`, and optionally `REVIEW_TO`.
 
-## EmailJS Templates
+## Email
 
-The backend sends from the server only; do not add the private key to frontend env files.
+All outbound mail goes through Resend (`src/services/mailer.js`); there is no other mail
+provider. The sending domain in `RESEND_FROM_EMAIL` must be verified in the Resend
+dashboard or sends fail with a 403.
 
-Contact template setup:
+Messages sent:
 
-- To Email: `{{to_email}}`
-- Reply To: `{{reply_to}}`
-- Subject: `{{subject}}`
-- Content: `{{{body_html}}}`
+- Contact enquiry confirmation (visitor) and copy (admin)
+- Free-audit request confirmation (visitor) and copy (admin)
+- Research subscription confirmation (subscriber) and copy (admin)
+- Review submission confirmation (reviewer) and approval link (admin)
+- Lab admin one-time sign-in code (`LAB_ADMIN_EMAILS`)
+- Lab assistant knowledge-gap alert (`LAB_UNANSWERED_TO`) — sent only when a visitor asks
+  an agency-related question the assistant cannot answer. Off-topic questions never
+  trigger mail. Repeat questions are suppressed for `LAB_UNANSWERED_DEDUPE_DAYS` and
+  alerts are capped at `LAB_UNANSWERED_MAX_PER_HOUR`.
 
-The backend calls this same template twice: once for the AigleOn Labs notification and once for the customer confirmation.
-
-Contact template params:
-
-- `to_email`
-- `reply_to`
-- `from_name`
-- `from_email`
-- `name`
-- `email`
-- `phone`
-- `project_type`
-- `project_goal`
-- `timeline`
-- `budget`
-- `subject`
-- `body_text`
-- `body_html`
-- `message`
-
-Review template params:
-
-- `to_email`
-- `reply_to`
-- `from_name`
-- `from_email`
-- `name`
-- `email`
-- `role`
-- `rating`
-- `quote`
-- `approve_url`
-- `body_text`
+Outside production, mail that cannot be delivered (missing key or unverified domain) is
+logged to the console instead so local development still works.
 
 ## API
 
@@ -77,3 +53,7 @@ Review template params:
 - `GET /api/reviews`
 - `POST /api/reviews`
 - `GET /api/reviews/:id/approve?token=...`
+- `POST /api/lab-chat/ask`
+- `POST /api/lab-chat/admin/login/request`, `.../verify`
+- `GET|POST /api/lab-chat/admin/documents`, `DELETE /api/lab-chat/admin/documents/:id`
+- `POST /api/lab-chat/admin/reindex-site-content`

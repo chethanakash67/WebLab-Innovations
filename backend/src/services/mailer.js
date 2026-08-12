@@ -784,3 +784,89 @@ export async function sendLabAdminOtpEmail({ email, code }) {
     return false;
   }
 }
+
+// -------------------------------------------------------------
+// 6. LAB UNANSWERED QUESTION ALERT (founders only)
+// -------------------------------------------------------------
+
+const DEFAULT_UNANSWERED_TO = "chethanakash67@gmail.com,saividesh29@gmail.com";
+
+export function labUnansweredRecipients() {
+  return (process.env.LAB_UNANSWERED_TO || DEFAULT_UNANSWERED_TO)
+    .split(",")
+    .map((email) => email.trim())
+    .filter(Boolean);
+}
+
+export function labUnansweredEmailStatus() {
+  return notificationStatus([]);
+}
+
+export async function sendLabUnansweredQuestionEmail({ question, sessionId, askedAt }) {
+  const recipients = labUnansweredRecipients();
+
+  if (recipients.length === 0) {
+    return false;
+  }
+
+  const config = getResendConfig();
+
+  if (!config) {
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`[Lab Unanswered] Resend not configured. Question for ${recipients.join(", ")}: ${question}`);
+      return true;
+    }
+    return false;
+  }
+
+  const fromAddress = process.env.RESEND_FROM_EMAIL || "info@theaigleonlabs.dev";
+  const when = (askedAt || new Date()).toISOString();
+  const subject = "Lab assistant couldn't answer a question about us";
+
+  const text = [
+    "The Lab assistant received a question about AigleOn Labs that its knowledge base could not answer.",
+    "",
+    `Question: ${question}`,
+    `Asked at: ${when}`,
+    `Session: ${sessionId || "unknown"}`,
+    "",
+    "The visitor did not provide contact details, so no reply is possible.",
+    "Consider adding this to the Lab knowledge base so the assistant can answer it next time.",
+  ].join("\n");
+
+  const html = `
+    <div style="margin:0;padding:0;font-family:Arial,sans-serif;color:#ffffff;">
+      <div style="max-width:620px;margin:0 auto;padding:24px 16px;">
+        <div style="background:#0b0d0f;border:1px solid rgba(54,184,255,0.4);padding:32px;">
+          <p style="margin:0 0 6px;color:#36b8ff;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;">
+            AigleOn Labs | Knowledge Gap
+          </p>
+          <h2 style="margin:0 0 20px;color:#ffffff;font-size:22px;line-height:1.3;">
+            The assistant couldn't answer a question about us
+          </h2>
+          <div style="background:#11151a;border:1px solid #20252b;padding:20px;margin-bottom:20px;">
+            <p style="margin:0;color:#ffffff;font-size:15px;line-height:1.6;">
+              &ldquo;${escapeHtml(question)}&rdquo;
+            </p>
+          </div>
+          <table style="width:100%;border-collapse:collapse;font-size:13px;color:#9ca3aa;margin-bottom:20px;">
+            <tr>
+              <td style="padding:6px 0;width:90px;">Asked at:</td>
+              <td style="padding:6px 0;color:#ffffff;">${escapeHtml(when)}</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 0;">Session:</td>
+              <td style="padding:6px 0;color:#ffffff;">${escapeHtml(sessionId || "unknown")}</td>
+            </tr>
+          </table>
+          <p style="margin:0;color:#9ca3aa;font-size:13px;line-height:1.6;">
+            The visitor did not provide contact details, so no reply is possible. Consider adding
+            this topic to the Lab knowledge base so the assistant can answer it next time.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  return sendResendEmail({ to: recipients, from: fromAddress, subject, html, text });
+}

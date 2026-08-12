@@ -209,3 +209,8 @@ CREATE TABLE IF NOT EXISTS lab_chat_logs (
 CREATE INDEX IF NOT EXISTS lab_chat_logs_created_idx
   ON lab_chat_logs (created_at DESC);
 
+-- Set when an agency-related question the assistant could not answer was emailed to the
+-- founders. Used to avoid re-sending the same question over and over.
+ALTER TABLE lab_chat_logs
+  ADD COLUMN IF NOT EXISTS escalated BOOLEAN NOT NULL DEFAULT FALSE;
+

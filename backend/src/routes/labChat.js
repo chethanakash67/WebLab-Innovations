@@ -20,7 +20,7 @@ import {
   requireLabAdmin,
   verifyOtp,
 } from "../services/labAuth.js";
-import { sendLabAdminOtpEmail } from "../services/mailer.js";
+import { sendLabAdminOtpEmail, sendLabUnansweredQuestionEmail } from "../services/mailer.js";
 
 const router = express.Router();
 
@@ -72,6 +72,55 @@ function isAskRateLimited(ip) {
   return bucket.count > ASK_RATE_LIMIT;
 }
 
+function envNumber(name, fallback) {
+  const value = Number(process.env[name]);
+  return Number.isFinite(value) && value > 0 ? value : fallback;
+}
+
+// Only escalate a question the founders haven't already been told about, and cap how many
+// alerts can go out per hour so a visitor hammering the box can't flood their inbox.
+async function shouldEscalate(question) {
+  const dedupeDays = envNumber("LAB_UNANSWERED_DEDUPE_DAYS", 7);
+  const maxPerHour = envNumber("LAB_UNANSWERED_MAX_PER_HOUR", 10);
+
+  const duplicate = await pool.query(
+    `SELECT 1 FROM lab_chat_logs
+     WHERE escalated = TRUE
+       AND lower(btrim(question)) = lower(btrim($1))
+       AND created_at > NOW() - ($2 || ' days')::interval
+     LIMIT 1`,
+    [question, String(dedupeDays)],
+  );
+
+  if (duplicate.rows.length > 0) {
+    return false;
+  }
+
+  const recent = await pool.query(
+    `SELECT COUNT(*)::int AS count FROM lab_chat_logs
+     WHERE escalated = TRUE AND created_at > NOW() - INTERVAL '1 hour'`,
+  );
+
+  if (recent.rows[0].count >= maxPerHour) {
+    console.warn("Lab unanswered-question alert suppressed: hourly cap reached.");
+    return false;
+  }
+
+  return true;
+}
+
+async function escalateUnansweredQuestion({ logId, question, sessionId }) {
+  if (!(await shouldEscalate(question))) {
+    return;
+  }
+
+  const sent = await sendLabUnansweredQuestionEmail({ question, sessionId, askedAt: new Date() });
+
+  if (sent && logId) {
+    await pool.query(`UPDATE lab_chat_logs SET escalated = TRUE WHERE id = $1`, [logId]);
+  }
+}
+
 router.post(
   "/ask",
   asyncHandler(async (request, response) => {
@@ -88,14 +137,27 @@ router.post(
     const { question, sessionId } = parsed.data;
     const result = await answerQuestion(question);
 
-    pool
-      .query(
-        `INSERT INTO lab_chat_logs (session_id, question, answer, matched) VALUES ($1, $2, $3, $4)`,
-        [sessionId || null, question, result.answer, result.matched],
-      )
-      .catch((error) => console.warn("Lab chat log insert failed:", error.message));
+    let logId = null;
 
-    return response.json({ success: true, ...result });
+    try {
+      const inserted = await pool.query(
+        `INSERT INTO lab_chat_logs (session_id, question, answer, matched) VALUES ($1, $2, $3, $4) RETURNING id`,
+        [sessionId || null, question, result.answer, result.matched],
+      );
+      logId = inserted.rows[0].id;
+    } catch (error) {
+      console.warn("Lab chat log insert failed:", error.message);
+    }
+
+    // The visitor shouldn't wait on an outbound email, so alert the founders after replying.
+    const { agencyRelated, ...payload } = result;
+    response.json({ success: true, ...payload });
+
+    if (!result.matched && agencyRelated) {
+      escalateUnansweredQuestion({ logId, question, sessionId }).catch((error) =>
+        console.error("Lab unanswered-question alert failed:", error.message),
+      );
+    }
   }),
 );
 
