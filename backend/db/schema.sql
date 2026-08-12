@@ -125,13 +125,28 @@ CREATE TABLE IF NOT EXISTS prebuilt_assets (
   tagline TEXT NOT NULL DEFAULT '',
   description TEXT NOT NULL DEFAULT '',
   price TEXT NOT NULL,
+  price_inr TEXT,
+  price_usd TEXT,
   original_price TEXT,
+  original_price_inr TEXT,
+  original_price_usd TEXT,
   badge TEXT,
   features TEXT[] NOT NULL DEFAULT '{}',
+  limitations TEXT[] NOT NULL DEFAULT '{}',
+  growth_tier_link TEXT,
   demo_url TEXT,
+  live_soon BOOLEAN NOT NULL DEFAULT FALSE,
   published BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS price_inr TEXT;
+ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS price_usd TEXT;
+ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS original_price_inr TEXT;
+ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS original_price_usd TEXT;
+ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS limitations TEXT[] DEFAULT '{}';
+ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS growth_tier_link TEXT;
+ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS live_soon BOOLEAN DEFAULT FALSE;
 
 CREATE INDEX IF NOT EXISTS prebuilt_assets_category_idx
   ON prebuilt_assets (category);

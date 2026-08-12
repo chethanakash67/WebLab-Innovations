@@ -11,6 +11,18 @@ const schemaPath = path.resolve(currentDir, "../../db/schema.sql");
 export async function initDatabase() {
   const schema = await fs.readFile(schemaPath, "utf8");
   await pool.query(schema);
+
+  // Ensure prebuilt_assets table has all required columns
+  await pool.query(`
+    ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS price_inr TEXT;
+    ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS price_usd TEXT;
+    ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS original_price_inr TEXT;
+    ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS original_price_usd TEXT;
+    ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS limitations TEXT[] DEFAULT '{}';
+    ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS growth_tier_link TEXT;
+    ALTER TABLE prebuilt_assets ADD COLUMN IF NOT EXISTS live_soon BOOLEAN DEFAULT FALSE;
+  `);
+
   await seedLibraryCatalog();
   await seedPastClients();
   await seedPrebuiltAssets();

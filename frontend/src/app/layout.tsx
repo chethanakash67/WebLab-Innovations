@@ -80,6 +80,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { RegionProvider } from "@/components/providers/RegionContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -88,28 +90,30 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${syne.variable}`}>
       <body className="min-h-screen bg-background text-foreground antialiased">
-        <BackToTop />
-        <LeadCapturePopup />
-        <ServerWarmup />
-        <DeviceNotice />
-        <Script
-          id="scroll-restoration"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if (window.location.hash) {
-                  sessionStorage.setItem('scrollHash', window.location.hash);
-                  history.replaceState(null, null, window.location.pathname + window.location.search);
-                }
-                if ('scrollRestoration' in history) {
-                  history.scrollRestoration = 'manual';
-                }
-              } catch (e) {}
-            `,
-          }}
-        />
-        {children}
+        <RegionProvider>
+          <BackToTop />
+          <LeadCapturePopup />
+          <ServerWarmup />
+          <DeviceNotice />
+          <Script
+            id="scroll-restoration"
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                try {
+                  if (window.location.hash) {
+                    sessionStorage.setItem('scrollHash', window.location.hash);
+                    history.replaceState(null, null, window.location.pathname + window.location.search);
+                  }
+                  if ('scrollRestoration' in history) {
+                    history.scrollRestoration = 'manual';
+                  }
+                } catch (e) {}
+              `,
+            }}
+          />
+          {children}
+        </RegionProvider>
       </body>
     </html>
   );
