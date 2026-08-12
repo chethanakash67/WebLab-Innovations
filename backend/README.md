@@ -25,6 +25,14 @@ Create a Render PostgreSQL database and a Web Service from this `backend` folder
 - Set `BACKEND_PUBLIC_URL` to the deployed backend URL so review approval links point to the right service
 - Email delivery uses the Resend API over HTTPS. Set `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `CONTACT_TO`, and optionally `REVIEW_TO`.
 
+## Lab assistant knowledge base
+
+Everything the Lab chat assistant knows lives in `data/` as Markdown — it is never
+hard-coded in the source. Add or edit a `.md` file there and restart the backend (or use
+Admin → Reindex site content on the Lab page); only changed files are re-indexed, and
+deleting a file removes that knowledge. Subfolders are supported and files prefixed with
+`_` are ignored. See `data/_README.md` for the full conventions.
+
 ## Email
 
 All outbound mail goes through Resend (`src/services/mailer.js`); there is no other mail
