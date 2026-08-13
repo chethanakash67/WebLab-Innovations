@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
+import RegionSelector from "@/components/ui/RegionSelector";
 import { useReactiveGlow } from "@/hooks/useReactiveGlow";
 import { LibraryCatalogItem } from "@/lib/library";
 
@@ -146,6 +147,18 @@ export default function Hero() {
       {/* Hero Ambient Glow Rings */}
       <div className="hero-orbit hero-orbit-one" style={{ zIndex: 1 }} />
       <div className="hero-orbit hero-orbit-two" style={{ zIndex: 1 }} />
+
+      {/* Top Right Region/Currency Dropdown - Above Hero Background Image */}
+      <div
+        style={{
+          position: "absolute",
+          top: "110px",
+          right: "24px",
+          zIndex: 100,
+        }}
+      >
+        <RegionSelector />
+      </div>
 
       {/* Centered Hero Content Container */}
       <div 
