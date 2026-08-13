@@ -19,7 +19,7 @@ interface ProblemOption {
   id: string;
   label: string;
   sub: string;
-  icon: React.ElementType;
+  icon: React.ElementType<any>;
 }
 
 const PROBLEM_OPTIONS: ProblemOption[] = [
