@@ -168,9 +168,9 @@ export interface Service {
 export const services: Service[] = [
   {
     id: "seo-aeo",
-    title: "Brand Audit and Custom Stratergy",
+    title: "Brand Audit and Custom Strategy",
     description:
-      "A Detailed Audit will be conducted for brand, as an extension of generic audit, to know more details about it. After that a custom stratergy will be made according to the metrics we got from audit.",
+      "A Detailed Audit will be conducted for brand, as an extension of generic audit, to know more details about it. After that a custom strategy will be made according to the metrics we got from audit.",
     icon: "Search",
   },
   {

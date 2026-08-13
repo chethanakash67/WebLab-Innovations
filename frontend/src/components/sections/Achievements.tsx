@@ -74,7 +74,7 @@ export default function Achievements() {
       {/* Accent glow */}
       <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] rounded-full bg-primary/5 blur-[120px] pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto">
+      <div className="relative z-10 mx-auto">
         <div className="achievements-meta text-center mb-8">
           <SectionBadge label="Statistics" number="05" />
           <p className="text-muted text-xs tracking-[0.3em] uppercase">

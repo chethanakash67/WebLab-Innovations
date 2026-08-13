@@ -323,6 +323,49 @@ body::before {
   }
 }
 
+/* Shared horizontal page inset — matches .section-padding's left/right scale
+   (24 / 48 / 80) so every section's content aligns to the same edges, even the
+   ones that use .section-rhythm and manage their own horizontal padding. */
+.page-inset {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+@media (min-width: 768px) {
+  .page-inset {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .page-inset {
+    padding-left: 80px;
+    padding-right: 80px;
+  }
+}
+
+/* Vertical-only section rhythm — matches .section-padding so sections that
+   manage their own horizontal padding still share the same vertical cadence. */
+.section-rhythm {
+  padding-top: 120px;
+  padding-bottom: 120px;
+}
+
+@media (min-width: 768px) {
+  .section-rhythm {
+    padding-top: 160px;
+    padding-bottom: 160px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .section-rhythm {
+    padding-top: 180px;
+    padding-bottom: 180px;
+  }
+}
+
 /* ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ Reveal Clip ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ */
 .clip-reveal {
   clip-path: inset(0 0 100% 0);
@@ -4512,9 +4555,21 @@ body::before {
   }
 }
 
-/* Interactive Customer System */
+/* Interactive Customer System — share the standard section rhythm */
 .customer-system-section.section-padding {
-  padding: clamp(92px, 8vw, 138px) clamp(20px, 5vw, 80px);
+  padding: 120px clamp(20px, 5vw, 80px);
+}
+
+@media (min-width: 768px) {
+  .customer-system-section.section-padding {
+    padding: 160px clamp(20px, 5vw, 80px);
+  }
+}
+
+@media (min-width: 1280px) {
+  .customer-system-section.section-padding {
+    padding: 180px clamp(20px, 5vw, 80px);
+  }
 }
 
 .customer-system-header {
@@ -4981,7 +5036,7 @@ body::before {
 
 @media (max-width: 767px) {
   .customer-system-section.section-padding {
-    padding: 82px var(--mobile-gutter);
+    padding: 120px var(--mobile-gutter);
   }
 
   .customer-system-header {
@@ -7510,7 +7565,7 @@ body {
   }
 
   .service-display {
-    min-height: clamp(300px, 76vw, 420px);
+    min-height: clamp(220px, 58vw, 340px);
     padding: 18px 0 8px;
   }
 
@@ -11607,4 +11662,98 @@ section:hover .section-marker-line,
     font-size: 10.5px !important;
     gap: 6px !important;
   }
+}
+
+/* ============================================================
+   Global design-polish layer
+   Safe, low-specificity enhancements that apply site-wide.
+   Excludes transform/opacity transitions so GSAP / framer-motion
+   animations are never double-driven.
+   ============================================================ */
+
+/* Smooth, consistent interaction feedback everywhere a component
+   doesn't already define its own transition. */
+a,
+button {
+  transition: color 200ms ease, background-color 200ms ease,
+    border-color 200ms ease, box-shadow 200ms ease;
+}
+
+/* Cleaner mobile taps (no grey flash) */
+a,
+button,
+[role="button"],
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Accessible, on-brand focus ring (keyboard users only) */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+[tabindex]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* ============================================================
+   Effects: accent scrollbar + primary CTA glow/shine
+   ============================================================ */
+
+/* On-brand thin scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(54, 184, 255, 0.45) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(54, 184, 255, 0.55), rgba(8, 122, 216, 0.55));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(54, 184, 255, 0.85), rgba(8, 122, 216, 0.85));
+  background-clip: padding-box;
+}
+
+/* Primary CTA: soft accent glow + a light shine sweep on hover */
+.lab-btn,
+.robot-studio-btn {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 6px 22px rgba(8, 122, 216, 0.25);
+}
+.lab-btn::after,
+.robot-studio-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -65%;
+  width: 45%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+  transform: skewX(-18deg);
+  transition: left 620ms ease;
+  pointer-events: none;
+}
+.lab-btn:hover,
+.robot-studio-btn:hover {
+  box-shadow: 0 10px 32px rgba(54, 184, 255, 0.45);
+}
+.lab-btn:hover::after,
+.robot-studio-btn:hover::after {
+  left: 135%;
 }

@@ -14,7 +14,6 @@ const WhyConsider = dynamic(
 );
 const Services = dynamic(() => import("@/components/sections/Services"));
 const PreBuiltAssetsSection = dynamic(() => import("@/components/sections/PreBuiltAssetsSection"));
-const AuditCtaBanner = dynamic(() => import("@/components/sections/AuditCtaBanner"));
 const BestWork = dynamic(() => import("@/components/sections/BestWork"));
 const CustomerSystem = dynamic(() => import("@/components/sections/CustomerSystem"));
 const Achievements = dynamic(() => import("@/components/sections/Achievements"));
@@ -50,9 +49,6 @@ export default function Home() {
         {/* 3.5 Pre-built Assets — ready-to-deploy assets catalog */}
         <PreBuiltAssetsSection />
 
-        {/* 3.6 Audit CTA Banner */}
-        <AuditCtaBanner />
-
         {/* 4. BestWork — Bento box showcase */}
         <BestWork />
 
@@ -78,4 +74,3 @@ export default function Home() {
     </SmoothScroll>
   );
 }
-

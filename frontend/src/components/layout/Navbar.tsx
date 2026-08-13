@@ -13,7 +13,8 @@ const navLinks = [
   { label: "Services", href: "#services", number: "02", isPage: false },
   { label: "Assets", href: "/prebuilt-assets", number: "03", isPage: true },
   { label: "Work", href: "/work", number: "04", isPage: true },
-  { label: "Team", href: "#team", number: "05", isPage: false },
+  { label: "Lab", href: "/lab", number: "05", isPage: true },
+  { label: "Team", href: "#team", number: "06", isPage: false },
 ];
 
 export default function Navbar() {

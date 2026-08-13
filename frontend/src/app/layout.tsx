@@ -5,7 +5,9 @@ import BackToTop from "@/components/ui/BackToTop";
 import LeadCapturePopup from "@/components/ui/LeadCapturePopup";
 import ServerWarmup from "@/components/ui/ServerWarmup";
 import DeviceNotice from "@/components/ui/DeviceNotice";
+import LabChatLauncher from "@/components/lab/LabChatLauncher";
 import "./globals.css";
+import GrainOverlay from "@/components/ui/GrainOverlay";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -113,6 +115,8 @@ export default function RootLayout({
             }}
           />
           {children}
+          <LabChatLauncher />
+          <GrainOverlay />
         </RegionProvider>
       </body>
     </html>

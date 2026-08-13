@@ -44,7 +44,7 @@ export default function Marquee() {
 
   return (
     <section className="marquee-section relative pt-16 lg:pt-32 pb-8 lg:pb-12 flex items-center">
-      <div className="max-w-[1500px] mx-auto px-6 lg:px-12 w-full flex flex-row md:flex-row items-stretch justify-center gap-3 md:gap-6">
+      <div className="max-w-[1500px] mx-auto page-inset w-full flex flex-col md:flex-row items-stretch justify-center gap-6">
         
         {/* Left: Static Text Card */}
         <div className="shrink-0 flex items-center px-5 md:px-12 lg:px-16 py-3 md:py-10 lg:py-12 bg-white/[0.02] rounded-2xl backdrop-blur-md z-20">

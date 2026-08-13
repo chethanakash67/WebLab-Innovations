@@ -1,0 +1,141 @@
+/* ── Robot studio section (home, after hero) ── */
+.robot-studio {
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background:
+    radial-gradient(circle at 72% 60%, rgba(54, 184, 255, 0.08), transparent 45%),
+    #030405;
+}
+
+.robot-studio-inner {
+  width: min(100%, 1500px);
+  margin: 0 auto;
+  padding-left: clamp(20px, 5vw, 80px);
+  padding-right: clamp(20px, 5vw, 80px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 48px;
+  align-items: center;
+}
+
+/* let grid/flex children shrink below their content (canvas) width */
+.robot-studio-copy,
+.robot-studio-stage {
+  min-width: 0;
+}
+
+.robot-studio-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.robot-studio-title {
+  margin-top: 20px;
+  font-family: var(--font-display), sans-serif;
+  font-size: clamp(2rem, 4.5vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  color: #fff;
+}
+
+.robot-studio-title span {
+  color: var(--color-accent);
+}
+
+.robot-studio-lead {
+  margin-top: 22px;
+  max-width: 32rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+
+.robot-studio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 32px;
+  padding: 13px 26px;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background 200ms ease;
+}
+
+.robot-studio-btn:hover {
+  background: var(--color-primary-light);
+}
+
+.robot-studio-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.robot-studio-stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* soft platform glow behind the robot */
+.robot-studio-glow {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  width: 70%;
+  height: 55%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(54, 184, 255, 0.22), transparent 68%);
+  filter: blur(30px);
+  pointer-events: none;
+  animation: rs-glow-pulse 6s ease-in-out infinite;
+}
+
+@keyframes rs-glow-pulse {
+  0%,
+  100% {
+    opacity: 0.75;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.08);
+  }
+}
+
+.robot-studio-canvas {
+  position: relative;
+  z-index: 1;
+  height: 440px;
+  width: 100%;
+}
+
+.robot-studio-loading {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+@media (min-width: 900px) {
+  .robot-studio-inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 40px;
+  }
+
+  .robot-studio-canvas {
+    height: 520px;
+  }
+}
