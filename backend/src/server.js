@@ -137,17 +137,17 @@ app.use((error, _request, response, _next) => {
 
 validateProductionEnv();
 logEmailNotificationStatus();
+
+app.listen(port, () => {
+  console.log(`WebLab backend listening on port ${port}.`);
+});
+
 initDatabase()
   .then(async () => {
     await seedLabContent().catch((error) => console.error("Lab content seed failed:", error));
     await reembedIfProviderChanged().catch((error) => console.error("Lab re-embedding failed:", error));
     await loadChunkCacheFromDb().catch((error) => console.error("Lab chunk cache load failed:", error));
-
-    app.listen(port, () => {
-      console.log(`WebLab backend listening on port ${port}.`);
-    });
   })
   .catch((error) => {
-    console.error("Unable to start backend:", error);
-    process.exit(1);
+    console.error("Database startup tasks failed:", error);
   });
