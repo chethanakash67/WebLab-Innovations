@@ -24,6 +24,8 @@ import {
   ExternalLink,
 } from "lucide-react";
 import { initialPrebuiltAssets, PrebuiltAsset } from "@/app/api/prebuilt-assets/route";
+import { useRegion } from "@/components/providers/RegionContext";
+import Link from "next/link";
 
 const MouseFollowLight = dynamic(
   () => import("@/components/ui/MouseFollowLight"),
@@ -39,14 +41,20 @@ const CATEGORIES = [
 ];
 
 export default function PrebuiltAssetsPage() {
+  const { region } = useRegion();
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [activeCategory, setActiveCategory] = useState<string>("Websites");
+  const [activeCategory, setActiveCategory] = useState<string>("all");
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [assets, setAssets] = useState<PrebuiltAsset[]>(initialPrebuiltAssets);
   const [expandedCardId, setExpandedCardId] = useState<string | number | null>(null);
 
-  // Claim Modal Form State
+  // Toast notification state
+  const [toastMsg, setToastMsg] = useState<string>("");
+  const [showToast, setShowToast] = useState<boolean>(false);
+
+  // Claim Modal & Growth Tier Modal State
+  const [showGrowthTierModal, setShowGrowthTierModal] = useState<boolean>(false);
   const [claimAsset, setClaimAsset] = useState<PrebuiltAsset | null>(null);
   const [claimName, setClaimName] = useState<string>("");
   const [claimEmail, setClaimEmail] = useState<string>("");
@@ -60,7 +68,23 @@ export default function PrebuiltAssetsPage() {
       .then((res) => res.json())
       .then((data) => {
         if (data.success && Array.isArray(data.items)) {
-          setAssets(data.items);
+          const merged = data.items.map((fetched: PrebuiltAsset) => {
+            const local = initialPrebuiltAssets.find((i) => i.slug === fetched.slug);
+            if (!local) return fetched;
+            return {
+              ...local,
+              ...fetched,
+              description: local.description || fetched.description,
+              priceInr: fetched.priceInr || local.priceInr,
+              priceUsd: fetched.priceUsd || local.priceUsd,
+              originalPriceInr: fetched.originalPriceInr || local.originalPriceInr,
+              originalPriceUsd: fetched.originalPriceUsd || local.originalPriceUsd,
+              limitations: (fetched.limitations && fetched.limitations.length > 0) ? fetched.limitations : local.limitations,
+              growthTierLink: fetched.growthTierLink || local.growthTierLink,
+              liveSoon: fetched.liveSoon !== undefined ? fetched.liveSoon : local.liveSoon,
+            };
+          });
+          setAssets(merged);
         }
       })
       .catch((err) => console.error("Error loading prebuilt assets:", err));
@@ -478,7 +502,7 @@ export default function PrebuiltAssetsPage() {
                             />
                           </button>
 
-                          {asset.demoUrl && (
+                          {asset.demoUrl ? (
                             <a
                               href={asset.demoUrl}
                               target="_blank"
@@ -498,10 +522,37 @@ export default function PrebuiltAssetsPage() {
                               <span>Live Link</span>
                               <ExternalLink style={{ width: "11px", height: "11px", color: "#36b8ff" }} />
                             </a>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setToastMsg("This will be live soon");
+                                setShowToast(true);
+                                setTimeout(() => setShowToast(false), 2600);
+                              }}
+                              style={{
+                                background: "none",
+                                border: "none",
+                                color: "#ffffff",
+                                fontSize: "12px",
+                                fontWeight: 600,
+                                textDecoration: "underline",
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "3px",
+                                opacity: 0.85,
+                                cursor: "pointer",
+                                padding: 0,
+                              }}
+                            >
+                              <span>Live Link</span>
+                              <ExternalLink style={{ width: "11px", height: "11px", color: "#36b8ff" }} />
+                            </button>
                           )}
                         </div>
 
-                        {/* Features List & Full Description (Expanded inline) */}
+                        {/* Features List, Full Description & Product Limitations (Expanded inline) */}
                         {isExpanded && (
                           <div
                             style={{
@@ -514,10 +565,11 @@ export default function PrebuiltAssetsPage() {
                             }}
                           >
                             {asset.description && (
-                              <p style={{ fontSize: "12.5px", color: "rgba(255, 255, 255, 0.85)", lineHeight: "1.55", marginBottom: "4px" }}>
+                              <div style={{ fontSize: "12.5px", color: "rgba(255, 255, 255, 0.85)", lineHeight: "1.55", marginBottom: "4px", whiteSpace: "pre-line" }}>
                                 {asset.description}
-                              </p>
+                              </div>
                             )}
+
                             <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                               {asset.features.map((feat, i) => (
                                 <div key={i} style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "rgba(255, 255, 255, 0.85)" }}>
@@ -526,6 +578,50 @@ export default function PrebuiltAssetsPage() {
                                 </div>
                               ))}
                             </div>
+
+                            {/* Product Limitations Section */}
+                            {asset.limitations && asset.limitations.length > 0 && (
+                              <div style={{ marginTop: "10px", paddingTop: "10px", borderTop: "1px dashed rgba(255,255,255,0.12)" }}>
+                                <span style={{ fontSize: "11px", fontFamily: "monospace", color: "#9ca3af", textTransform: "uppercase", letterSpacing: "1px", display: "block", marginBottom: "8px" }}>
+                                  Scope &amp; Product Limitations
+                                </span>
+                                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                                  {asset.limitations.map((lim, idx) => (
+                                    <p key={idx} style={{ fontSize: "11.5px", color: "rgba(255, 255, 255, 0.72)", lineHeight: "1.45", margin: 0, paddingLeft: "8px", borderLeft: "2px solid rgba(54, 184, 255, 0.4)" }}>
+                                      {lim}
+                                    </p>
+                                  ))}
+                                </div>
+
+                                {asset.growthTierLink && (
+                                  <div style={{ marginTop: "10px" }}>
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setShowGrowthTierModal(true);
+                                      }}
+                                      style={{
+                                        fontSize: "12px",
+                                        color: "#36b8ff",
+                                        fontWeight: 600,
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        gap: "4px",
+                                        textDecoration: "underline",
+                                        background: "none",
+                                        border: "none",
+                                        padding: 0,
+                                        cursor: "pointer",
+                                      }}
+                                    >
+                                      <span>Need custom workflows or advanced AI rules? Go to Growth Tier</span>
+                                      <ArrowUpRight style={{ width: "12px", height: "12px" }} />
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
@@ -533,7 +629,7 @@ export default function PrebuiltAssetsPage() {
                       {/* Pricing + Claim Button Side-by-Side (0 Border Radius) & Asterisk Notes */}
                       <div style={{ borderTop: "1px solid rgba(255, 255, 255, 0.08)", paddingTop: "14px" }}>
                         <div style={{ display: "flex", alignItems: "stretch", gap: "8px", marginBottom: "8px" }}>
-                          {/* Transparent 0 border radius Price Box with Strikethrough 8,000/- above 3,999/- */}
+                          {/* Price Box matching Region (India vs Others) */}
                           <div
                             style={{
                               flex: 1,
@@ -541,23 +637,28 @@ export default function PrebuiltAssetsPage() {
                               flexDirection: "column",
                               alignItems: "center",
                               justifyContent: "center",
-                              padding: "6px 12px",
+                              padding: "6px 10px",
                               borderRadius: 0,
                               backgroundColor: "transparent",
                               border: "1px solid rgba(54, 184, 255, 0.4)",
                               color: "#ffffff",
                               fontFamily: "monospace",
+                              textAlign: "center",
                             }}
                           >
                             <span style={{ fontSize: "11px", textDecoration: "line-through", color: "rgba(255, 255, 255, 0.5)", lineHeight: "1.1" }}>
-                              ₹8,000/-
+                              {region === "IN"
+                                ? asset.originalPriceInr || asset.originalPrice || "₹18,000/-"
+                                : asset.originalPriceUsd || "$350/-"}
                             </span>
-                            <span style={{ fontSize: "14.5px", fontWeight: 700, color: "#ffffff", lineHeight: "1.2" }}>
-                              ₹3,999/-
+                            <span style={{ fontSize: "14.5px", fontWeight: 700, color: "#ffffff", lineHeight: "1.2", textAlign: "center" }}>
+                              {region === "IN"
+                                ? asset.priceInr || asset.price || "₹9,999/-"
+                                : asset.priceUsd || "$199/-"}
                             </span>
                           </div>
 
-                          {/* Claim This Button (0 Border Radius) */}
+                          {/* Claim This Button (0 Border Radius, Edged Theme Button) */}
                           <button
                             type="button"
                             onClick={(e) => openClaimModal(asset, e)}
@@ -569,24 +670,24 @@ export default function PrebuiltAssetsPage() {
                               gap: "6px",
                               padding: "10px 14px",
                               borderRadius: 0,
-                              backgroundColor: "#36b8ff",
-                              color: "#020303",
                               fontSize: "13px",
                               fontWeight: 700,
-                              border: "none",
                               cursor: "pointer",
-                              transition: "all 0.2s ease",
+                              transition: "all 0.25s ease",
                             }}
+                            className="bg-transparent hover:bg-[#36b8ff] text-white hover:text-[#020303] border border-[#36b8ff] group/claimbtn"
                           >
                             <span>Claim this</span>
-                            <ArrowUpRight style={{ width: "15px", height: "15px" }} />
+                            <ArrowUpRight style={{ width: "15px", height: "15px" }} className="transition-transform duration-200 group-hover/claimbtn:-translate-y-0.5 group-hover/claimbtn:translate-x-0.5" />
                           </button>
                         </div>
 
                         {/* Asterisk Notes below price button row */}
                         <div style={{ display: "flex", flexDirection: "column", gap: "3px", textAlign: "center" }}>
                           <p style={{ fontSize: "11px", color: "rgba(255, 255, 255, 0.65)", fontStyle: "italic", margin: 0 }}>
-                            * ₹2,500/- annually for maintenance
+                            {region === "IN"
+                              ? asset.maintenanceNoteInr || asset.maintenanceNote || "* ₹2,500/- annually for maintenance"
+                              : asset.maintenanceNoteUsd || "* $35/- annually for maintenance"}
                           </p>
                           {asset.revisionNote && (
                             <p style={{ fontSize: "11px", color: "#36b8ff", fontStyle: "italic", margin: 0 }}>
@@ -914,6 +1015,236 @@ export default function PrebuiltAssetsPage() {
               </div>
             )}
           </div>
+        </div>
+      )}
+
+      {/* Growth Tier Modal */}
+      {showGrowthTierModal && (
+        <div
+          onClick={() => setShowGrowthTierModal(false)}
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 99999,
+            backgroundColor: "rgba(2, 3, 3, 0.85)",
+            backdropFilter: "blur(12px)",
+            WebkitBackdropFilter: "blur(12px)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "20px",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: "relative",
+              maxWidth: "620px",
+              width: "100%",
+              maxHeight: "90vh",
+              overflowY: "auto",
+              backgroundColor: "#07090c",
+              border: "1px solid rgba(54, 184, 255, 0.35)",
+              borderRadius: "20px",
+              padding: "32px 28px",
+              boxShadow: "0 25px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(54, 184, 255, 0.15)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "20px",
+            }}
+          >
+            {/* Close Button */}
+            <button
+              type="button"
+              onClick={() => setShowGrowthTierModal(false)}
+              style={{
+                position: "absolute",
+                top: "20px",
+                right: "20px",
+                backgroundColor: "rgba(255, 255, 255, 0.05)",
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                borderRadius: "50%",
+                width: "32px",
+                height: "32px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "#9ca3af",
+                cursor: "pointer",
+                transition: "all 0.2s ease",
+              }}
+            >
+              <X style={{ width: "16px", height: "16px" }} />
+            </button>
+
+            {/* Header Tag */}
+            <div>
+              <div
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  padding: "5px 12px",
+                  borderRadius: "20px",
+                  backgroundColor: "rgba(54, 184, 255, 0.12)",
+                  border: "1px solid rgba(54, 184, 255, 0.35)",
+                  color: "#36b8ff",
+                  fontSize: "11px",
+                  fontFamily: "monospace",
+                  fontWeight: 700,
+                  letterSpacing: "1px",
+                  textTransform: "uppercase",
+                  marginBottom: "12px",
+                }}
+              >
+                <Sparkles style={{ width: "12px", height: "12px" }} />
+                <span>Everything Included in Product Tier +</span>
+              </div>
+
+              <h3 style={{ fontSize: "24px", fontWeight: 800, color: "#ffffff", margin: 0, lineHeight: "1.25" }}>
+                Growth Tier &amp; Custom AI Solutions
+              </h3>
+              <p style={{ fontSize: "13.5px", color: "rgba(255, 255, 255, 0.72)", marginTop: "8px", marginBottom: 0, lineHeight: "1.5" }}>
+                Bespoke enterprise AI agent architectures tailored specifically to your business workflows, custom CRM connectors, and deep preference-mining engines.
+              </p>
+            </div>
+
+            {/* Bespoke Features List */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "14px", backgroundColor: "rgba(255, 255, 255, 0.02)", padding: "18px", borderRadius: "14px", border: "1px solid rgba(255, 255, 255, 0.06)" }}>
+              <span style={{ fontSize: "11px", fontFamily: "monospace", color: "#9ca3af", textTransform: "uppercase", letterSpacing: "1px", display: "block" }}>
+                Bespoke Growth Features &amp; Capabilities:
+              </span>
+
+              <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                <CheckCircle2 style={{ width: "16px", height: "16px", color: "#36b8ff", flexShrink: 0, marginTop: "2px" }} />
+                <div>
+                  <h4 style={{ fontSize: "13px", fontWeight: 700, color: "#ffffff", margin: 0 }}>
+                    Custom RAG &amp; Deep Preference Mining
+                  </h4>
+                  <p style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.65)", margin: "2px 0 0 0", lineHeight: "1.4" }}>
+                    Advanced preference-mining models trained on your proprietary product catalogs, user behavior history, and dynamic personalized offer logic.
+                  </p>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                <CheckCircle2 style={{ width: "16px", height: "16px", color: "#36b8ff", flexShrink: 0, marginTop: "2px" }} />
+                <div>
+                  <h4 style={{ fontSize: "13px", fontWeight: 700, color: "#ffffff", margin: 0 }}>
+                    Custom CRM, ERP &amp; Database Connectors
+                  </h4>
+                  <p style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.65)", margin: "2px 0 0 0", lineHeight: "1.4" }}>
+                    Bi-directional integrations extending beyond standard Shopify/WooCommerce webhooks into custom CRMs, ERPs, inventory databases, and custom APIs.
+                  </p>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                <CheckCircle2 style={{ width: "16px", height: "16px", color: "#36b8ff", flexShrink: 0, marginTop: "2px" }} />
+                <div>
+                  <h4 style={{ fontSize: "13px", fontWeight: 700, color: "#ffffff", margin: 0 }}>
+                    Multi-Template Feedback &amp; Referral Engines
+                  </h4>
+                  <p style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.65)", margin: "2px 0 0 0", lineHeight: "1.4" }}>
+                    Custom multi-step post-purchase review sequences, automated referral distribution, and dynamic testimonial capture flows.
+                  </p>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                <CheckCircle2 style={{ width: "16px", height: "16px", color: "#36b8ff", flexShrink: 0, marginTop: "2px" }} />
+                <div>
+                  <h4 style={{ fontSize: "13px", fontWeight: 700, color: "#ffffff", margin: 0 }}>
+                    Tailored AI Guardrails &amp; Dynamic Offer Logic
+                  </h4>
+                  <p style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.65)", margin: "2px 0 0 0", lineHeight: "1.4" }}>
+                    Custom prompt engineering, brand tone calibration, multi-lingual capabilities, and custom human-in-the-loop escalation rules.
+                  </p>
+                </div>
+              </div>
+
+              <div style={{ display: "flex", gap: "10px", alignItems: "flex-start" }}>
+                <CheckCircle2 style={{ width: "16px", height: "16px", color: "#36b8ff", flexShrink: 0, marginTop: "2px" }} />
+                <div>
+                  <h4 style={{ fontSize: "13px", fontWeight: 700, color: "#ffffff", margin: 0 }}>
+                    Dedicated 1-on-1 Strategy &amp; Priority Support
+                  </h4>
+                  <p style={{ fontSize: "12px", color: "rgba(255, 255, 255, 0.65)", margin: "2px 0 0 0", lineHeight: "1.4" }}>
+                    Architecture strategy calls, custom agent tuning, dedicated account manager, and direct Slack/WhatsApp priority channels.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div style={{ display: "flex", gap: "12px", marginTop: "4px" }}>
+              <a
+                href="https://wa.me/917396733009?text=Hi,%20I%20want%20to%20discuss%20Growth%20Tier%20custom%20AI%20workflows%20for%20my%20business"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  flex: 1,
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  padding: "13px 20px",
+                  borderRadius: "12px",
+                  backgroundColor: "#36b8ff",
+                  color: "#020303",
+                  fontWeight: 700,
+                  fontSize: "13.5px",
+                  textDecoration: "none",
+                  boxShadow: "0 0 25px rgba(54, 184, 255, 0.35)",
+                }}
+              >
+                <span>Discuss Growth Tier on WhatsApp</span>
+                <ArrowUpRight style={{ width: "16px", height: "16px" }} />
+              </a>
+
+              <button
+                type="button"
+                onClick={() => setShowGrowthTierModal(false)}
+                style={{
+                  padding: "13px 20px",
+                  borderRadius: "12px",
+                  backgroundColor: "rgba(255, 255, 255, 0.06)",
+                  border: "1px solid rgba(255, 255, 255, 0.12)",
+                  color: "#ffffff",
+                  fontWeight: 600,
+                  fontSize: "13px",
+                  cursor: "pointer",
+                }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showToast && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: "28px",
+            right: "28px",
+            zIndex: 99999,
+            backgroundColor: "#0b0d0f",
+            border: "1px solid rgba(54, 184, 255, 0.5)",
+            borderRadius: "10px",
+            padding: "10px 18px",
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.8)",
+            color: "#ffffff",
+            fontSize: "12px",
+            fontFamily: "monospace",
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+          }}
+        >
+          <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#36b8ff" }} />
+          <span>{toastMsg}</span>
         </div>
       )}
 

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, X } from "lucide-react";
 import AgencyMark from "@/components/ui/AgencyMark";
+import RegionSelector from "@/components/ui/RegionSelector";
 
 const navLinks = [
   { label: "Studio", href: "#home", number: "01", isPage: false },

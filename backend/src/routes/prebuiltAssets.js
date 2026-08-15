@@ -34,7 +34,7 @@ router.get(
     const searchTerm = `%${q}%`;
 
     const result = await pool.query(
-      `SELECT id, title, slug, category, tagline, description, price, original_price, badge, features, demo_url, created_at
+      `SELECT id, title, slug, category, tagline, description, price, price_inr, price_usd, original_price, original_price_inr, original_price_usd, badge, features, limitations, growth_tier_link, demo_url, live_soon, created_at
        FROM prebuilt_assets
        WHERE published = TRUE
          AND ($1 = 'all' OR category ILIKE $1)
@@ -62,10 +62,17 @@ router.get(
         tagline: row.tagline,
         description: row.description,
         price: row.price,
+        priceInr: row.price_inr,
+        priceUsd: row.price_usd,
         originalPrice: row.original_price,
+        originalPriceInr: row.original_price_inr,
+        originalPriceUsd: row.original_price_usd,
         badge: row.badge,
         features: row.features,
+        limitations: row.limitations,
+        growthTierLink: row.growth_tier_link,
         demoUrl: row.demo_url,
+        liveSoon: row.live_soon,
         createdAt: row.created_at,
       })),
     });
