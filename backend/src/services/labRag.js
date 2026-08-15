@@ -666,24 +666,23 @@ async function unansweredResult(question) {
 }
 
 export async function answerQuestion(question) {
-  if (!isLabRagConfigured()) {
-    return {
-      answer: "The Labs assistant isn't fully configured yet — please check back soon.",
-      matched: false,
-      sources: [],
-      agencyRelated: false,
-    };
-  }
-
-  const matches = await retrieve(question);
-
-  if (matches.length === 0) {
-    return unansweredResult(question);
-  }
-
-  const sources = [...new Set(matches.map((match) => match.chunk.documentTitle))].map((title) => ({ title }));
-
   try {
+    if (!isLabRagConfigured()) {
+      return {
+        answer: "The Labs assistant isn't fully configured yet — please check back soon.",
+        matched: false,
+        sources: [],
+        agencyRelated: false,
+      };
+    }
+
+    const matches = await retrieve(question);
+
+    if (matches.length === 0) {
+      return unansweredResult(question);
+    }
+
+    const sources = [...new Set(matches.map((match) => match.chunk.documentTitle))].map((title) => ({ title }));
     const answer = await generateAnswer(question, matches);
 
     // Retrieval pulled something in, but the model reports the passages don't actually
@@ -694,11 +693,11 @@ export async function answerQuestion(question) {
 
     return { answer, matched: true, sources, agencyRelated: true };
   } catch (error) {
-    console.error("Lab chat generation failed across all providers:", error.message);
+    console.error("Lab chat failed:", error.message);
     return {
-      answer: "I found relevant information but couldn't generate a response just now — please try again in a moment.",
-      matched: true,
-      sources,
+      answer: "I couldn't reach the Lab knowledge base just now, but the team has been notified to check the deployment. Please try again in a moment.",
+      matched: false,
+      sources: [],
       agencyRelated: true,
     };
   }
