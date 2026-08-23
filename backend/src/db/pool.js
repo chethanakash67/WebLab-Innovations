@@ -5,7 +5,7 @@ const { Pool } = pg;
 
 const isProduction = process.env.NODE_ENV === "production";
 const connectionString = isProduction
-  ? (process.env.SUPABASE_DATABASE_URL || process.env.DATABASE_URL)
+  ? (process.env.DATABASE_URL || process.env.SUPABASE_DATABASE_URL)
   : (process.env.DATABASE_URL || "postgresql://postgres:POSTGRESQL@localhost:5432/aigleonlabs");
 
 const shouldUseSsl = isProduction && process.env.DATABASE_SSL !== "false";
